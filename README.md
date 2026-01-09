@@ -77,6 +77,7 @@ cp -r bkit-claude-code/.claude your-project/
 
 ## Documentation
 
+- **[Architecture & User Journey](docs/ARCHITECTURE.md)** - Complete system analysis and user experience guide
 - [Getting Started](docs/getting-started.md)
 - [PDCA Methodology](docs/pdca-methodology.md)
 - [Development Pipeline](docs/development-pipeline.md)
