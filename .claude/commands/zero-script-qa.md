@@ -104,7 +104,7 @@ Claude Code automatically:
 
 ```json
 {
-  "timestamp": "2025-01-08T10:30:00.000Z",
+  "timestamp": "2026-01-08T10:30:00.000Z",
   "level": "INFO",
   "service": "api",
   "request_id": "req_abc123",

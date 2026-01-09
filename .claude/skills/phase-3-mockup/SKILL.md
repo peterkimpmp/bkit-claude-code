@@ -94,7 +94,7 @@ docs/02-design/
 | **Godly** | Landing page references | godly.website |
 | **Land-book** | Landing page gallery | land-book.com |
 
-#### 2. 2024-2025 UI/UX Trends
+#### 2. 2025-2026 UI/UX Trends
 
 ```
 🎨 Visual Trends
