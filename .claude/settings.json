@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Glob(**)",
+      "Grep(**)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(gh *)",
+      "Bash(chmod *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "mcp__mcp-atlassian__*",
+      "WebSearch",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:code.claude.com)",
+      "WebFetch(domain:github.com)",
+      "Skill(learn-claude-code)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo *)",
+      "Bash(* --force)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "once": true,
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check file path and apply PDCA rules:\n- docs/01-plan/* → ALLOW (Plan phase)\n- docs/02-design/* → ALLOW (Design phase)\n- docs/03-analysis/* → ALLOW (Check phase)\n- docs/04-report/* → ALLOW (Act phase)\n- .claude/* → ALLOW (config files)\n- mockup/* → ALLOW (prototyping)\n- public/* → ALLOW (static assets)\n- src/* or app/* → Check if related design exists in docs/02-design/\n- Other paths → ALLOW\nRespond ONLY with JSON: {\"decision\": \"approve\", \"reason\": \"brief explanation\"}",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash(git commit *)",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Commit completed. Consider: 1) Update PDCA status if feature complete 2) Run /pdca-analyze for gap analysis. Respond with JSON: {\"decision\": \"approve\", \"reason\": \"Commit done\"}",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Evaluate if Claude should stop working.\n\nCheck these criteria:\n- Todo list: All tasks completed?\n- Design-implementation: Aligned?\n- Tests: Written if needed?\n- Docs: Updated if needed?\n\nIf all complete, Claude can stop.\nIf not, list remaining items with line breaks."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before compacting, summarize key context to preserve: 1) Current task status 2) Key decisions made 3) Files modified 4) Remaining work. Respond with JSON: {\"decision\": \"approve\", \"summary\": \"brief summary\"}",
+            "timeout": 15000
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Evaluate if subagent task is complete.\n\nCheck:\n- Results sufficient?\n- Summary needed for main conversation?\n\nIf complete, subagent can stop.\nIf not, list remaining items with line breaks."
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "PDCA_LEVEL": "auto",
+    "PDCA_DOCS_PATH": "docs"
+  }
+}

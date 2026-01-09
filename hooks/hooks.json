@@ -55,6 +55,18 @@
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before compacting, summarize key context to preserve:\n1) Current task status\n2) Key decisions made\n3) Files modified\n4) Remaining work\n\nRespond with: {\"decision\": \"approve\", \"summary\": \"brief summary\"}",
+            "timeout": 15000
+          }
+        ]
+      }
     ]
   }
 }
