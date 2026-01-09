@@ -18,7 +18,10 @@
         "email": "contact@popupstudio.ai"
       },
       "repository": "https://github.com/popup-studio-ai/bkit-claude-code",
-      "source": ".",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/popup-studio-ai/bkit-claude-code.git"
+      },
       "category": "development",
       "keywords": [
         "vibecoding",
