@@ -119,7 +119,7 @@ flowchart LR
 
 ---
 
-### Stage 4: 17 Commands for Workflow Automation
+### Stage 4: 18 Commands for Workflow Automation
 
 Users can use slash commands as needed.
 
@@ -140,13 +140,14 @@ Users can use slash commands as needed.
 | `/init-dynamic` | BaaS fullstack (Next.js + bkend.ai) |
 | `/init-enterprise` | MSA (Microservices + K8s) |
 
-#### PDCA Workflow (6)
+#### PDCA Workflow (7)
 
 | Command | Function |
 |---------|----------|
 | `/pdca-status` | Current PDCA progress dashboard |
 | `/pdca-plan [feature]` | Write plan document |
 | `/pdca-design [feature]` | Write design document |
+| `/pdca-iterate [feature]` | Auto-fix with Evaluator-Optimizer pattern |
 | `/pdca-analyze [feature]` | Gap analysis (design vs implementation) |
 | `/pdca-report` | Generate report |
 | `/pdca-next` | Suggest next action |
@@ -167,13 +168,14 @@ Users can use slash commands as needed.
 
 ---
 
-### Stage 5: 10 Specialized Agents
+### Stage 5: 11 Specialized Agents
 
 Complex tasks are handled by specialized sub-agents.
 
 | Agent | Role | Invocation Timing |
 |-------|------|-------------------|
 | `gap-detector` | Design-implementation diff analysis | On `/pdca-analyze` |
+| `pdca-iterator` | Evaluator-Optimizer auto-iteration | On `/pdca-iterate` |
 | `code-analyzer` | Code quality analysis | On refactoring requests |
 | `design-validator` | Design document validation | On design completion |
 | `report-generator` | Auto-generate reports | On `/pdca-report` |
@@ -261,8 +263,8 @@ flowchart LR
     end
     
     subgraph OnDemand["📦 On-Demand Layer"]
-        commands["commands/<br/>(17 slash cmds)"]
-        agents["agents/<br/>(10 specialists)"]
+        commands["commands/<br/>(18 slash cmds)"]
+        agents["agents/<br/>(11 specialists)"]
         skills["skills/<br/>(domain context)"]
     end
     
@@ -347,15 +349,16 @@ flowchart TB
 │   ├── hooks/
 │   │   └── session-start.sh
 │   │
-│   └── commands/ (17)
+│   └── commands/ (18)
 │       ├── /learn-claude-code
 │       ├── /setup-claude-code
 │       ├── /pdca-*
 │       └── /init-*
 │
 ├── Specialists
-│   ├── agents/ (10)
+│   ├── agents/ (11)
 │   │   ├── gap-detector
+│   │   ├── pdca-iterator
 │   │   ├── code-analyzer
 │   │   └── bkend-expert
 │   │

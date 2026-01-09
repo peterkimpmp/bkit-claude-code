@@ -13,12 +13,13 @@ bkit is a Claude Code plugin that transforms how you build software with AI. It 
 ## Features
 
 - **PDCA Methodology** - Structured development workflow with automatic documentation
+- **Evaluator-Optimizer Pattern** - Automatic iteration cycles from Anthropic's agent architecture
 - **9-Stage Development Pipeline** - From schema design to deployment
 - **3 Project Levels** - Starter (static), Dynamic (fullstack), Enterprise (microservices)
 - **Multilingual Support** - 8 languages (EN, KO, JA, ZH, ES, FR, DE, IT)
-- **17 Commands** - Automate common development tasks
-- **23 Skills** - Domain-specific knowledge for various development scenarios
-- **10 Agents** - Specialized AI assistants for different tasks
+- **18 Commands** - Automate common development tasks
+- **24 Skills** - Domain-specific knowledge for various development scenarios
+- **11 Agents** - Specialized AI assistants for different tasks
 
 ---
 
@@ -85,6 +86,7 @@ bkit-claude-code/
 ```bash
 /bkit:pdca-plan {feature}    # Create plan document
 /bkit:pdca-design {feature}  # Create design document
+/bkit:pdca-iterate {feature} # Auto-fix with Evaluator-Optimizer pattern
 /bkit:pdca-analyze           # Run gap analysis
 /bkit:pdca-report            # Generate completion report
 ```
@@ -103,10 +105,11 @@ bkit-claude-code/
 
 ## Documentation
 
-- **[Architecture & User Journey](docs/ARCHITECTURE.md)** - Complete system analysis and user experience guide
+- **[Architecture & User Journey](docs/00-ARCHITECTURE.md)** - Complete system analysis and user experience guide
 - **[AI-Native Transformation](docs/AI-NATIVE-TRANSFORMATION.md)** - Business value analysis for C-Level executives
 - [Getting Started](.claude/docs/setup/environment-setup.md)
 - [PDCA Methodology](.claude/docs/pdca/overview.md)
+- [Evaluator-Optimizer Pattern](skills/evaluator-optimizer/SKILL.md)
 - [Development Pipeline](skills/development-pipeline/SKILL.md)
 - [Commands Reference](commands/)
 - [Skills Reference](skills/)

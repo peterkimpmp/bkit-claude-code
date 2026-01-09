@@ -393,6 +393,7 @@ Claude (with bkit):
 |---------|:-----------:|------------------------|
 | `/pdca-plan` | Plan | On new feature request → "Shall we write a plan first?" |
 | `/pdca-design` | Plan | After plan approval → "Now shall we write detailed design?" |
+| `/pdca-iterate` | Check | After gap analysis → "Shall we auto-fix issues?" (Evaluator-Optimizer pattern) |
 | `/pdca-analyze` | Check | After implementation → "Shall we run Gap analysis?" |
 | `/pdca-report` | Act | After analysis → "Shall we write completion report?" |
 | `/pdca-status` | - | "Show me the progress" |
@@ -457,6 +458,7 @@ bkit automatically activates appropriate expert agents based on context.
 
 | Agent | Role | Auto-activation Condition |
 |-------|------|---------------------------|
+| `pdca-iterator` | Evaluator-Optimizer auto-iteration | When "iterate", "auto-fix", "반복 개선" requested |
 | `qa-monitor` | Real-time Docker log analysis | When Zero Script QA runs |
 | `code-analyzer` | Code quality/security analysis | When code review requested |
 | `report-generator` | PDCA completion report generation | When feature completion reported |
@@ -478,6 +480,7 @@ Skills are expert knowledge that Claude references. They auto-activate for relat
 | Skill | Content | When Applied |
 |-------|---------|--------------|
 | `pdca-methodology` | Document-code sync cycle | All tasks |
+| `evaluator-optimizer` | Anthropic's iteration pattern | Auto-fix cycles |
 | `ai-native-development` | AI collaboration development | Strategy planning |
 | `document-standards` | Documentation standards | Document writing |
 | `zero-script-qa` | Log-based QA methodology | Quality verification |

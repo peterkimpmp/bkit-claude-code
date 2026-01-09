@@ -387,4 +387,4 @@ Key Success Factors:
 
 *Document Version: 1.0*
 *Created: January 2026*
-*Related Documents: ARCHITECTURE.md, README.md*
+*Related Documents: 00-ARCHITECTURE.md, README.md*
