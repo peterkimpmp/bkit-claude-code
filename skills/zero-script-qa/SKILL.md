@@ -12,18 +12,18 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: prompt
-          prompt: "Verify this bash command is safe for QA testing. No destructive operations allowed."
+          prompt: "Verify this bash command is safe for QA testing. No destructive operations (rm, drop, delete) allowed. Respond with JSON: {\"decision\": \"approve\"|\"block\", \"reason\": \"...\"}"
   Stop:
     - hooks:
         - type: prompt
-          prompt: "Verify QA checks completed. Ensure all logs are analyzed and issues documented."
+          prompt: "Verify QA checks completed. Ensure all logs are analyzed and issues documented. Respond with JSON: {\"decision\": \"approve\", \"summary\": \"QA result summary\"}"
 ---
 
 # Zero Script QA Expert Knowledge
 
 ## Overview
 
-Zero Script QA verifies features through **structured logs** and **real-time monitoring** without writing test scripts.
+Zero Script QA is a methodology that verifies features through **structured logs** and **real-time monitoring** without writing test scripts.
 
 ```
 Traditional: Write test code → Execute → Check results → Maintain
@@ -32,11 +32,27 @@ Zero Script: Build log infrastructure → Manual UX test → AI log analysis →
 
 ## Core Principles
 
-1. **Log Everything** - All API calls (including 200 OK), all errors, all business events
-2. **Structured JSON Logs** - Parseable JSON format, consistent fields
-3. **Real-time Monitoring** - Docker log streaming, Claude Code analyzes in real-time
+### 1. Log Everything
+- All API calls (including 200 OK)
+- All errors
+- All important business events
+- Entire flow trackable via Request ID
 
-## JSON Log Format Standard
+### 2. Structured JSON Logs
+- Parseable JSON format
+- Consistent fields (timestamp, level, request_id, message, data)
+- Different log levels per environment
+
+### 3. Real-time Monitoring
+- Docker log streaming
+- Claude Code analyzes in real-time
+- Immediate issue detection and documentation
+
+---
+
+## Logging Architecture
+
+### JSON Log Format Standard
 
 ```json
 {
@@ -45,7 +61,12 @@ Zero Script: Build log infrastructure → Manual UX test → AI log analysis →
   "service": "api",
   "request_id": "req_abc123",
   "message": "API Request completed",
-  "data": { "method": "POST", "path": "/api/users", "status": 200, "duration_ms": 45 }
+  "data": {
+    "method": "POST",
+    "path": "/api/users",
+    "status": 200,
+    "duration_ms": 45
+  }
 }
 ```
 
@@ -55,81 +76,298 @@ Zero Script: Build log infrastructure → Manual UX test → AI log analysis →
 |-------|------|-------------|
 | timestamp | ISO 8601 | Time of occurrence |
 | level | string | DEBUG, INFO, WARNING, ERROR |
-| service | string | Service name |
+| service | string | Service name (api, web, worker, etc.) |
 | request_id | string | Request tracking ID |
 | message | string | Log message |
+| data | object | Additional data (optional) |
 
 ### Log Level Policy
 
-| Environment | Minimum Level |
-|-------------|---------------|
-| Local/Staging | DEBUG |
-| Production | INFO |
+| Environment | Minimum Level | Purpose |
+|-------------|---------------|---------|
+| Local | DEBUG | Development and QA |
+| Staging | DEBUG | QA and integration testing |
+| Production | INFO | Operations monitoring |
+
+---
 
 ## Request ID Propagation
+
+### Concept
 
 ```
 Client → API Gateway → Backend → Database
    ↓         ↓           ↓          ↓
 req_abc   req_abc     req_abc    req_abc
+
+Trackable with same Request ID across all layers
 ```
 
-Track entire flow with same Request ID across all layers.
+### Implementation Patterns
 
-## Backend Logging (FastAPI Example)
+#### 1. Request ID Generation (Entry Point)
+```typescript
+// middleware.ts
+import { v4 as uuidv4 } from 'uuid';
+
+export function generateRequestId(): string {
+  return `req_${uuidv4().slice(0, 8)}`;
+}
+
+// Propagate via header
+headers['X-Request-ID'] = requestId;
+```
+
+#### 2. Request ID Extraction and Propagation
+```typescript
+// API client
+const requestId = headers['X-Request-ID'] || generateRequestId();
+
+// Include in all logs
+logger.info('Processing request', { request_id: requestId });
+
+// Include in header when calling downstream services
+await fetch(url, {
+  headers: { 'X-Request-ID': requestId }
+});
+```
+
+---
+
+## Backend Logging (FastAPI)
+
+### Logging Middleware
 
 ```python
 # middleware/logging.py
-import json, logging, time, uuid
+import logging
+import time
+import uuid
+import json
 from fastapi import Request
+
+class JsonFormatter(logging.Formatter):
+    def format(self, record):
+        log_record = {
+            "timestamp": self.formatTime(record),
+            "level": record.levelname,
+            "service": "api",
+            "request_id": getattr(record, 'request_id', 'N/A'),
+            "message": record.getMessage(),
+        }
+        if hasattr(record, 'data'):
+            log_record["data"] = record.data
+        return json.dumps(log_record)
 
 class LoggingMiddleware:
     async def __call__(self, request: Request, call_next):
         request_id = request.headers.get('X-Request-ID', f'req_{uuid.uuid4().hex[:8]}')
+        request.state.request_id = request_id
+
         start_time = time.time()
 
-        logger.info("Request started", extra={
-            'request_id': request_id,
-            'data': {'method': request.method, 'path': request.url.path}
-        })
+        # Request logging
+        logger.info(
+            f"Request started",
+            extra={
+                'request_id': request_id,
+                'data': {
+                    'method': request.method,
+                    'path': request.url.path,
+                    'query': str(request.query_params)
+                }
+            }
+        )
 
         response = await call_next(request)
+
         duration = (time.time() - start_time) * 1000
 
-        logger.info("Request completed", extra={
-            'request_id': request_id,
-            'data': {'status': response.status_code, 'duration_ms': round(duration, 2)}
-        })
+        # Response logging (including 200 OK!)
+        logger.info(
+            f"Request completed",
+            extra={
+                'request_id': request_id,
+                'data': {
+                    'status': response.status_code,
+                    'duration_ms': round(duration, 2)
+                }
+            }
+        )
 
         response.headers['X-Request-ID'] = request_id
         return response
 ```
 
-## Frontend Logging (Next.js Example)
+### Business Logic Logging
+
+```python
+# services/user_service.py
+def create_user(data: dict, request_id: str):
+    logger.info("Creating user", extra={
+        'request_id': request_id,
+        'data': {'email': data['email']}
+    })
+
+    # Business logic
+    user = User(**data)
+    db.add(user)
+    db.commit()
+
+    logger.info("User created", extra={
+        'request_id': request_id,
+        'data': {'user_id': user.id}
+    })
+
+    return user
+```
+
+---
+
+## Frontend Logging (Next.js)
+
+### Logger Module
 
 ```typescript
 // lib/logger.ts
 type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR';
 
-function log(level: LogLevel, message: string, data?: object) {
-  console.log(JSON.stringify({
+interface LogData {
+  request_id?: string;
+  [key: string]: any;
+}
+
+const LOG_LEVELS: Record<LogLevel, number> = {
+  DEBUG: 0,
+  INFO: 1,
+  WARNING: 2,
+  ERROR: 3,
+};
+
+const MIN_LEVEL = process.env.NODE_ENV === 'production' ? 'INFO' : 'DEBUG';
+
+function log(level: LogLevel, message: string, data?: LogData) {
+  if (LOG_LEVELS[level] < LOG_LEVELS[MIN_LEVEL]) return;
+
+  const logEntry = {
     timestamp: new Date().toISOString(),
-    level, service: 'web', message, data
-  }));
+    level,
+    service: 'web',
+    request_id: data?.request_id || 'N/A',
+    message,
+    data: data ? { ...data, request_id: undefined } : undefined,
+  };
+
+  console.log(JSON.stringify(logEntry));
 }
 
 export const logger = {
-  debug: (msg: string, data?: object) => log('DEBUG', msg, data),
-  info: (msg: string, data?: object) => log('INFO', msg, data),
-  error: (msg: string, data?: object) => log('ERROR', msg, data),
+  debug: (msg: string, data?: LogData) => log('DEBUG', msg, data),
+  info: (msg: string, data?: LogData) => log('INFO', msg, data),
+  warning: (msg: string, data?: LogData) => log('WARNING', msg, data),
+  error: (msg: string, data?: LogData) => log('ERROR', msg, data),
 };
 ```
 
+### API Client Integration
+
+```typescript
+// lib/api-client.ts
+import { logger } from './logger';
+import { v4 as uuidv4 } from 'uuid';
+
+export async function apiClient<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const requestId = `req_${uuidv4().slice(0, 8)}`;
+  const startTime = Date.now();
+
+  logger.info('API Request started', {
+    request_id: requestId,
+    method: options.method || 'GET',
+    endpoint,
+  });
+
+  try {
+    const response = await fetch(`/api${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Request-ID': requestId,
+        ...options.headers,
+      },
+    });
+
+    const duration = Date.now() - startTime;
+    const data = await response.json();
+
+    // Log 200 OK too!
+    logger.info('API Request completed', {
+      request_id: requestId,
+      status: response.status,
+      duration_ms: duration,
+    });
+
+    if (!response.ok) {
+      logger.error('API Request failed', {
+        request_id: requestId,
+        status: response.status,
+        error: data.error,
+      });
+      throw new ApiError(data.error);
+    }
+
+    return data;
+  } catch (error) {
+    logger.error('API Request error', {
+      request_id: requestId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+    throw error;
+  }
+}
+```
+
+---
+
+## Nginx JSON Logging
+
+### nginx.conf Configuration
+
+```nginx
+http {
+    log_format json_combined escape=json '{'
+        '"timestamp":"$time_iso8601",'
+        '"level":"INFO",'
+        '"service":"nginx",'
+        '"request_id":"$http_x_request_id",'
+        '"message":"HTTP Request",'
+        '"data":{'
+            '"remote_addr":"$remote_addr",'
+            '"method":"$request_method",'
+            '"uri":"$request_uri",'
+            '"status":$status,'
+            '"body_bytes_sent":$body_bytes_sent,'
+            '"request_time":$request_time,'
+            '"upstream_response_time":"$upstream_response_time",'
+            '"http_referer":"$http_referer",'
+            '"http_user_agent":"$http_user_agent"'
+        '}'
+    '}';
+
+    access_log /var/log/nginx/access.log json_combined;
+}
+```
+
+---
+
 ## Docker-Based QA Workflow
 
-### docker-compose.yml
+### docker-compose.yml Configuration
 
 ```yaml
+version: '3.8'
 services:
   api:
     build: ./backend
@@ -140,65 +378,121 @@ services:
       driver: json-file
       options:
         max-size: "10m"
+        max-file: "3"
+
+  web:
+    build: ./frontend
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - web
 ```
 
 ### Real-time Log Monitoring
 
 ```bash
-docker compose logs -f                    # Stream all logs
-docker compose logs -f api                # Specific service
-docker compose logs -f | grep '"level":"ERROR"'  # Filter errors
-docker compose logs -f | grep 'req_abc123'       # Track Request ID
+# Stream all service logs
+docker compose logs -f
+
+# Specific service only
+docker compose logs -f api
+
+# Filter errors only
+docker compose logs -f | grep '"level":"ERROR"'
+
+# Track specific Request ID
+docker compose logs -f | grep 'req_abc123'
 ```
+
+---
 
 ## QA Automation Workflow
 
-1. **Start Environment**: `docker compose up -d && docker compose logs -f`
-2. **Manual UX Testing**: User tests features in browser
-3. **Claude Code Log Analysis**: Monitor stream, detect patterns, track Request ID
-4. **Issue Documentation**: Auto-document findings
+### 1. Start Environment
+```bash
+# Start development environment
+docker compose up -d
 
-### Issue Documentation Template
+# Start log monitoring (Claude Code monitors)
+docker compose logs -f
+```
 
+### 2. Manual UX Testing
+```
+User tests actual features in browser:
+1. Sign up attempt
+2. Login attempt
+3. Use core features
+4. Test edge cases
+```
+
+### 3. Claude Code Log Analysis
+```
+Claude Code in real-time:
+1. Monitor log stream
+2. Detect error patterns
+3. Detect abnormal response times
+4. Track entire flow via Request ID
+5. Auto-document issues
+```
+
+### 4. Issue Documentation
 ```markdown
-### ISSUE-001: Insufficient error handling
+# QA Issue Report
+
+## Issues Found
+
+### ISSUE-001: Insufficient error handling on login failure
 - **Request ID**: req_abc123
 - **Severity**: Medium
 - **Reproduction path**: Login → Wrong password
-- **Log**: {"level":"ERROR","message":"Login failed"}
+- **Log**:
+  ```json
+  {"level":"ERROR","message":"Login failed","data":{"error":"Invalid credentials"}}
+  ```
+- **Problem**: Error message not user-friendly
 - **Recommended fix**: Add error code to message mapping
 ```
 
+---
+
 ## Issue Detection Patterns
 
-| Pattern | Detection | Action |
-|---------|-----------|--------|
-| `{"level":"ERROR"}` | Error logged | Report immediately |
-| `{"data":{"duration_ms":3000}}` | Slow response | Warning when >1000ms |
-| 3+ consecutive failures | System issue | Report potential problem |
-| `{"data":{"status":500}}` | Server error | Report 5xx immediately |
-
-## Iterative Test Cycle Pattern
-
-| Cycle | Pass Rate | Bug Found | Fix Applied |
-|-------|-----------|-----------|-------------|
-| 1st | 30% | DB schema mismatch | Schema migration |
-| 2nd | 45% | NULL handling | Add null checks |
-| ... | ... | ... | ... |
-| 8th | **89%** | Stable | Final polish |
-
-### Cycle Workflow
-
+### 1. Error Detection
+```json
+{"level":"ERROR","message":"..."}
 ```
-Cycle N:
-1. Run test (E2E or manual)
-2. Claude monitors logs in real-time
-3. Record pass/fail results
-4. Claude identifies root cause
-5. Fix code immediately
-6. Document: Cycle N → Bug → Fix
-Repeat until >85% pass rate
+→ Report immediately
+
+### 2. Slow Response Detection
+```json
+{"data":{"duration_ms":3000}}
 ```
+→ Warning when exceeding 1000ms
+
+### 3. Consecutive Failure Detection
+```
+3+ consecutive failures on same endpoint
+```
+→ Report potential system issue
+
+### 4. Abnormal Status Codes
+```json
+{"data":{"status":500}}
+```
+→ Report 5xx errors immediately
+
+---
 
 ## Phase Integration
 
@@ -209,6 +503,127 @@ Repeat until >85% pass rate
 | Phase 7 (Security) | Security event logging verification |
 | Phase 8 (Review) | Log quality review |
 | Phase 9 (Deployment) | Production log level configuration |
+
+---
+
+## Iterative Test Cycle Pattern
+
+Based on bkamp.ai notification feature development:
+
+### Example: 8-Cycle Test Process
+
+| Cycle | Pass Rate | Bug Found | Fix Applied |
+|-------|-----------|-----------|-------------|
+| 1st | 30% | DB schema mismatch | Schema migration |
+| 2nd | 45% | NULL handling missing | Add null checks |
+| 3rd | 55% | Routing error | Fix deeplinks |
+| 4th | 65% | Type mismatch | Fix enum types |
+| 5th | 70% | Calculation error | Fix count logic |
+| 6th | 75% | Event missing | Add event triggers |
+| 7th | 82% | Cache sync issue | Fix cache invalidation |
+| 8th | **89%** | Stable | Final polish |
+
+### Cycle Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Iterative Test Cycle                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Cycle N:                                                   │
+│  1. Run test script (E2E or manual)                         │
+│  2. Claude monitors logs in real-time                       │
+│  3. Record pass/fail results                                │
+│  4. Claude identifies root cause of failures                │
+│  5. Fix code immediately (hot reload)                       │
+│  6. Document: Cycle N → Bug → Fix                           │
+│                                                             │
+│  Repeat until acceptable pass rate (>85%)                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### E2E Test Script Template
+
+```bash
+#!/bin/bash
+# E2E Test Script Template
+
+API_URL="http://localhost:8000"
+TOKEN="your-test-token"
+
+PASS_COUNT=0
+FAIL_COUNT=0
+SKIP_COUNT=0
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+test_feature_action() {
+    echo -n "Testing: Feature action... "
+
+    response=$(curl -s -X POST "$API_URL/api/v1/feature/action" \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"param": "value"}')
+
+    if [[ "$response" == *"expected_result"* ]]; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        ((PASS_COUNT++))
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        echo "Response: $response"
+        ((FAIL_COUNT++))
+    fi
+}
+
+# Run all tests
+test_feature_action
+# ... more tests
+
+# Summary
+echo ""
+echo "═══════════════════════════════════════"
+echo "Test Results:"
+echo -e "  ${GREEN}✅ PASS: $PASS_COUNT${NC}"
+echo -e "  ${RED}❌ FAIL: $FAIL_COUNT${NC}"
+echo -e "  ${YELLOW}⏭️  SKIP: $SKIP_COUNT${NC}"
+echo "═══════════════════════════════════════"
+```
+
+### Test Cycle Documentation Template
+
+```markdown
+# Feature Test Results - Cycle N
+
+## Summary
+- **Date**: YYYY-MM-DD
+- **Feature**: {feature name}
+- **Pass Rate**: N%
+- **Tests**: X passed / Y total
+
+## Results
+
+| Test Case | Status | Notes |
+|-----------|--------|-------|
+| Test 1 | ✅ | |
+| Test 2 | ❌ | {error description} |
+| Test 3 | ⏭️ | {skip reason} |
+
+## Bugs Found
+
+### BUG-001: {Title}
+- **Root Cause**: {description}
+- **Fix**: {what was changed}
+- **Files**: `path/to/file.py:123`
+
+## Next Cycle Plan
+- {what to test next}
+```
+
+---
 
 ## Checklist
 
@@ -227,6 +642,7 @@ Repeat until >85% pass rate
 ### Frontend Logging
 - [ ] Logger module implemented
 - [ ] API client integration
+- [ ] Error boundary logging
 
 ### QA Workflow
 - [ ] Docker Compose configured
