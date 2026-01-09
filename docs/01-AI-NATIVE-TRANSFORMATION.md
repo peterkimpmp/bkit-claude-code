@@ -39,16 +39,42 @@ Claude Code + PDCA Methodology + 9-Stage Pipeline + Zero Script QA
 
 ### 2.2 Automated PDCA Cycle
 
-```
-Traditional Development Flow:
-Requirements → [Manual] Design → [Manual] Coding → [Manual] Testing → [Manual] Documentation
-                    ↓
-          Communication overhead, omissions, inconsistencies at each stage
+#### Traditional Development Flow
 
-Bkit Development Flow:
-Requirements → [Auto] Design Generation → [AI] Code Generation → [Auto] Verification → [Auto] Doc Sync
-                    ↓
-          Claude auto-applies PDCA at each stage, guaranteeing design-code alignment
+```mermaid
+flowchart LR
+    A[Requirements] --> B["[Manual] Design"]
+    B --> C["[Manual] Coding"]
+    C --> D["[Manual] Testing"]
+    D --> E["[Manual] Documentation"]
+
+    B -.-> F["⚠️ Communication overhead"]
+    C -.-> F
+    D -.-> F
+    E -.-> F
+    F -.-> G["Omissions & Inconsistencies"]
+
+    style F fill:#ffcccc
+    style G fill:#ff9999
+```
+
+#### Bkit Development Flow
+
+```mermaid
+flowchart LR
+    A[Requirements] --> B["[Auto] Design Generation"]
+    B --> C["[AI] Code Generation"]
+    C --> D["[Auto] Verification"]
+    D --> E["[Auto] Doc Sync"]
+
+    B -.-> F["✅ PDCA Auto-Applied"]
+    C -.-> F
+    D -.-> F
+    E -.-> F
+    F -.-> G["Design-Code Alignment Guaranteed"]
+
+    style F fill:#ccffcc
+    style G fill:#99ff99
 ```
 
 ---
@@ -68,19 +94,11 @@ Requirements → [Auto] Design Generation → [AI] Code Generation → [Auto] Ve
 
 ### 3.2 Role Transformation Details
 
-```
-Senior Developer:
-  As-Is: Direct coding + Junior reviews + Architecture design
-  To-Be: AI verification + Direction setting + Quality standards (AI-Native conductor)
-
-Junior Developer:
-  As-Is: Simple feature implementation, asks seniors questions
-  To-Be: Can implement complex features through AI collaboration
-
-QA Engineer:
-  As-Is: Write and execute manual test scripts
-  To-Be: Monitor logs, discover edge cases
-```
+| Role | As-Is | To-Be |
+|------|-------|-------|
+| **Senior Developer** | Direct coding + Junior reviews + Architecture design | AI verification + Direction setting + Quality standards (AI-Native conductor) |
+| **Junior Developer** | Simple feature implementation, asks seniors questions | Can implement complex features through AI collaboration |
+| **QA Engineer** | Write and execute manual test scripts | Monitor logs, discover edge cases |
 
 ---
 
@@ -121,16 +139,36 @@ QA Engineer:
 
 ### 5.2 Zero Script QA Benefits
 
-```
-Traditional QA:
-  Write test scripts (2 days) → Execute (1 day) → Find bugs → Fix → Retest
-  ↓
-  Test maintenance costs accumulate, edge cases missed
+#### Traditional QA
 
-Zero Script QA:
-  Build log infrastructure (one-time) → Manual UX testing → AI real-time analysis → Immediate issue detection
-  ↓
-  No test script maintenance, all API calls tracked
+```mermaid
+flowchart LR
+    A["Write test scripts<br/>(2 days)"] --> B["Execute<br/>(1 day)"]
+    B --> C[Find bugs]
+    C --> D[Fix]
+    D --> E[Retest]
+    E -.-> A
+
+    C -.-> F["⚠️ Test maintenance costs accumulate"]
+    F -.-> G["Edge cases missed"]
+
+    style F fill:#ffcccc
+    style G fill:#ff9999
+```
+
+#### Zero Script QA
+
+```mermaid
+flowchart LR
+    A["Build log infrastructure<br/>(one-time)"] --> B[Manual UX testing]
+    B --> C[AI real-time analysis]
+    C --> D[Immediate issue detection]
+
+    C -.-> E["✅ No test script maintenance"]
+    E -.-> F["All API calls tracked"]
+
+    style E fill:#ccffcc
+    style F fill:#99ff99
 ```
 
 ---

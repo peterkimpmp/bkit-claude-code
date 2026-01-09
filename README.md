@@ -79,12 +79,12 @@ cp -r bkit-claude-code/.claude your-project/
 
 - **[Architecture & User Journey](docs/ARCHITECTURE.md)** - Complete system analysis and user experience guide
 - **[AI-Native Transformation](docs/AI-NATIVE-TRANSFORMATION.md)** - Business value analysis for C-Level executives
-- [Getting Started](docs/getting-started.md)
-- [PDCA Methodology](docs/pdca-methodology.md)
-- [Development Pipeline](docs/development-pipeline.md)
-- [Commands Reference](docs/commands.md)
-- [Skills Reference](docs/skills.md)
-- [Agents Reference](docs/agents.md)
+- [Getting Started](.claude/docs/setup/environment-setup.md)
+- [PDCA Methodology](.claude/docs/pdca/overview.md)
+- [Development Pipeline](skills/development-pipeline/SKILL.md)
+- [Commands Reference](commands/)
+- [Skills Reference](skills/)
+- [Agents Reference](agents/)
 
 ---
 
