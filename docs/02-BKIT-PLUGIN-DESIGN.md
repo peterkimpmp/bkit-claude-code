@@ -701,7 +701,7 @@ claude --plugin-dir ./bkit
 
 **Created**: 2026-01-09
 **Author**: Claude (with Kay)
-**Version**: v1.1.0
+**Version**: v1.1.1
 **Status**: Design verified → Implementation ready
 
 ---
@@ -739,6 +739,12 @@ claude --plugin-dir ./bkit
 ---
 
 ## Changelog
+
+### v1.1.1 (2026-01-14)
+- 📸 Added 5 screenshot images to documentation
+- 📝 Updated README.md with visual examples
+- 📝 Updated AI-NATIVE-DEVELOPMENT.md with visual examples
+- 📝 Added FAQ section for non-development use cases
 
 ### v1.1.0 (2026-01-09)
 - ✅ Verified against official Claude Code documentation

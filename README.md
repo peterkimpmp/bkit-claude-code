@@ -8,9 +8,13 @@
 
 bkit is a Claude Code plugin that transforms how you build software with AI. It provides structured development workflows, automatic documentation, and intelligent code assistance through the PDCA (Plan-Do-Check-Act) methodology.
 
+![bkit Introduction](images/bkit-intro.png)
+
 ---
 
 ## Features
+
+![bkit Features](images/bkit-features.png)
 
 - **PDCA Methodology** - Structured development workflow with automatic documentation
 - **Evaluator-Optimizer Pattern** - Automatic iteration cycles from Anthropic's agent architecture
@@ -112,6 +116,22 @@ bkit-claude-code/
 | **Starter** | Static websites, portfolios | HTML, CSS, JS |
 | **Dynamic** | Fullstack applications | Next.js, BaaS |
 | **Enterprise** | Microservices architecture | K8s, Terraform, MSA |
+
+---
+
+## Is bkit Only for Development?
+
+![bkit for Non-Development](images/to-use-non-development.png)
+
+bkit is **primarily designed for software development**. However, some components can inspire structured workflows beyond coding:
+
+| Component | Beyond Development Uses |
+|-----------|------------------------|
+| **PDCA Methodology** | Project management, process improvement |
+| **Document Templates** | Planning any structured project |
+| **Gap Analysis** | Comparing any plan vs. actual outcome |
+
+> **Note**: For general writing, research, or non-technical tasks, plain Claude Code (without bkit) is better suited.
 
 ---
 

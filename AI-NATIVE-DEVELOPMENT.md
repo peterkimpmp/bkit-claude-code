@@ -42,6 +42,8 @@ flowchart TB
 
 ## What is AI-Native Development?
 
+![AI-Native by bkit - Part 1](images/ai-native-by-bkit-1.png)
+
 AI-Native development is a paradigm where AI is not just a tool, but a **core collaborator** in the software development process. Unlike traditional development with AI assistance, AI-Native development fundamentally rethinks how software is designed, built, and maintained.
 
 ### Key Characteristics (Industry Consensus)
@@ -229,6 +231,8 @@ Specification Document → PDCA Design → AI Implementation → Working Code
 ---
 
 ## Comparison: Traditional vs AI-Native with bkit
+
+![AI-Native by bkit - Part 2](images/ai-native-by-bkit-2.png)
 
 | Aspect | Traditional Development | AI-Native with bkit |
 |--------|------------------------|---------------------|

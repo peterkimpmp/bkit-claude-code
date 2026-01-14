@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "bkit Vibecoding Kit v1.1.0 by POPUP STUDIO (https://popupstudio.ai)\n\nCore PDCA Rules (always apply):\n- New feature request → Check docs/02-design/ first → Design before code\n- No guessing → Check docs → Ask user\n- SoR priority: Code > CLAUDE.md > docs/\n- After implementation → Suggest gap analysis\n\nCommands: /bkit:learn-claude-code, /bkit:pdca-plan, /bkit:init-starter\n\nFor Korean response, add to ~/.claude/settings.json: {\"language\": \"korean\"}\n\nReport issues: https://github.com/popup-studio-ai/bkit-claude-code/issues",
+            "prompt": "bkit Vibecoding Kit v1.1.1 by POPUP STUDIO (https://popupstudio.ai)\n\nCore PDCA Rules (always apply):\n- New feature request → Check docs/02-design/ first → Design before code\n- No guessing → Check docs → Ask user\n- SoR priority: Code > CLAUDE.md > docs/\n- After implementation → Suggest gap analysis\n\nCommands: /bkit:learn-claude-code, /bkit:pdca-plan, /bkit:init-starter\n\nFor Korean response, add to ~/.claude/settings.json: {\"language\": \"korean\"}\n\nReport issues: https://github.com/popup-studio-ai/bkit-claude-code/issues",
             "timeout": 5000
           }
         ]

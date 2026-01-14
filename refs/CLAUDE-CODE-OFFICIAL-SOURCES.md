@@ -215,7 +215,7 @@ hooks: hooks.json
 
 ## 8. bkit Plugin Compatibility
 
-### Current bkit Version: 1.1.0
+### Current bkit Version: 1.1.1
 
 | Component | Count | Claude Code Compatibility |
 |-----------|-------|--------------------------|
