@@ -50,19 +50,29 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Check file path and apply PDCA rules:\n- docs/01-plan/* → ALLOW (Plan phase)\n- docs/02-design/* → ALLOW (Design phase)\n- docs/03-analysis/* → ALLOW (Check phase)\n- docs/04-report/* → ALLOW (Act phase)\n- .claude/* → ALLOW (config files)\n- mockup/* → ALLOW (prototyping)\n- public/* → ALLOW (static assets)\n- src/* or app/* → Check if related design exists in docs/02-design/\n- Other paths → ALLOW\nRespond ONLY with JSON: {\"decision\": \"approve\", \"reason\": \"brief explanation\"}",
-            "timeout": 10000
+            "prompt": "## Adaptive PDCA Guidance\n\n### Step 1: Task Classification (Reference: task-classification skill)\n- Quick Fix: typo, fix, adjust (1 file, ≤10 lines)\n- Minor Change: improve, refactor, optimize (1-3 files, no new files)\n- Feature: add, create, implement (new files needed)\n- Major Feature: redesign, migrate, architecture (multi-module)\n\n### Step 2: Project Level Detection\n- services/ or infra/ or kubernetes/ → Enterprise\n- package.json + .mcp.json → Dynamic\n- index.html only → Starter\n- Unknown → Dynamic (default)\n\n### Step 3: Decision Matrix\n|Level     |QuickFix|Minor |Feature|Major  |\n|----------|--------|------|-------|-------|\n|Starter   |ALLOW   |ALLOW |SUGGEST|SUGGEST|\n|Dynamic   |ALLOW   |ALLOW |WARN   |STRONG |\n|Enterprise|ALLOW   |WARN  |STRONG |STRONG |\n\n### Step 4: Apply Guidance\n- ALLOW: Proceed without mention\n- SUGGEST: \"Design doc would help\" - light suggestion\n- WARN: Show warning with options: [1] Design doc (recommended) [2] Inline design [3] Skip\n- STRONG: Detailed warning, require user confirmation before proceeding\n\n### Step 5: PDCA Lite for Minor Change\nDisplay 3-line summary format:\n📝 PDCA Lite\n• What: [target]\n• Why: [reason]\n• How: [method]\n\n### Step 6: Ambiguous Request Handling\nIf classification unclear, use AskUserQuestion with options: Simple fix / Feature improvement / Large scale change\n\n### Path-based ALLOW (skip classification)\ndocs/*, .claude/*, commands/*, skills/*, agents/*, hooks/*, templates/*, mockup/*, public/*, scripts/*, *.md, *.json\n\nRespond: {\"classification\":\"quick_fix|minor_change|feature|major_feature\",\"level\":\"starter|dynamic|enterprise\",\"guidance\":\"allow|suggest|warn|strong\",\"pdca_lite\":{\"what\":\"...\",\"why\":\"...\",\"how\":\"...\"},\"reason\":\"brief explanation\",\"decision\":\"approve\"}",
+            "timeout": 15000
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "## PDCA Status Update Check\n\n### Feature Status Updates\nIf file in PDCA paths, update docs/.pdca-status.json:\n- docs/01-plan/**/*.plan.md → status: 'plan'\n- docs/02-design/**/*.design.md → status: 'design'\n- docs/03-analysis/**/*.analysis.md → status: 'check'\n- docs/04-report/**/*.report.md → status: 'act'\n\nExtract feature name: docs/{phase}/features/{feature-name}.{type}.md\n\n### PDCA Lite Recording\nIf previous PreToolUse classified as minor_change with pdca_lite object, record to quick_changes:\n{\"date\":\"YYYY-MM-DD\",\"desc\":\"brief desc\",\"type\":\"minor\",\"what\":\"...\",\"why\":\"...\",\"how\":\"...\",\"files\":[\"path\"]}\n\nRespond: {\"status_updated\":true/false,\"feature\":\"...\",\"new_status\":\"...\",\"quick_change_recorded\":true/false}",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
         "matcher": "Bash(git commit *)",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Commit completed. Consider: 1) Update PDCA status if feature complete 2) Run /pdca-analyze for gap analysis. Respond with JSON: {\"decision\": \"approve\", \"reason\": \"Commit done\"}",
+            "prompt": "Commit completed. Consider: 1) Update PDCA status if feature complete 2) Run /pdca-analyze for gap analysis.\nRespond: {\"decision\":\"approve\",\"reason\":\"Commit done\"}",
             "timeout": 10000
           }
         ]

@@ -701,8 +701,8 @@ claude --plugin-dir ./bkit
 
 **Created**: 2026-01-09
 **Author**: Claude (with Kay)
-**Version**: v1.1.1
-**Status**: Design verified → Implementation ready
+**Version**: v1.1.2
+**Status**: Design verified → Implementation complete
 
 ---
 
@@ -739,6 +739,16 @@ claude --plugin-dir ./bkit
 ---
 
 ## Changelog
+
+### v1.1.2 (2026-01-15)
+- 🌐 Translated 5 PDCA documents to English (1 plan + 4 design documents)
+- 📸 Added marketplace installation screenshots to README.md
+- 📝 Added auto-update configuration documentation
+- 🚀 Implemented Smart Onboarding system (UserPromptSubmit hook)
+- 🔧 Implemented Adaptive PDCA Guidance (PreToolUse hooks with Decision Matrix)
+- 📊 Implemented PDCA Status Tracking (PostToolUse hooks with docs/.pdca-status.json)
+- 🏷️ Added Task Classification system (Quick Fix/Minor Change/Feature/Major Feature)
+- 📋 Added PDCA Lite mode for Minor Changes (3-line summary format)
 
 ### v1.1.1 (2026-01-14)
 - 📸 Added 5 screenshot images to documentation

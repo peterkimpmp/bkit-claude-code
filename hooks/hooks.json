@@ -1,14 +1,14 @@
 {
   "description": "bkit Vibecoding Kit hooks for PDCA workflow automation",
   "hooks": {
-    "SessionStart": [
+    "UserPromptSubmit": [
       {
         "once": true,
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "bkit Vibecoding Kit v1.1.1 by POPUP STUDIO (https://popupstudio.ai)\n\nCore PDCA Rules (always apply):\n- New feature request → Check docs/02-design/ first → Design before code\n- No guessing → Check docs → Ask user\n- SoR priority: Code > CLAUDE.md > docs/\n- After implementation → Suggest gap analysis\n\nCommands: /bkit:learn-claude-code, /bkit:pdca-plan, /bkit:init-starter\n\nFor Korean response, add to ~/.claude/settings.json: {\"language\": \"korean\"}\n\nReport issues: https://github.com/popup-studio-ai/bkit-claude-code/issues",
-            "timeout": 5000
+            "prompt": "Welcome to bkit Vibecoding Kit!\n\n## PDCA Core Rules (Always Apply)\n- New feature request → Check/create design doc first\n- Don't guess → Check docs → Ask user\n- After implementation → Suggest Gap analysis\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nUse AskUserQuestion tool to ask:\n\n**Question**: \"What kind of help do you need?\"\n**Header**: \"Help Type\"\n**Options**:\n1. bkit Introduction - Learn what bkit is\n2. Learn Development Process - 9-stage pipeline learning\n3. Learn Claude Code - Setup and usage\n4. Continue Work - Resume previous work\n5. Start New Project - Setup from scratch\n\n**Actions by Selection**:\n- Option 1 → Explain bkit features (PDCA, Pipeline, Levels, Agents, Zero Script QA)\n- Option 2 → Run /bkit:pipeline-start or teach 9 stages\n- Option 3 → Run /bkit:learn-claude-code\n- Option 4 → Check PDCA status (docs/.pdca-status.json or scan docs/), guide next step\n- Option 5 → Ask level selection, run /bkit:init-*\n\n**Important**: End response with 'Claude is not perfect. Always verify important decisions.'\n\nAlso respond to user's original question.",
+            "timeout": 10000
           }
         ]
       }
@@ -19,19 +19,29 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "PDCA validation:\n- docs/01-plan/* → ALLOW (Plan phase)\n- docs/02-design/* → ALLOW (Design phase)\n- docs/03-analysis/* → ALLOW (Check phase)\n- docs/04-report/* → ALLOW (Act phase)\n- src/* or app/* → Check if related design exists in docs/02-design/\n- Other paths → ALLOW\n\nRespond with: {\"decision\": \"approve\", \"reason\": \"brief explanation\"}",
-            "timeout": 10000
+            "prompt": "## Adaptive PDCA Guidance\n\n### Step 1: Task Classification (Reference: task-classification skill)\n- Quick Fix: typo, fix, adjust (1 file, ≤10 lines)\n- Minor Change: improve, refactor, optimize (1-3 files, no new files)\n- Feature: add, create, implement (new files needed)\n- Major Feature: redesign, migrate, architecture (multi-module)\n\n### Step 2: Project Level Detection\n- services/ or infra/ or kubernetes/ → Enterprise\n- package.json + .mcp.json → Dynamic\n- index.html only → Starter\n- Unknown → Dynamic (default)\n\n### Step 3: Decision Matrix\n|Level     |QuickFix|Minor |Feature|Major  |\n|----------|--------|------|-------|-------|\n|Starter   |ALLOW   |ALLOW |SUGGEST|SUGGEST|\n|Dynamic   |ALLOW   |ALLOW |WARN   |STRONG |\n|Enterprise|ALLOW   |WARN  |STRONG |STRONG |\n\n### Step 4: Apply Guidance\n- ALLOW: Proceed without mention\n- SUGGEST: \"Design doc would help\" - light suggestion\n- WARN: Show warning with options: [1] Design doc (recommended) [2] Inline design [3] Skip\n- STRONG: Detailed warning, require user confirmation before proceeding\n\n### Step 5: PDCA Lite for Minor Change\nDisplay 3-line summary format:\n📝 PDCA Lite\n• What: [target]\n• Why: [reason]\n• How: [method]\n\n### Step 6: Ambiguous Request Handling\nIf classification unclear, use AskUserQuestion with options: Simple fix / Feature improvement / Large scale change\n\n### Path-based ALLOW (skip classification)\ndocs/*, .claude/*, commands/*, skills/*, agents/*, hooks/*, templates/*, mockup/*, public/*, scripts/*, *.md, *.json\n\nRespond: {\"classification\":\"quick_fix|minor_change|feature|major_feature\",\"level\":\"starter|dynamic|enterprise\",\"guidance\":\"allow|suggest|warn|strong\",\"pdca_lite\":{\"what\":\"...\",\"why\":\"...\",\"how\":\"...\"},\"reason\":\"brief explanation\",\"decision\":\"approve\"}",
+            "timeout": 15000
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "## PDCA Status Update Check\n\n### Feature Status Updates\nIf file in PDCA paths, update docs/.pdca-status.json:\n- docs/01-plan/**/*.plan.md → status: 'plan'\n- docs/02-design/**/*.design.md → status: 'design'\n- docs/03-analysis/**/*.analysis.md → status: 'check'\n- docs/04-report/**/*.report.md → status: 'act'\n\nExtract feature name: docs/{phase}/features/{feature-name}.{type}.md\n\n### PDCA Lite Recording\nIf previous PreToolUse classified as minor_change with pdca_lite object, record to quick_changes.\n\nRespond: {\"status_updated\":true/false,\"feature\":\"...\",\"new_status\":\"...\",\"quick_change_recorded\":true/false}",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
         "matcher": "Bash(git commit *)",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Commit completed. Consider:\n1) Update PDCA status if feature complete\n2) Run /bkit:pdca-analyze for gap analysis\n\nRespond with: {\"decision\": \"approve\", \"reason\": \"Commit done\"}",
+            "prompt": "Commit completed. Consider:\n1) Update PDCA status if feature complete\n2) Run /bkit:pdca-analyze for gap analysis\n\nRespond: {\"decision\":\"approve\",\"reason\":\"Commit done\"}",
             "timeout": 10000
           }
         ]

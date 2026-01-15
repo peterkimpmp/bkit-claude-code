@@ -40,7 +40,25 @@ allowed-tools: ["Read", "Write", "Bash", "Glob"]
    - frontend/CLAUDE.md (frontend conventions)
    - infra/CLAUDE.md (infrastructure conventions)
 
-4. **Check CI/CD**
+4. **Initialize PDCA Status File**
+   - Create `docs/.pdca-status.json` with initial structure:
+   ```json
+   {
+     "version": "1.0.0",
+     "last_updated": "{current_timestamp}",
+     "project_level": "enterprise",
+     "features": {},
+     "quick_changes": [],
+     "statistics": {
+       "total_features": 0,
+       "completed": 0,
+       "in_progress": 0,
+       "quick_changes_count": 0
+     }
+   }
+   ```
+
+5. **Check CI/CD**
    - Verify .github/workflows/
    - Check ArgoCD configuration (if applicable)
 

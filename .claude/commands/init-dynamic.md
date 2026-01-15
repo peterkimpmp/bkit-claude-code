@@ -35,7 +35,25 @@ allowed-tools: ["Read", "Write", "Bash", "Glob"]
    - Generate data-model.md template (bkend.ai collection structure)
    - Authentication flow document template
 
-4. **Check MCP Configuration**
+4. **Initialize PDCA Status File**
+   - Create `docs/.pdca-status.json` with initial structure:
+   ```json
+   {
+     "version": "1.0.0",
+     "last_updated": "{current_timestamp}",
+     "project_level": "dynamic",
+     "features": {},
+     "quick_changes": [],
+     "statistics": {
+       "total_features": 0,
+       "completed": 0,
+       "in_progress": 0,
+       "quick_changes_count": 0
+     }
+   }
+   ```
+
+5. **Check MCP Configuration**
    - Verify .mcp.json file
    - Guide bkend.ai MCP server setup
 

@@ -34,7 +34,7 @@
     {
       "name": "bkit",
       "description": "Vibecoding Kit - PDCA methodology + Claude Code mastery for AI-native development. Includes 18 commands, 11 agents, 24 skills, and 6 hooks for structured development workflows.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
         "name": "POPUP STUDIO PTE. LTD.",
         "email": "contact@popupstudio.ai"

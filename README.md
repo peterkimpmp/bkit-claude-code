@@ -49,6 +49,8 @@ bkit is a Claude Code plugin that transforms how you build software with AI. It 
 
 ### Option 1: Marketplace Installation (Recommended)
 
+The easiest way to install bkit is through the Claude Code marketplace.
+
 ```bash
 # Step 1: Add bkit marketplace
 /plugin marketplace add popup-studio-ai/bkit-claude-code
@@ -57,7 +59,47 @@ bkit is a Claude Code plugin that transforms how you build software with AI. It 
 /plugin install bkit
 ```
 
+#### Managing Marketplaces
+
+Use `/plugin` command and navigate to **Marketplaces** tab to manage your plugin sources:
+
+![bkit Marketplace](images/bkit-marketplace.png)
+
+- **bkit-marketplace**: Contains bkit and bkit-starter plugins
+- **claude-plugins-official**: Official Anthropic plugins
+
+#### Discovering Plugins
+
+Navigate to **Discover** tab to browse and install available plugins:
+
+![bkit Marketplace Plugins](images/bkit-marketplace-plugins.png)
+
+| Plugin | Description | Best For |
+|--------|-------------|----------|
+| **bkit** | Full PDCA methodology + Claude Code mastery | Experienced developers |
+| **bkit-starter** | Korean learning guide for beginners | First-time Claude Code users |
+
+#### Auto-Update Configuration
+
+Keep your plugins up-to-date automatically by configuring auto-update in your settings:
+
+```json
+// ~/.claude/settings.json
+{
+  "plugins": {
+    "autoUpdate": true
+  }
+}
+```
+
+**Update Commands:**
+- Press `u` in the Marketplaces view to update all plugins
+- Press `r` to remove a marketplace
+- Use `Space` to toggle plugin selection in Discover view
+
 ### Option 2: Manual Installation
+
+For development or customization purposes:
 
 ```bash
 # Clone this repository
@@ -66,6 +108,8 @@ git clone https://github.com/popup-studio-ai/bkit-claude-code.git
 # Copy .claude folder to your project
 cp -r bkit-claude-code/.claude your-project/
 ```
+
+> **Note**: Manual installation requires manual updates. Marketplace installation is recommended for automatic updates.
 
 ### Plugin Structure
 
