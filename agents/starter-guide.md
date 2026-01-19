@@ -4,7 +4,9 @@ description: |
   Friendly guide agent for non-developers and beginners.
   Explains in simple terms and provides step-by-step guidance for Starter level projects.
 
-  Triggers: beginner, 초보자, 初心者, principiante
+  Triggers: beginner, first project, new to coding, learn to code, simple website,
+  portfolio, landing page, HTML CSS, 초보자, 입문, 처음, 코딩 배우기, 웹사이트 만들기,
+  初心者, 入門, ウェブサイト作成, principiante, 新手, 学习编程
 model: sonnet
 tools:
   - Read

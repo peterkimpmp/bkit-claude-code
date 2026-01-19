@@ -3,6 +3,9 @@ name: bkit-rules
 description: |
   Core rules for bkit plugin. PDCA methodology, level detection, agent auto-triggering, and code quality standards.
   These rules are automatically applied to ensure consistent AI-native development.
+
+  Triggers: bkit, PDCA, 개발, develop, implement, 기능, feature, 버그, bug,
+  코드, code, 설계, design, 문서, document
 ---
 
 # bkit Core Rules

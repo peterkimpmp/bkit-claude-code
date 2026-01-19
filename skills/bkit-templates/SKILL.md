@@ -3,6 +3,9 @@ name: bkit-templates
 description: |
   PDCA document templates for consistent documentation.
   Plan, Design, Analysis, and Report templates with proper structure.
+
+  Triggers: template, plan document, design document, analysis document, report,
+  템플릿, 계획서, 설계서, 분석서, 보고서, テンプレート, 計画書, 設計書
 ---
 
 # bkit Document Templates
