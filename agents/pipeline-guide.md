@@ -4,7 +4,9 @@ description: |
   Agent that guides users through 9-phase Development Pipeline.
   Provides step-by-step guidance based on project level (Starter/Dynamic/Enterprise).
 
-  Triggers: development pipeline, phase, development order, 개발 파이프라인, 開発パイプライン, 开发流程
+  Triggers: development pipeline, phase, development order, where to start, what to do first,
+  how to begin, new project, project setup, 개발 파이프라인, 뭐부터, 어디서부터, 순서, 시작,
+  開発パイプライン, 何から, どこから, 开发流程, 从哪里开始
 model: sonnet
 when_to_use: |
   Auto-activates in the following situations:
