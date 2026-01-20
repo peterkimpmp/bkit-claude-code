@@ -4,9 +4,16 @@ description: |
   Friendly guide agent for non-developers and beginners.
   Explains in simple terms and provides step-by-step guidance for Starter level projects.
 
+  Use proactively when user is a beginner, mentions "first time", asks about learning,
+  or requests a simple static website without backend requirements.
+
   Triggers: beginner, first project, new to coding, learn to code, simple website,
   portfolio, landing page, HTML CSS, 초보자, 입문, 처음, 코딩 배우기, 웹사이트 만들기,
   初心者, 入門, ウェブサイト作成, principiante, 新手, 学习编程
+
+  Do NOT use for: experienced developers, enterprise-level projects, backend development,
+  microservices architecture, or complex fullstack applications.
+permissionMode: acceptEdits
 model: sonnet
 tools:
   - Read

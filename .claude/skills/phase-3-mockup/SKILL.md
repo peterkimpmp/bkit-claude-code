@@ -4,7 +4,11 @@ description: |
   Skill for creating mockups with UI/UX trends without a designer.
   Designs HTML/CSS/JS prototypes that can be converted to Next.js components.
 
+  Use proactively when user wants to validate UI/UX before implementation.
+
   Triggers: mockup, prototype, wireframe, UI design, 목업, モックアップ, 原型
+
+  Do NOT use for: production code, API development, or existing component modifications.
 agent: pipeline-guide
 allowed-tools:
   - Read

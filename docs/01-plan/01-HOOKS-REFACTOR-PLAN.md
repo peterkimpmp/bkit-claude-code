@@ -153,7 +153,7 @@ exit 0
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/pre-write-hook.sh",
+            "command": "$CLAUDE_PROJECT_DIR/hooks/pre-write-hook.sh",
             "timeout": 5000
           }
         ]
@@ -165,7 +165,7 @@ exit 0
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/post-write-hook.sh",
+            "command": "$CLAUDE_PROJECT_DIR/hooks/post-write-hook.sh",
             "timeout": 3000
           }
         ]
@@ -176,7 +176,7 @@ exit 0
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.sh"
+            "command": "$CLAUDE_PROJECT_DIR/hooks/stop-hook.sh"
           }
         ]
       }
@@ -186,7 +186,7 @@ exit 0
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/subagent-stop-hook.sh"
+            "command": "$CLAUDE_PROJECT_DIR/hooks/subagent-stop-hook.sh"
           }
         ]
       }

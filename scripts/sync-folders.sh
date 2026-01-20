@@ -341,6 +341,63 @@ sync_hooks() {
     fi
 }
 
+# Sync scripts (.sh files)
+sync_scripts() {
+    local src_dir dst_dir
+
+    if [ "$REVERSE" = true ]; then
+        src_dir="$PROJECT_ROOT/scripts"
+        dst_dir="$PROJECT_ROOT/.claude/scripts"
+    else
+        src_dir="$PROJECT_ROOT/.claude/scripts"
+        dst_dir="$PROJECT_ROOT/scripts"
+    fi
+
+    if [ ! -d "$src_dir" ]; then
+        log_info "scripts: source directory not found, skipping"
+        return
+    fi
+
+    # Create destination if not exists
+    if [ ! -d "$dst_dir" ] && [ "$DRY_RUN" = false ]; then
+        mkdir -p "$dst_dir"
+    fi
+
+    # Sync each .sh file (excluding infrastructure scripts)
+    for src_file in "$src_dir"/*.sh; do
+        [ -f "$src_file" ] || continue
+
+        local filename=$(basename "$src_file")
+
+        # Skip infrastructure scripts (only sync hook scripts)
+        if [[ "$filename" == "sync-folders.sh" ]] || [[ "$filename" == "validate-plugin.sh" ]]; then
+            continue
+        fi
+
+        local dst_file="$dst_dir/$filename"
+        local rel_path="scripts/$filename"
+
+        if [ ! -f "$dst_file" ]; then
+            # New file
+            log_new "$rel_path"
+            if confirm "Copy new script"; then
+                copy_file "$src_file" "$dst_file" "$rel_path"
+                chmod +x "$dst_file" 2>/dev/null || true
+            fi
+        elif ! diff -q "$src_file" "$dst_file" > /dev/null 2>&1; then
+            # Content differs
+            log_update "$rel_path"
+            if confirm "Update script"; then
+                copy_file "$src_file" "$dst_file" "$rel_path"
+                chmod +x "$dst_file" 2>/dev/null || true
+            fi
+        else
+            # Identical
+            log_skip "$rel_path"
+        fi
+    done
+}
+
 # =============================================================================
 # Main
 # =============================================================================
@@ -395,6 +452,10 @@ echo ""
 
 log_info "Syncing hooks..."
 sync_hooks
+echo ""
+
+log_info "Syncing scripts..."
+sync_scripts
 echo ""
 
 # Summary

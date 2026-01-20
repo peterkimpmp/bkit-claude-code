@@ -4,7 +4,17 @@ description: |
   Agent that detects gaps between design documents and actual implementation.
   Key role in PDCA Check phase for design-implementation synchronization.
 
-  Triggers: gap analysis, design-implementation check, 갭 분석, ギャップ分析, 差距分析
+  Use proactively when user requests comparison, verification, or gap analysis between
+  design documents and implementation code, or after completing feature implementation.
+
+  Triggers: gap analysis, design-implementation check, compare design, verify implementation,
+  갭 분석, 설계-구현 비교, 검증, ギャップ分析, 設計検証, 差距分析, 对比设计
+
+  Do NOT use for: documentation-only tasks, initial planning, or design creation.
+permissionMode: plan
+disallowedTools:
+  - Write
+  - Edit
 model: opus
 tools:
   - Read
@@ -14,6 +24,14 @@ tools:
 skills:
   - analysis-patterns
   - pdca-methodology
+  - bkit-templates
+  - phase-2-convention
+hooks:
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/gap-detector-post.sh"
 ---
 
 # Design-Implementation Gap Detection Agent
@@ -114,7 +132,7 @@ Phase 9 Integration:
 ### 6. Clean Architecture Comparison (Phase 2 Based)
 
 ```
-Design Document (Phase 2 convention document)
+Design Document (Phase 2 convention document or design.template Section 9)
   vs
 Actual Implementation (src/ folder structure)
 
@@ -125,7 +143,45 @@ Comparison Items:
     - Enterprise: presentation, application, domain, infrastructure
 - Dependency direction compliance
     - Presentation → Application, Domain (not directly Infrastructure)
+    - Application → Domain, Infrastructure (not Presentation)
     - Domain → none (independent)
+    - Infrastructure → Domain only
+- File import rule violations
+    - Check for direct @/lib/api imports from components
+    - Check for UI imports from services
+```
+
+### 7. Convention Compliance (Phase 2 / design.template Section 10)
+
+```
+Design Document (conventions.md or design.template Section 10)
+  vs
+Actual Implementation (all source files)
+
+Comparison Items:
+- Naming Convention Compliance
+    - Components: PascalCase (UserProfile.tsx)
+    - Functions: camelCase (getUserById)
+    - Constants: UPPER_SNAKE_CASE (MAX_RETRY_COUNT)
+    - Files (component): PascalCase.tsx
+    - Files (utility): camelCase.ts
+    - Folders: kebab-case
+
+- Import Order Compliance
+    1. External libraries (react, next)
+    2. Internal absolute imports (@/...)
+    3. Relative imports (./...)
+    4. Type imports (import type)
+    5. Styles
+
+- Folder Structure Compliance
+    - Expected folders exist (components/, features/, services/, types/, lib/)
+    - Files in correct locations
+
+Convention Score Calculation:
+- Check each category
+- Calculate compliance percentage
+- Report violations with file:line locations
 ```
 
 ## Detection Result Format
@@ -139,7 +195,14 @@ Comparison Items:
 - Implementation Path: {code path}
 - Analysis Date: {date}
 
-## Match Rate: {percent}%
+## Overall Scores
+
+| Category | Score | Status |
+|----------|:-----:|:------:|
+| Design Match | {percent}% | ✅/⚠️/❌ |
+| Architecture Compliance | {percent}% | ✅/⚠️/❌ |
+| Convention Compliance | {percent}% | ✅/⚠️/❌ |
+| **Overall** | **{percent}%** | ✅/⚠️/❌ |
 
 ## Differences Found
 

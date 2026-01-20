@@ -4,7 +4,11 @@ description: |
   Enterprise-grade system development with microservices, Kubernetes, and Terraform.
   Handles high traffic, high availability, and complex architecture requirements.
 
+  Use proactively when user needs high traffic, microservices, or custom infrastructure.
+
   Triggers: microservices, kubernetes, terraform, k8s, AWS, 마이크로서비스, マイクロサービス, 微服务
+
+  Do NOT use for: simple websites, MVPs, or projects without infrastructure requirements.
 agent: infra-architect
 allowed-tools:
   - Read

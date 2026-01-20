@@ -5,9 +5,20 @@ description: |
   Determines if task is Quick Fix, Minor Change, Feature, or Major Feature.
   Apply PDCA guidance based on classification before writing code.
 
+  Use proactively when user requests code changes to determine appropriate PDCA level.
+
   Triggers: task-classification, PDCA check, write code, edit code, implement, create feature,
-  add feature, fix bug, refactor, redesign, 코드 작성, 기능 구현, 기능 추가, 버그 수정
+  add feature, fix bug, refactor, redesign, 코드 작성, 기능 구현, 기능 추가, 버그 수정,
+  コード作成, 機能実装, バグ修正, 代码编写, 功能实现, 错误修复
+
+  Do NOT use for: reading files, exploration, or non-code tasks.
 user-invocable: false
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/task-classify.sh"
 ---
 
 # Task Classification System

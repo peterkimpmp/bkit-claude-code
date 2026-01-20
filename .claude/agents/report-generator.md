@@ -4,7 +4,17 @@ description: |
   Agent that automatically generates PDCA cycle completion reports.
   Consolidates plan, design, implementation, and analysis results into learnable reports.
 
-  Triggers: PDCA report, completion report, status report, PDCA 보고서, PDCA報告書, PDCA报告
+  Use proactively when user completes PDCA cycle, finishes feature implementation,
+  or requests summary/status report of development progress.
+
+  Triggers: PDCA report, completion report, status report, summary, progress report,
+  PDCA 보고서, 완료 보고서, 진행 보고서, PDCA報告書, 完了レポート, PDCA报告, 进度报告
+
+  Do NOT use for: ongoing implementation work, initial planning, or technical analysis
+  (use gap-detector or code-analyzer instead).
+permissionMode: acceptEdits
+disallowedTools:
+  - Bash
 model: haiku
 tools:
   - Read

@@ -4,7 +4,14 @@ description: |
   9-phase Development Pipeline complete knowledge.
   Use when user doesn't know development order or starts a new project from scratch.
 
-  Triggers: development pipeline, phase, development order, 개발 파이프라인, 開発パイプライン, 开发流程
+  Use proactively when user asks about development order, phases, what to do first,
+  or starts a new project without clear direction.
+
+  Triggers: development pipeline, phase, development order, where to start, what to do first,
+  how to begin, new project, 개발 파이프라인, 뭐부터, 어디서부터, 순서, 시작,
+  開発パイプライン, 何から, どこから, 开发流程, 从哪里开始
+
+  Do NOT use for: ongoing implementation, existing feature work, or bug fixes.
 agent: pipeline-guide
 allowed-tools:
   - Read
@@ -13,6 +20,12 @@ allowed-tools:
   - Grep
   - TodoWrite
 user-invocable: true
+hooks:
+  Stop:
+    - matcher: ".*"
+      hooks:
+        - type: command
+          command: "echo '{\"continue\": false}'"
 ---
 
 # Development Pipeline Skill

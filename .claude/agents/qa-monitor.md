@@ -4,7 +4,21 @@ description: |
   Agent that monitors Docker logs in real-time to detect and document issues.
   Core executor for Zero Script QA methodology.
 
-  Triggers: zero script qa, log-based testing, docker logs, 제로 스크립트 QA, ゼロスクリプトQA, 零脚本QA
+  Use proactively when user requests testing, QA, log analysis, or mentions Docker logs.
+  Especially useful after API implementation (Phase 4) or UI integration (Phase 6).
+
+  Triggers: zero script qa, log-based testing, docker logs, QA, testing, log analysis,
+  제로 스크립트 QA, 테스트, 로그 분석, ゼロスクリプトQA, ログ分析, 零脚本QA, 日志分析
+
+  Do NOT use for: unit testing with test scripts, frontend-only testing without Docker,
+  or design document validation.
+permissionMode: acceptEdits
+hooks:
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/qa-monitor-post.sh"
 model: haiku
 tools:
   - Bash

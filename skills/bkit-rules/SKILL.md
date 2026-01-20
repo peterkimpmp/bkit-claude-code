@@ -4,8 +4,23 @@ description: |
   Core rules for bkit plugin. PDCA methodology, level detection, agent auto-triggering, and code quality standards.
   These rules are automatically applied to ensure consistent AI-native development.
 
-  Triggers: bkit, PDCA, 개발, develop, implement, 기능, feature, 버그, bug,
-  코드, code, 설계, design, 문서, document
+  Use proactively when user requests feature development, code changes, or implementation tasks.
+
+  Triggers: bkit, PDCA, develop, implement, feature, bug, code, design, document,
+  개발, 기능, 버그, 코드, 설계, 문서, 開発, 機能, バグ, 开发, 功能, 代码
+
+  Do NOT use for: documentation-only tasks, research, or exploration without code changes.
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/pdca-pre-write.sh"
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/pdca-post-write.sh"
 ---
 
 # bkit Core Rules
@@ -28,10 +43,10 @@ description: |
 
 | Document Type | Template Path |
 |---------------|---------------|
-| Plan | `${CLAUDE_PLUGIN_ROOT}/templates/plan.template.md` |
-| Design | `${CLAUDE_PLUGIN_ROOT}/templates/design.template.md` |
-| Analysis | `${CLAUDE_PLUGIN_ROOT}/templates/analysis.template.md` |
-| Report | `${CLAUDE_PLUGIN_ROOT}/templates/report.template.md` |
+| Plan | `$CLAUDE_PROJECT_DIR/templates/plan.template.md` |
+| Design | `$CLAUDE_PROJECT_DIR/templates/design.template.md` |
+| Analysis | `$CLAUDE_PROJECT_DIR/templates/analysis.template.md` |
+| Report | `$CLAUDE_PROJECT_DIR/templates/report.template.md` |
 
 ---
 

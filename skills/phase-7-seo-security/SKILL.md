@@ -4,7 +4,11 @@ description: |
   Skill for enhancing search optimization (SEO) and security.
   Covers meta tags, semantic HTML, and security vulnerability checks.
 
+  Use proactively when user asks about search ranking, security hardening, or vulnerability fixes.
+
   Triggers: SEO, security, meta tags, XSS, CSRF, 보안, セキュリティ, 安全
+
+  Do NOT use for: backend-only APIs, internal tools, or basic development setup.
 agent: code-analyzer
 allowed-tools:
   - Read

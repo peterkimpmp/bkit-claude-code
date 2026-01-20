@@ -4,7 +4,11 @@ description: |
   PDCA (Plan-Do-Check-Act) methodology knowledge.
   Covers documentation-first development, design-implementation sync, continuous improvement.
 
+  Use proactively when user starts feature development or needs quality assurance guidance.
+
   Triggers: PDCA, plan, design, check, act, 계획, 설계, 検証, 改善
+
+  Do NOT use for: quick fixes, trivial changes, or non-development tasks.
 agent: design-validator
 allowed-tools:
   - Read

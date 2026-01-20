@@ -4,7 +4,17 @@ description: |
   Skill for building platform-independent design systems.
   Develops consistent component libraries for all UI frameworks.
 
+  Use proactively when user needs consistent UI components or mentions design tokens.
+
   Triggers: design system, component library, design tokens, shadcn, 디자인 시스템, デザインシステム, 设计系统
+
+  Do NOT use for: one-off UI changes, backend development, or simple static sites.
+hooks:
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/phase5-design-post.sh"
 agent: pipeline-guide
 allowed-tools:
   - Read

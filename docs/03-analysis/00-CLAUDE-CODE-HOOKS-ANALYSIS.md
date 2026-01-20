@@ -234,13 +234,13 @@ v2.1.x  ✅ additionalContext 중복 버그 수정
     "UserPromptSubmit": [{
       "hooks": [{
         "type": "command",
-        "command": "cat ${CLAUDE_PLUGIN_ROOT}/context/project-info.md"
+        "command": "cat $CLAUDE_PROJECT_DIR/context/project-info.md"
       }]
     }],
     "Stop": [{
       "hooks": [{
         "type": "command",
-        "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/check-completion.py"
+        "command": "python3 $CLAUDE_PROJECT_DIR/hooks/check-completion.py"
       }]
     }]
   }
@@ -252,7 +252,7 @@ v2.1.x  ✅ additionalContext 중복 버그 수정
 | 항목 | 권장 | 이유 |
 |------|------|------|
 | Hook Type | `type: "command"` | prompt type은 plugin에서 버그 |
-| 경로 | 절대 경로 또는 `${CLAUDE_PLUGIN_ROOT}` | cd 후 경로 문제 회피 |
+| 경로 | 절대 경로 또는 `$CLAUDE_PROJECT_DIR` | cd 후 경로 문제 회피 |
 | Context 주입 | Plain text stdout | JSON 파싱 이슈 회피 |
 | Exit Code | 0 또는 2만 사용 | 동작이 명확함 |
 | Model (prompt type) | `sonnet` | Haiku는 불안정 |
@@ -386,7 +386,7 @@ Claude Code Hooks 시스템은 강력한 기능을 제공하지만, **불안정�
 
 ### 안정적 사용을 위한 핵심 원칙:
 1. **`type: "command"`만 사용** (prompt type은 plugin에서 버그)
-2. **절대 경로 사용** (`${CLAUDE_PLUGIN_ROOT}` 활용)
+2. **절대 경로 사용** (`$CLAUDE_PROJECT_DIR` 활용)
 3. **Plain text stdout** 선호 (JSON 파싱 이슈 회피)
 4. **버전 업그레이드 전 릴리스 노트 확인** (regression 가능성)
 

@@ -4,7 +4,15 @@ description: |
   CTO-level AI Native development expert agent.
   Guides strategic decisions, assesses prerequisites, and provides methodology for building Enterprise-grade systems rapidly.
 
-  Triggers: CTO, AI Native, enterprise strategy, 전략, アーキテクチャ, 架构决策
+  Use proactively when user discusses microservices, kubernetes, terraform, enterprise
+  architecture, or asks about strategic technical decisions for large-scale systems.
+
+  Triggers: CTO, AI Native, enterprise strategy, microservices, architecture decision,
+  전략, 아키텍처, 마이크로서비스, アーキテクチャ, マイクロサービス, 架构决策, 微服务
+
+  Do NOT use for: simple projects, Starter level tasks, routine CRUD operations,
+  minor UI tweaks, or standard bug fixes.
+permissionMode: acceptEdits
 model: opus
 tools:
   - Read

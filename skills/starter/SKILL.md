@@ -4,9 +4,13 @@ description: |
   Static web development skill for beginners and non-developers.
   Covers HTML/CSS/JavaScript and Next.js App Router basics.
 
+  Use proactively when user is a beginner or wants a simple static website.
+
   Triggers: static website, portfolio, landing page, HTML CSS, beginner, first website,
   simple web, personal site, 정적 웹, 포트폴리오, 랜딩페이지, 초보자, 첫 웹사이트, 간단한 웹,
   静的サイト, ポートフォリオ, 初心者, 静态网站, 个人网站, 初学者
+
+  Do NOT use for: fullstack apps with backend, authentication features, or database needs.
 agent: starter-guide
 allowed-tools:
   - Read

@@ -1,21 +1,36 @@
 ---
 template: design
-version: 1.0
-description: PDCA Design phase document template (between Plan and Do)
+version: 1.2
+description: PDCA Design phase document template (between Plan and Do) with Clean Architecture and Convention support
 variables:
   - feature: Feature name
   - date: Creation date (YYYY-MM-DD)
   - author: Author
+  - project: Project name (from package.json or CLAUDE.md)
+  - version: Project version (from package.json)
 ---
 
 # {feature} Design Document
 
 > **Summary**: {One-line description}
 >
+> **Project**: {project}
+> **Version**: {version}
 > **Author**: {author}
 > **Date**: {date}
 > **Status**: Draft
 > **Planning Doc**: [{feature}.plan.md](../01-plan/features/{feature}.plan.md)
+
+### Pipeline References (if applicable)
+
+| Phase | Document | Status |
+|-------|----------|--------|
+| Phase 1 | [Schema Definition](../01-plan/schema.md) | ✅/❌/N/A |
+| Phase 2 | [Coding Conventions](../01-plan/conventions.md) | ✅/❌/N/A |
+| Phase 3 | [Mockup](../02-design/mockup/{feature}.md) | ✅/❌/N/A |
+| Phase 4 | [API Spec](../02-design/api/{feature}.md) | ✅/❌/N/A |
+
+> **Note**: If Pipeline documents exist, reference them in the relevant sections below.
 
 ---
 
@@ -216,9 +231,116 @@ Home → Login → Dashboard → Use Feature → View Results
 
 ---
 
-## 9. Implementation Guide
+## 9. Clean Architecture
 
-### 9.1 File Structure
+> Reference: `docs/01-plan/conventions.md` or Phase 2 Pipeline output
+
+### 9.1 Layer Structure
+
+| Layer | Responsibility | Location |
+|-------|---------------|----------|
+| **Presentation** | UI components, hooks, pages | `src/components/`, `src/hooks/`, `src/app/` |
+| **Application** | Use cases, services, business logic orchestration | `src/services/`, `src/features/*/hooks/` |
+| **Domain** | Entities, types, core business rules | `src/types/`, `src/domain/` |
+| **Infrastructure** | API clients, DB, external services | `src/lib/`, `src/api/` |
+
+### 9.2 Dependency Rules
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Dependency Direction                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Presentation ──→ Application ──→ Domain ←── Infrastructure│
+│                          │                                  │
+│                          └──→ Infrastructure                │
+│                                                             │
+│   Rule: Inner layers MUST NOT depend on outer layers        │
+│         Domain is independent (no external dependencies)    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 9.3 File Import Rules
+
+| From | Can Import | Cannot Import |
+|------|-----------|---------------|
+| Presentation | Application, Domain | Infrastructure directly |
+| Application | Domain, Infrastructure | Presentation |
+| Domain | Nothing external (pure types/logic) | All external layers |
+| Infrastructure | Domain only | Application, Presentation |
+
+### 9.4 This Feature's Layer Assignment
+
+| Component | Layer | Location |
+|-----------|-------|----------|
+| {ComponentA} | Presentation | `src/components/{feature}/` |
+| {ServiceA} | Application | `src/services/{feature}.ts` |
+| {TypeA} | Domain | `src/types/{feature}.ts` |
+| {ApiClient} | Infrastructure | `src/lib/api/{feature}.ts` |
+
+---
+
+## 10. Coding Convention Reference
+
+> Reference: `docs/01-plan/conventions.md` or Phase 2 Pipeline output
+
+### 10.1 Naming Conventions
+
+| Target | Rule | Example |
+|--------|------|---------|
+| Components | PascalCase | `UserProfile`, `LoginForm` |
+| Functions | camelCase | `getUserById()`, `handleSubmit()` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `API_BASE_URL` |
+| Types/Interfaces | PascalCase | `UserProfile`, `ApiResponse` |
+| Files (component) | PascalCase.tsx | `UserProfile.tsx` |
+| Files (utility) | camelCase.ts | `formatDate.ts` |
+| Folders | kebab-case | `user-profile/`, `auth-provider/` |
+
+### 10.2 Import Order
+
+```typescript
+// 1. External libraries
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
+// 2. Internal absolute imports
+import { Button } from '@/components/ui'
+import { userService } from '@/services/user'
+
+// 3. Relative imports
+import { useLocalState } from './hooks'
+
+// 4. Type imports
+import type { User } from '@/types'
+
+// 5. Styles
+import './styles.css'
+```
+
+### 10.3 Environment Variables
+
+| Prefix | Purpose | Scope | Example |
+|--------|---------|-------|---------|
+| `NEXT_PUBLIC_` | Client-side accessible | Browser | `NEXT_PUBLIC_API_URL` |
+| `DB_` | Database connections | Server only | `DB_HOST`, `DB_PASSWORD` |
+| `API_` | External API keys | Server only | `API_STRIPE_SECRET` |
+| `AUTH_` | Authentication secrets | Server only | `AUTH_SECRET`, `AUTH_GOOGLE_ID` |
+
+### 10.4 This Feature's Conventions
+
+| Item | Convention Applied |
+|------|-------------------|
+| Component naming | {convention used} |
+| File organization | {convention used} |
+| State management | {convention used} |
+| Error handling | {convention used} |
+
+---
+
+## 11. Implementation Guide
+
+### 11.1 File Structure
 
 ```
 src/
@@ -229,7 +351,7 @@ src/
 │   └── types/
 ```
 
-### 9.2 Implementation Order
+### 11.2 Implementation Order
 
 1. [ ] Define data model
 2. [ ] Implement API

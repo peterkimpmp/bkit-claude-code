@@ -4,7 +4,16 @@ description: |
   Skill for designing and implementing backend APIs.
   Includes Zero Script QA methodology for validating APIs without test scripts.
 
+  Use proactively when user needs to design or implement backend APIs.
+
   Triggers: API design, REST API, backend, endpoint, API 설계, API設計, API设计
+
+  Do NOT use for: frontend-only projects, static websites, or Starter level projects.
+hooks:
+  Stop:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/phase4-api-stop.sh"
 agent: qa-monitor
 allowed-tools:
   - Read

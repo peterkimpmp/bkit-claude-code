@@ -4,7 +4,16 @@ description: |
   Design-implementation gap analysis, code quality analysis, and report writing patterns.
   Used in PDCA Check phase for verification and quality assurance.
 
+  Use proactively when user needs to verify implementation against design documents.
+
   Triggers: gap analysis, code review, quality check, 설계-구현 분석, ギャップ分析, 差距分析
+
+  Do NOT use for: initial development, design phase, or deployment tasks.
+hooks:
+  Stop:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/analysis-stop.sh"
 context: fork
 agent: code-analyzer
 allowed-tools:

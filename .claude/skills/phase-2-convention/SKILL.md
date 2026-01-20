@@ -4,7 +4,17 @@ description: |
   Skill for defining coding rules and conventions.
   Ensures consistent code style and specifies coding standards for AI collaboration.
 
+  Use proactively when starting a new project or when coding standards are needed.
+
   Triggers: convention, coding style, naming rules, 컨벤션, コンベンション, 编码风格
+
+  Do NOT use for: existing projects with established conventions, deployment, or testing.
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/phase2-convention-pre.sh"
 agent: pipeline-guide
 allowed-tools:
   - Read

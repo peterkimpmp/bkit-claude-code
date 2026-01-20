@@ -1,20 +1,33 @@
 ---
 template: analysis
-version: 1.0
-description: PDCA Check phase document template (design-implementation analysis)
+version: 1.2
+description: PDCA Check phase document template with Clean Architecture and Convention compliance checks
 variables:
   - feature: Feature name
   - date: Creation date (YYYY-MM-DD)
   - author: Author
+  - project: Project name (from package.json or CLAUDE.md)
+  - version: Project version (from package.json)
 ---
 
 # {feature} Analysis Report
 
 > **Analysis Type**: Gap Analysis / Code Quality / Performance Analysis
 >
+> **Project**: {project}
+> **Version**: {version}
 > **Analyst**: {author}
 > **Date**: {date}
 > **Design Doc**: [{feature}.design.md](../02-design/features/{feature}.design.md)
+
+### Pipeline References (for verification)
+
+| Phase | Document | Verification Target |
+|-------|----------|---------------------|
+| Phase 1 | [Schema](../01-plan/schema.md) | Terminology consistency |
+| Phase 2 | [Conventions](../01-plan/conventions.md) | Convention compliance |
+| Phase 4 | [API Spec](../02-design/api/{feature}.md) | API implementation match |
+| Phase 8 | [Review Checklist](./phase-8-review.md) | Architecture/Convention review |
 
 ---
 
@@ -136,39 +149,146 @@ variables:
 
 ---
 
-## 6. Overall Score
+## 6. Clean Architecture Compliance
+
+> Reference: `docs/02-design/{feature}.design.md` Section 9 (Clean Architecture)
+
+### 6.1 Layer Dependency Verification
+
+| Layer | Expected Dependencies | Actual Dependencies | Status |
+|-------|----------------------|---------------------|--------|
+| Presentation | Application, Domain | {actual imports} | ✅/❌ |
+| Application | Domain, Infrastructure | {actual imports} | ✅/❌ |
+| Domain | None (independent) | {actual imports} | ✅/❌ |
+| Infrastructure | Domain only | {actual imports} | ✅/❌ |
+
+### 6.2 Dependency Violations
+
+| File | Layer | Violation | Recommendation |
+|------|-------|-----------|----------------|
+| `components/UserList.tsx` | Presentation | Imports `@/lib/api` directly | Use service hook instead |
+| `services/user.ts` | Application | Imports `@/components/Button` | Remove UI dependency |
+| - | - | - | - |
+
+### 6.3 Layer Assignment Verification
+
+| Component | Designed Layer | Actual Location | Status |
+|-----------|---------------|-----------------|--------|
+| {ComponentA} | Presentation | `src/components/{feature}/` | ✅ |
+| {ServiceA} | Application | `src/services/{feature}.ts` | ✅ |
+| {TypeA} | Domain | `src/types/{feature}.ts` | ✅ |
+| {ApiClient} | Infrastructure | `src/lib/api/{feature}.ts` | ✅ |
+
+### 6.4 Architecture Score
 
 ```
 ┌─────────────────────────────────────────────┐
-│  Overall Score: 72/100                       │
+│  Architecture Compliance: 85%                │
 ├─────────────────────────────────────────────┤
-│  Design Match:     75 points                 │
-│  Code Quality:     70 points                 │
-│  Security:         65 points                 │
-│  Testing:          70 points                 │
-│  Performance:      80 points                 │
+│  ✅ Correct layer placement: 17/20 files     │
+│  ⚠️ Dependency violations:   2 files         │
+│  ❌ Wrong layer:              1 file         │
 └─────────────────────────────────────────────┘
 ```
 
 ---
 
-## 7. Recommended Actions
+## 7. Convention Compliance
 
-### 7.1 Immediate (within 24 hours)
+> Reference: `docs/01-plan/conventions.md` or Phase 2 Pipeline output
+
+### 7.1 Naming Convention Check
+
+| Category | Convention | Files Checked | Compliance | Violations |
+|----------|-----------|:-------------:|:----------:|------------|
+| Components | PascalCase | 15 | 100% | - |
+| Functions | camelCase | 42 | 98% | `GetUser` → `getUser` |
+| Constants | UPPER_SNAKE_CASE | 8 | 100% | - |
+| Files (component) | PascalCase.tsx | 15 | 93% | `userProfile.tsx` → `UserProfile.tsx` |
+| Files (utility) | camelCase.ts | 12 | 100% | - |
+| Folders | kebab-case | 10 | 90% | `userProfile/` → `user-profile/` |
+
+### 7.2 Folder Structure Check
+
+| Expected Path | Exists | Contents Correct | Notes |
+|---------------|:------:|:----------------:|-------|
+| `src/components/` | ✅ | ✅ | |
+| `src/features/{feature}/` | ✅ | ✅ | |
+| `src/services/` | ✅ | ⚠️ | Some services in features/ |
+| `src/types/` | ✅ | ✅ | |
+| `src/lib/` | ✅ | ✅ | |
+
+### 7.3 Import Order Check
+
+- [x] External libraries first
+- [x] Internal absolute imports second (`@/...`)
+- [ ] Relative imports third (`./...`)
+- [x] Type imports fourth (`import type`)
+- [x] Styles last
+
+**Violations Found:**
+| File | Issue | Line |
+|------|-------|------|
+| `components/Header.tsx` | Type import before relative import | L5-6 |
+
+### 7.4 Environment Variable Check
+
+| Variable | Convention | Actual | Status |
+|----------|-----------|--------|--------|
+| API URL | `NEXT_PUBLIC_API_URL` | `NEXT_PUBLIC_API_URL` | ✅ |
+| DB Host | `DB_HOST` | `DATABASE_HOST` | ⚠️ Non-standard |
+| Auth Secret | `AUTH_SECRET` | `AUTH_SECRET` | ✅ |
+
+### 7.5 Convention Score
+
+```
+┌─────────────────────────────────────────────┐
+│  Convention Compliance: 92%                  │
+├─────────────────────────────────────────────┤
+│  Naming:          95%                        │
+│  Folder Structure: 90%                       │
+│  Import Order:     88%                       │
+│  Env Variables:    95%                       │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## 8. Overall Score
+
+```
+┌─────────────────────────────────────────────┐
+│  Overall Score: 78/100                       │
+├─────────────────────────────────────────────┤
+│  Design Match:        75 points              │
+│  Code Quality:        70 points              │
+│  Security:            65 points              │
+│  Testing:             70 points              │
+│  Performance:         80 points              │
+│  Architecture:        85 points (New)        │
+│  Convention:          92 points (New)        │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## 9. Recommended Actions
+
+### 9.1 Immediate (within 24 hours)
 
 | Priority | Item | File | Assignee |
 |----------|------|------|----------|
 | 🔴 1 | Remove hardcoded secret | auth.ts:42 | - |
 | 🔴 2 | Add input validation | api.ts:15 | - |
 
-### 7.2 Short-term (within 1 week)
+### 9.2 Short-term (within 1 week)
 
 | Priority | Item | File | Expected Impact |
 |----------|------|------|-----------------|
 | 🟡 1 | Fix N+1 query | repository.ts | 60% response time reduction |
 | 🟡 2 | Split function | service.ts | Improved maintainability |
 
-### 7.3 Long-term (backlog)
+### 9.3 Long-term (backlog)
 
 | Item | File | Notes |
 |------|------|-------|
@@ -177,7 +297,7 @@ variables:
 
 ---
 
-## 8. Design Document Updates Needed
+## 10. Design Document Updates Needed
 
 The following items require design document updates to match implementation:
 
@@ -187,7 +307,7 @@ The following items require design document updates to match implementation:
 
 ---
 
-## 9. Next Steps
+## 11. Next Steps
 
 - [ ] Fix Critical issues
 - [ ] Update design document

@@ -4,7 +4,17 @@ description: |
   Skill for deploying to production environment.
   Covers CI/CD, environment configuration, and deployment strategies.
 
+  Use proactively when user is ready to deploy or asks about production environment setup.
+
   Triggers: deployment, CI/CD, production, Vercel, Kubernetes, Docker, 배포, デプロイ, 部署
+
+  Do NOT use for: local development, design phase, or feature implementation.
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/phase9-deploy-pre.sh"
 agent: infra-architect
 allowed-tools:
   - Read

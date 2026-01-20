@@ -4,7 +4,11 @@ description: |
   Evaluator-Optimizer pattern knowledge for automatic iteration cycles.
   Implements Anthropic's agent architecture pattern for continuous improvement.
 
+  Use proactively when quality criteria are not met and iteration is needed.
+
   Triggers: evaluator-optimizer, iteration pattern, 평가-최적화, 評価最適化, 评估优化
+
+  Do NOT use for: simple fixes, one-time tasks, or when quality targets are already met.
 context: fork
 agent: pdca-iterator
 allowed-tools:

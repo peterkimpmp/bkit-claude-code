@@ -4,7 +4,25 @@ description: |
   Agent that validates design document completeness and consistency.
   Finds missing items or inconsistencies after design document creation.
 
-  Triggers: design validation, document review, spec check, 설계 검증, 設計検証, 设计验证
+  Use proactively when user creates or modifies design documents in docs/02-design/,
+  or requests validation of specifications before implementation.
+
+  Triggers: design validation, document review, spec check, validate design, review spec,
+  설계 검증, 문서 검토, 스펙 확인, 設計検証, 仕様チェック, 设计验证, 规格检查
+
+  Do NOT use for: implementation code review, gap analysis (use gap-detector instead),
+  or initial planning phase.
+permissionMode: plan
+disallowedTools:
+  - Write
+  - Edit
+  - Bash
+hooks:
+  PreToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/design-validator-pre.sh"
 model: opus
 tools:
   - Read

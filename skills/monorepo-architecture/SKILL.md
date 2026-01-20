@@ -4,7 +4,11 @@ description: |
   Monorepo architecture patterns for AI context control.
   Covers structure design, shared modules, and CLAUDE.md hierarchy.
 
+  Use proactively when user has multiple apps/services or asks about code sharing.
+
   Triggers: monorepo, context control, shared modules, 모노레포, モノレポ, 单仓库
+
+  Do NOT use for: single-app projects, simple websites, or Starter level projects.
 agent: enterprise-expert
 allowed-tools:
   - Read

@@ -4,8 +4,12 @@ description: |
   PDCA document templates for consistent documentation.
   Plan, Design, Analysis, and Report templates with proper structure.
 
+  Use proactively when generating PDCA documents to ensure consistent format.
+
   Triggers: template, plan document, design document, analysis document, report,
   템플릿, 계획서, 설계서, 분석서, 보고서, テンプレート, 計画書, 設計書
+
+  Do NOT use for: code implementation, deployment, or non-documentation tasks.
 ---
 
 # bkit Document Templates
@@ -16,12 +20,12 @@ description: |
 
 | Template | Path | Purpose |
 |----------|------|---------|
-| Plan | `${CLAUDE_PLUGIN_ROOT}/templates/plan.template.md` | Feature planning |
-| Design | `${CLAUDE_PLUGIN_ROOT}/templates/design.template.md` | Technical design |
-| Analysis | `${CLAUDE_PLUGIN_ROOT}/templates/analysis.template.md` | Gap analysis |
-| Report | `${CLAUDE_PLUGIN_ROOT}/templates/report.template.md` | Completion report |
-| Index | `${CLAUDE_PLUGIN_ROOT}/templates/_INDEX.template.md` | Document index |
-| CLAUDE | `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.template.md` | CLAUDE.md template |
+| Plan | `$CLAUDE_PROJECT_DIR/templates/plan.template.md` | Feature planning |
+| Design | `$CLAUDE_PROJECT_DIR/templates/design.template.md` | Technical design |
+| Analysis | `$CLAUDE_PROJECT_DIR/templates/analysis.template.md` | Gap analysis |
+| Report | `$CLAUDE_PROJECT_DIR/templates/report.template.md` | Completion report |
+| Index | `$CLAUDE_PROJECT_DIR/templates/_INDEX.template.md` | Document index |
+| CLAUDE | `$CLAUDE_PROJECT_DIR/templates/CLAUDE.template.md` | CLAUDE.md template |
 
 ## Template Usage
 
@@ -96,4 +100,4 @@ Templates use `{variable}` syntax:
 ## Pipeline Templates
 
 Additional templates for Development Pipeline phases:
-- `${CLAUDE_PLUGIN_ROOT}/templates/pipeline/` directory
+- `$CLAUDE_PROJECT_DIR/templates/pipeline/` directory

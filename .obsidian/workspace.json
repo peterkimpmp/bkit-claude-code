@@ -1,0 +1,247 @@
+{
+  "main": {
+    "id": "72c2d134dbc22916",
+    "type": "split",
+    "children": [
+      {
+        "id": "c5ed7a89f7f87edd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5a2a57be4d939796",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          },
+          {
+            "id": "dabb434299855c3f",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "그래프 뷰"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c387fb5928c858d1",
+    "type": "split",
+    "children": [
+      {
+        "id": "2f345649bb7c7a7e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8b8fb81a162f8dd6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "d47d1c654312457a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "8aa1a845cfa42897",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d0ba65906f7174ff",
+    "type": "split",
+    "children": [
+      {
+        "id": "7b9fa4c0be8f3485",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9e56b9d4c2168b15",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "09576f3c6237bb77",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "나가는 링크"
+            }
+          },
+          {
+            "id": "50d596431dcd6705",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "120cfe71e3eaa7d1",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "430f8ffc4146e4af",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "README 의 개요"
+            }
+          },
+          {
+            "id": "cc2b5ca9fceb248c",
+            "type": "leaf",
+            "state": {
+              "type": "claudian-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Claudian"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 496.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false,
+      "obsidian42-brat:BRAT": false,
+      "claudian:Open Claudian": false
+    }
+  },
+  "active": "dabb434299855c3f",
+  "lastOpenFiles": [
+    "docs/01-plan/05-CLEAN-ARCHITECTURE-REFACTORING-PLAN.md",
+    "docs/03-analysis/05-clean-architecture-refactoring-analysis.md",
+    "test/README.md",
+    "test/COMPLETION-CHECKLIST.md",
+    "test/IMPLEMENTATION-SUMMARY.md",
+    "test/ZERO-SCRIPT-QA-SKILL-GUIDE.md",
+    "test/ZERO-SCRIPT-QA-ANALYSIS.md",
+    "test/src/features/payment/checkout.ts",
+    "test/src/features/payment",
+    "bkit-system/phase-4-api.md",
+    "test/firebase-debug.log",
+    "test/src/features/auth/login.ts",
+    "test/docs/02-design/features/auth.design.md",
+    "test/package.json",
+    "test/docs/02-design/features",
+    "test/docs/01-plan/features",
+    "test/docs/03-analysis",
+    "test/docs/02-design",
+    "test/docs/01-plan",
+    "bkit-system/testing/test-checklist.md",
+    "bkit-system/scenarios/scenario-qa.md",
+    "bkit-system/scenarios/scenario-new-feature.md",
+    "bkit-system/scenarios/scenario-write-code.md",
+    "bkit-system/components/scripts/_scripts-overview.md",
+    "bkit-system/components/hooks/_hooks-overview.md",
+    "bkit-system/components/agents/_agents-overview.md",
+    "bkit-system/components/skills/_skills-overview.md",
+    "bkit-system/triggers/priority-rules.md",
+    "bkit-system/triggers/trigger-matrix.md",
+    "bkit-system/_GRAPH-INDEX.md",
+    "bkit-system/README.md",
+    "docs/03-analysis/04-codebase-comprehensive-gap-analysis.md",
+    "docs/03-analysis/02-bkit-automation-improvement.analysis.md",
+    "docs/03-analysis/00-CLAUDE-CODE-HOOKS-ANALYSIS.md",
+    "docs/03-analysis/01-HOOKS-FIX-PLAN-2026-01-19.md",
+    "docs/02-design/01-hooks-simplification.design.md",
+    "무제.canvas"
+  ]
+}

@@ -1,17 +1,21 @@
 ---
 template: report
-version: 1.0
+version: 1.1
 description: PDCA Act phase document template (completion report)
 variables:
   - feature: Feature name
   - date: Creation date (YYYY-MM-DD)
   - author: Author
+  - project: Project name (from package.json or CLAUDE.md)
+  - version: Project version (from package.json)
 ---
 
 # {feature} Completion Report
 
 > **Status**: Complete / Partial / Cancelled
 >
+> **Project**: {project}
+> **Version**: {version}
 > **Author**: {author}
 > **Completion Date**: {date}
 > **PDCA Cycle**: #{cycle_number}

@@ -4,9 +4,13 @@ description: |
   Fullstack development skill using bkend.ai BaaS platform.
   Covers authentication, data storage, API integration for dynamic web apps.
 
+  Use proactively when user needs login, database, or backend features without managing servers.
+
   Triggers: fullstack, BaaS, bkend, authentication, login feature, signup, database,
   web app, SaaS, MVP, 풀스택, 인증, 로그인 기능, 회원가입, 데이터베이스, 웹앱,
   フルスタック, 認証, ログイン機能, データベース, 全栈, 身份验证, 登录功能
+
+  Do NOT use for: static websites, Enterprise-grade systems requiring custom infrastructure.
 agent: bkend-expert
 allowed-tools:
   - Read

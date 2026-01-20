@@ -4,7 +4,11 @@ description: |
   AI Native development methodology for building Enterprise-grade systems rapidly.
   Covers 10-day development patterns, document-first design, and AI collaboration workflows.
 
+  Use proactively when user wants to build complex systems with AI collaboration methodology.
+
   Triggers: AI native, 10-day, enterprise development, 엔터프라이즈, AI協業, AI协作
+
+  Do NOT use for: simple projects, Starter level, or non-development AI tasks.
 agent: enterprise-expert
 allowed-tools:
   - Read

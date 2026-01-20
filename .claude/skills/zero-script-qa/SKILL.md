@@ -16,11 +16,11 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/qa-pre-bash.sh"
+          command: "$CLAUDE_PROJECT_DIR/scripts/qa-pre-bash.sh"
   Stop:
     - hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/qa-stop.sh"
+          command: "$CLAUDE_PROJECT_DIR/scripts/qa-stop.sh"
 ---
 
 # Zero Script QA Expert Knowledge

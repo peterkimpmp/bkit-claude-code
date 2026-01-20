@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-v2.1.1+-purple.svg)](https://code.claude.com)
+[![Version](https://img.shields.io/badge/Version-1.2.0-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Claude Code mastery for AI-native development**
@@ -22,8 +23,9 @@ bkit is a Claude Code plugin that transforms how you build software with AI. It 
 - **3 Project Levels** - Starter (static), Dynamic (fullstack), Enterprise (microservices)
 - **Multilingual Support** - 8 languages (EN, KO, JA, ZH, ES, FR, DE, IT)
 - **18 Commands** - Automate common development tasks
-- **24 Skills** - Domain-specific knowledge for various development scenarios
+- **26 Skills** - Domain-specific knowledge for various development scenarios
 - **11 Agents** - Specialized AI assistants for different tasks
+- **Skills Frontmatter Hooks** - Automatic triggers based on context (v1.2.0+)
 
 ---
 
@@ -181,6 +183,7 @@ bkit is **primarily designed for software development**. However, some component
 
 ## Documentation
 
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
 - **[Architecture & User Journey](docs/00-ARCHITECTURE.md)** - Complete system analysis and user experience guide
 - **[AI-Native Transformation](docs/AI-NATIVE-TRANSFORMATION.md)** - Business value analysis for C-Level executives
 - **[AI-Native Development Methodology](AI-NATIVE-DEVELOPMENT.md)** - How bkit realizes AI-Native development principles

@@ -4,7 +4,16 @@ description: |
   Skill for verifying overall codebase quality.
   Covers architecture consistency, convention compliance, and potential issue detection.
 
+  Use proactively when implementation is complete and quality verification is needed.
+
   Triggers: code review, architecture review, quality check, refactoring, 코드 리뷰, コードレビュー, 代码审查
+
+  Do NOT use for: initial development, design phase, or deployment tasks.
+hooks:
+  Stop:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/scripts/phase8-review-stop.sh"
 agent: code-analyzer
 allowed-tools:
   - Read

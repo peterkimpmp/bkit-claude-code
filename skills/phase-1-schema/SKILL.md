@@ -4,7 +4,11 @@ description: |
   Skill for defining terminology and data structures used throughout the project.
   Covers domain terminology, entities, relationships, and schema design.
 
+  Use proactively when starting a new project or when data structures are unclear.
+
   Triggers: schema, terminology, data model, entity, 스키마, 用語, データモデル, 数据模型
+
+  Do NOT use for: UI-only changes, deployment, or when schema is already defined.
 agent: pipeline-guide
 allowed-tools:
   - Read

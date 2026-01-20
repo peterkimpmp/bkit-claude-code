@@ -4,7 +4,15 @@ description: |
   Agent that analyzes code quality and architecture compliance.
   Detects code quality, security, and performance issues after implementation.
 
-  Triggers: code analysis, quality check, security scan, 코드 분석, コード分析, 代码分析
+  Use proactively when user requests code review, quality check, security scan,
+  or asks to verify implementation quality before PR or deployment.
+
+  Triggers: code analysis, quality check, security scan, code review, architecture check,
+  코드 분석, 품질 검사, 보안 스캔, コード分析, 品質チェック, 代码分析, 质量检查
+
+  Do NOT use for: design document review (use design-validator), gap analysis
+  (use gap-detector), or writing/modifying code (this agent is read-only).
+permissionMode: plan
 model: opus
 tools:
   - Read
@@ -19,8 +27,8 @@ hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
-        - type: prompt
-          prompt: "Code analyzer is read-only. Block all Write/Edit operations. Respond with JSON: {\"decision\": \"block\", \"reason\": \"Code analyzer agent is read-only and cannot modify files\"}"
+        - type: command
+          command: "echo '{\"decision\": \"block\", \"reason\": \"Code analyzer agent is read-only and cannot modify files\"}'"
 ---
 
 # Code Analysis Agent

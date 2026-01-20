@@ -328,12 +328,12 @@ Keep under 500 lines for optimal performance.
 
 ### 3.4 Path Portability
 
-> ⚠️ **CRITICAL**: Always use `${CLAUDE_PLUGIN_ROOT}` for file references within plugins.
+> ⚠️ **CRITICAL**: Always use `$CLAUDE_PROJECT_DIR` for file references within plugins.
 
 ```bash
 # ✅ Correct
-${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh
-${CLAUDE_PLUGIN_ROOT}/references/guide.md
+$CLAUDE_PROJECT_DIR/scripts/setup.sh
+$CLAUDE_PROJECT_DIR/references/guide.md
 
 # ❌ Incorrect - will break after installation
 /Users/kay/plugins/bkit/scripts/setup.sh
@@ -774,7 +774,7 @@ claude --plugin-dir ./bkit
 - ❌ Removed unsupported `permissions` field from plugin.json
 - 🔄 Updated installation commands to use `/plugin install`
 - 📝 Added SKILL.md constraints (name: 64 chars, description: 1024 chars)
-- 📝 Added ${CLAUDE_PLUGIN_ROOT} path requirement
+- 📝 Added $CLAUDE_PROJECT_DIR path requirement
 - 📝 Added comprehensive official documentation references
 - 📝 Updated agents count from 9 to 10
 

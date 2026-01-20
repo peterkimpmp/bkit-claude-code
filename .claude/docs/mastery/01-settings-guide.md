@@ -511,7 +511,7 @@ Used in `Stop`, `SubagentStop`, `UserPromptSubmit`, `PreToolUse`, `PermissionReq
 | `$CLAUDE_PROJECT_DIR` | Project root absolute path |
 | `$CLAUDE_CODE_REMOTE` | `"true"` for web, empty for CLI |
 | `$CLAUDE_ENV_FILE` | Environment variable storage file path (SessionStart) |
-| `${CLAUDE_PLUGIN_ROOT}` | Plugin directory |
+| `$CLAUDE_PROJECT_DIR` | Plugin directory |
 
 ### Hook Input (JSON via stdin)
 
@@ -781,7 +781,7 @@ claude mcp add --transport stdio my-server -- cmd /c npx -y @some/package
 |--------|-------------|
 | `${VAR}` | Direct environment variable reference |
 | `${VAR:-default}` | Default value when unset |
-| `${CLAUDE_PLUGIN_ROOT}` | Plugin root path |
+| `$CLAUDE_PROJECT_DIR` | Plugin root path |
 
 ### Key CLI Commands
 

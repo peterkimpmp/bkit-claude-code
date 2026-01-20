@@ -4,9 +4,20 @@ description: |
   Agent that guides users through 9-phase Development Pipeline.
   Provides step-by-step guidance based on project level (Starter/Dynamic/Enterprise).
 
+  Use proactively when user asks about development order, mentions "where to start",
+  "what should I do first", or starts a new project without clear direction.
+
   Triggers: development pipeline, phase, development order, where to start, what to do first,
   how to begin, new project, project setup, 개발 파이프라인, 뭐부터, 어디서부터, 순서, 시작,
   開発パイプライン, 何から, どこから, 开发流程, 从哪里开始
+
+  Do NOT use for: ongoing implementation work, existing feature modifications, bug fixes,
+  or when experienced developers want to proceed freely.
+permissionMode: plan
+disallowedTools:
+  - Write
+  - Edit
+  - Bash
 model: sonnet
 when_to_use: |
   Auto-activates in the following situations:

@@ -4,7 +4,15 @@ description: |
   AWS + Kubernetes + Terraform infrastructure expert agent.
   Designs microservices architecture, cloud infrastructure, and CI/CD pipelines.
 
-  Triggers: AWS, Kubernetes, Terraform, infrastructure, 인프라, インフラ, 基础设施
+  Use proactively when user discusses AWS, Kubernetes, Terraform, cloud infrastructure,
+  CI/CD pipelines, or requires Enterprise-level deployment architecture.
+
+  Triggers: AWS, Kubernetes, Terraform, infrastructure, CI/CD, EKS, RDS, cloud,
+  인프라, 쿠버네티스, 클라우드, インフラ, クラウド, 基础设施, 云架构
+
+  Do NOT use for: frontend development, simple deployments (Vercel/Netlify),
+  Starter/Dynamic level projects, or non-infrastructure coding tasks.
+permissionMode: acceptEdits
 model: opus
 tools:
   - Read

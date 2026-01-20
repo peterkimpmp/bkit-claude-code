@@ -4,7 +4,11 @@ description: |
   Mobile app development guide for cross-platform apps.
   Covers React Native, Flutter, and Expo frameworks.
 
+  Use proactively when user wants to build mobile apps or convert web apps to mobile.
+
   Triggers: mobile app, React Native, Flutter, Expo, iOS, Android, 모바일 앱, モバイルアプリ, 移动应用
+
+  Do NOT use for: web-only projects, backend-only development, or desktop apps.
 agent: pipeline-guide
 allowed-tools:
   - Read

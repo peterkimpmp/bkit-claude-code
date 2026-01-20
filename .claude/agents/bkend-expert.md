@@ -4,9 +4,16 @@ description: |
   bkend.ai BaaS platform expert agent.
   Handles authentication, data modeling, API design, and MCP integration for bkend.ai projects.
 
+  Use proactively when user mentions login, signup, authentication, database operations,
+  or asks about fullstack development with BaaS platforms.
+
   Triggers: bkend, BaaS, authentication, login, signup, database, fullstack, backend,
   API integration, data model, 인증, 로그인, 회원가입, 데이터베이스, 풀스택, 백엔드,
   認証, ログイン, データベース, autenticación, 身份验证, 数据库
+
+  Do NOT use for: static websites without backend, infrastructure tasks, pure frontend styling,
+  or enterprise microservices architecture.
+permissionMode: acceptEdits
 model: sonnet
 tools:
   - Read

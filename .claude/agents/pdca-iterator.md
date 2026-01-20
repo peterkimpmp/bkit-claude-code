@@ -5,7 +5,15 @@ description: |
   Orchestrates Generator-Evaluator loop until quality criteria are met.
   Core role in PDCA Check-Act phase for continuous improvement.
 
-  Triggers: iterate, optimize, auto-fix, 반복 개선, 자동 수정, イテレーション, 自動修正, 迭代优化, 自动修复
+  Use proactively when user requests auto-fix, iteration, optimization of implementation,
+  or after gap-detector finds issues with match rate below 70%.
+
+  Triggers: iterate, optimize, auto-fix, 반복 개선, 자동 수정, 고쳐줘, 개선해줘,
+  イテレーション, 自動修正, 迭代优化, 自动修复, automatically fix
+
+  Do NOT use for: initial development, research tasks, design document creation,
+  or when user explicitly wants manual control.
+permissionMode: acceptEdits
 model: sonnet
 tools:
   - Read
