@@ -8,36 +8,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2026-01-20
 
 ### Added
-- **Skills Frontmatter Hooks**: Added hooks directly in SKILL.md frontmatter for 4 priority skills
+- **Centralized Configuration**: Added `bkit.config.json` for centralized settings
+  - Task classification thresholds
+  - Level detection rules
+  - PDCA document paths
+  - Template configurations
+- **Shared Utilities**: Added `lib/common.sh` with reusable functions
+  - `get_config()`: Read values from bkit.config.json
+  - `is_source_file()`: Check if path is source code
+  - `extract_feature()`: Extract feature name from file path
+  - `classify_task()`: Classify task by content size
+  - `detect_level()`: Detect project level
+- **Customization Guide**: Added documentation for customizing plugin components
+  - Copy from `~/.claude/plugins/bkit/` to project `.claude/`
+  - Project-level overrides take priority over plugin defaults
+- **Skills Frontmatter Hooks**: Added hooks directly in SKILL.md frontmatter for priority skills
   - `bkit-rules`: SessionStart, PreToolUse (Write|Edit), Stop hooks
-  - `task-classification`: PreToolUse (Write|Edit) hook for task size detection
-  - `level-detection`: SessionStart hook for automatic project level detection
-  - `development-pipeline`: SessionStart hook for pipeline guidance
-- **New Shell Scripts**: Added 7 automation scripts
-  - `level-detect.sh`: Automatic project level detection (Starter/Dynamic/Enterprise)
-  - `pdca-pre-write.sh`: PDCA phase detection before Write/Edit
-  - `pdca-post-write.sh`: Gap analysis suggestion after implementation
+  - `bkit-templates`: Template selection automation
+- **New Shell Scripts**: Added automation scripts
+  - `pre-write.sh`: Unified pre-write hook combining PDCA and task classification
+  - `select-template.sh`: Template selection based on document type and level
   - `task-classify.sh`: Task size classification for PDCA guidance
-  - `gap-detector-post.sh`: Next steps after gap analysis
-  - `qa-pre-bash.sh`: Safe command validation for QA testing
-  - `qa-stop.sh`: QA session completion guidance
-- **Semantic Matching Enhancement**: Added "Use proactively when" and "Do NOT use for" patterns to all 22 skills
-- **Template Variables**: Added `{project}` and `{version}` variables to PDCA templates
-- **Pipeline Checklist**: Added validation checklist to zero-script-qa template
 
 ### Changed
-- **Zero Script QA Hooks**: Converted from `type: "prompt"` to `type: "command"` (per GitHub #13155)
-- **Document Standards**: Integrated timeline-awareness rules into document-standards skill
-- **Zero Script QA**: Integrated zero-script-qa-rules into skill with auto-apply rules
+- **Repository Structure**: Removed `.claude/` folder from version control
+  - Plugin elements now exist only at root level (single source of truth)
+  - Local development uses symlinks from `.claude/` to root
+  - Users customize by copying from `~/.claude/plugins/bkit/` to project `.claude/`
+- **Zero Script QA Hooks**: Converted from `type: "prompt"` to `type: "command"`
 - **Template Version**: Bumped PDCA templates from v1.0 to v1.1
 
-### Deprecated
-- **Instructions Folder**: `.claude/instructions/` is now deprecated
-  - Content migrated to respective skills with frontmatter hooks
-  - Files kept for backward compatibility
+### Removed
+- **Deprecated Skills**: Consolidated redundant skills into core skills
+  - `ai-native-development` → merged into `bkit-rules`
+  - `analysis-patterns` → merged into `bkit-templates`
+  - `document-standards` → merged into `bkit-templates`
+  - `evaluator-optimizer` → available via `/pdca-iterate` command
+  - `level-detection` → moved to `lib/common.sh`
+  - `monorepo-architecture` → merged into `enterprise`
+  - `pdca-methodology` → merged into `bkit-rules`
+  - `task-classification` → moved to `lib/common.sh`
+- **Instructions Folder**: Removed deprecated `.claude/instructions/`
+  - Content migrated to respective skills
 
 ### Fixed
-- **Folder Sync**: All skills, templates now synced between `.claude/` and root
+- **Single Source of Truth**: Eliminated dual maintenance between root and `.claude/` folders
 
 ## [1.1.4] - 2026-01-15
 

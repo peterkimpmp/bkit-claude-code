@@ -99,20 +99,6 @@ Keep your plugins up-to-date automatically by configuring auto-update in your se
 - Press `r` to remove a marketplace
 - Use `Space` to toggle plugin selection in Discover view
 
-### Option 2: Manual Installation
-
-For development or customization purposes:
-
-```bash
-# Clone this repository
-git clone https://github.com/popup-studio-ai/bkit-claude-code.git
-
-# Copy .claude folder to your project
-cp -r bkit-claude-code/.claude your-project/
-```
-
-> **Note**: Manual installation requires manual updates. Marketplace installation is recommended for automatic updates.
-
 ### Plugin Structure
 
 ```
@@ -124,9 +110,61 @@ bkit-claude-code/
 ├── agents/                  # Specialized AI agents
 ├── skills/                  # Domain knowledge
 ├── hooks/                   # Event hooks (hooks.json)
+├── scripts/                 # Hook scripts
+├── lib/                     # Shared utilities
 ├── templates/               # Document templates
-└── .claude/                 # Source files (also works standalone)
+└── bkit.config.json         # Centralized configuration
 ```
+
+> **Note**: The `.claude/` folder is not included in this repository. Plugin elements are located at the root level.
+
+---
+
+## Customization
+
+After installing bkit via the marketplace, you can customize any component by copying it to your project's `.claude/` folder.
+
+### How It Works
+
+Claude Code searches for configuration files in this priority order:
+1. **Project `.claude/`** (highest priority - your customizations)
+2. **User `~/.claude/`**
+3. **Plugin installation** (default)
+
+### Customization Steps
+
+```bash
+# Step 1: Find the plugin installation location
+ls ~/.claude/plugins/bkit/
+
+# Step 2: Copy only the files you want to customize
+mkdir -p .claude/skills/starter
+cp ~/.claude/plugins/bkit/skills/starter/SKILL.md .claude/skills/starter/
+
+# Step 3: Edit the copied file in your project
+# Your project's .claude/skills/starter/SKILL.md will override the plugin's version
+
+# Step 4: Commit to version control (optional)
+git add .claude/
+git commit -m "feat: customize bkit starter skill"
+```
+
+### Available Components for Customization
+
+| Component | Location | Description |
+|-----------|----------|-------------|
+| **Commands** | `~/.claude/plugins/bkit/commands/` | Slash commands (e.g., `/pdca-plan`) |
+| **Skills** | `~/.claude/plugins/bkit/skills/` | Domain knowledge and context |
+| **Agents** | `~/.claude/plugins/bkit/agents/` | Specialized AI assistants |
+| **Templates** | `~/.claude/plugins/bkit/templates/` | Document templates |
+| **Scripts** | `~/.claude/plugins/bkit/scripts/` | Hook scripts |
+| **Config** | `~/.claude/plugins/bkit/bkit.config.json` | Central configuration |
+
+### Important Notes
+
+- **Customized files don't receive plugin updates.** When bkit is updated, your customized files remain unchanged while non-customized files are updated automatically.
+- **Check the [CHANGELOG](CHANGELOG.md)** periodically for updates that might affect your customizations.
+- **Delete a customized file** to revert to the plugin's default version.
 
 ---
 
@@ -187,9 +225,6 @@ bkit is **primarily designed for software development**. However, some component
 - **[Architecture & User Journey](docs/00-ARCHITECTURE.md)** - Complete system analysis and user experience guide
 - **[AI-Native Transformation](docs/AI-NATIVE-TRANSFORMATION.md)** - Business value analysis for C-Level executives
 - **[AI-Native Development Methodology](AI-NATIVE-DEVELOPMENT.md)** - How bkit realizes AI-Native development principles
-- [Getting Started](.claude/docs/setup/environment-setup.md)
-- [PDCA Methodology](.claude/docs/pdca/overview.md)
-- [Evaluator-Optimizer Pattern](skills/evaluator-optimizer/SKILL.md)
 - [Development Pipeline](skills/development-pipeline/SKILL.md)
 - [Commands Reference](commands/)
 - [Skills Reference](skills/)
