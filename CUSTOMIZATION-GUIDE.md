@@ -13,11 +13,13 @@ A comprehensive guide to customizing Claude Code plugins for your organization, 
 4. [Enterprise AI-Native Architecture](#4-enterprise-ai-native-architecture)
 
 **Part II: Plugin Architecture**
+
 5. [Understanding Plugin Architecture](#5-understanding-plugin-architecture)
 6. [Configuration Paths by Platform](#6-configuration-paths-by-platform)
 7. [Plugin Components Overview](#7-plugin-components-overview)
 
 **Part III: Customization Guide**
+
 8. [Customizing Agents](#8-customizing-agents)
 9. [Customizing Skills](#9-customizing-skills)
 10. [Customizing Commands](#10-customizing-commands)
@@ -26,6 +28,7 @@ A comprehensive guide to customizing Claude Code plugins for your organization, 
 13. [Organization-Specific Customization](#13-organization-specific-customization)
 
 **Part IV: Reference**
+
 14. [Best Practices](#14-best-practices)
 15. [License & Attribution](#15-license--attribution)
 
