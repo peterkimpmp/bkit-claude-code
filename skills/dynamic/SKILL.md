@@ -52,7 +52,7 @@ Deployment:
 - bkend.ai (backend)
 ```
 
-### Language Tier Guidance (v1.2.1)
+### Language Tier Guidance (v1.3.0)
 
 > **Recommended**: Tier 1-2 languages
 >

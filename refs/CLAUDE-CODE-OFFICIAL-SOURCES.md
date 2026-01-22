@@ -215,16 +215,32 @@ hooks: hooks.json
 
 ## 8. bkit Plugin Compatibility
 
-### Current bkit Version: 1.2.1
+### Current bkit Version: 1.3.0
 
 | Component | Count | Claude Code Compatibility |
 |-----------|-------|--------------------------|
-| Commands | 18 | v2.1.x ✅ |
+| Commands | 20 | v2.1.x ✅ |
 | Agents | 11 | v2.1.x ✅ |
 | Skills | 18 | v2.1.x ✅ |
 | Scripts | 19 | v2.1.x ✅ |
 | Templates | 20 | v2.1.x ✅ |
 | Hooks | 3 events | v2.1.x ✅ |
+
+### v1.3.0 Changes
+
+- **Check-Act Iteration Loop**: Automatic gap analysis and fix cycles
+  - pdca-iterator agent orchestrates evaluation-optimization loop
+  - Maximum 5 iterations per session with 90% pass threshold
+  - Auto-invoked when Match Rate < 90%
+- **SessionStart Enhancement**: AskUserQuestion integration for session initialization
+  - 4 options: Learn bkit, Learn Claude Code, Continue Previous Work, Start New Project
+- **Trigger Keyword Mapping**: Agent auto-triggering based on user keywords
+- **Task Size Rules**: PDCA application guidance based on change size
+- **New Commands**: /archive, /github-stats
+
+### v1.2.3 Changes
+
+- SessionStart hook with AskUserQuestion guidance
 
 ### v1.2.1 Changes
 

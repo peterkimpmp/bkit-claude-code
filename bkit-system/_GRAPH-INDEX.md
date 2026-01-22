@@ -9,6 +9,8 @@
 > **v1.2.1 Language Tier System**: AI-Native 개발 및 Vibe Coding 트렌드 반영한 4단계 언어 분류 체계
 >
 > **v1.2.3 SessionStart Enhancement**: AskUserQuestion guidance with 4 options for session initialization
+>
+> **v1.3.0 Check-Act Iteration Loop**: Automatic gap analysis and fix cycles with pdca-iterator agent
 
 ## Philosophy (3)
 
