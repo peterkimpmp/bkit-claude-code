@@ -117,7 +117,9 @@ After:  /learn-claude-code → Systematic training
 
 ---
 
-## Current Implementation (v1.2.1)
+## Current Implementation (v1.4.0)
+
+> **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 
 ### Component Counts
 
@@ -125,9 +127,10 @@ After:  /learn-claude-code → Systematic training
 |-----------|-------|----------|
 | Skills | 18 | `skills/*/SKILL.md` |
 | Agents | 11 | `agents/*.md` |
-| Commands | 18 | `commands/*.md` |
-| Scripts | 21 | `scripts/*.js` |
+| Commands | 20 (×2) | `commands/*.md` (Claude), `commands/gemini/*.toml` (Gemini) |
+| Scripts | 26 | `scripts/*.js` |
 | Templates | 20 | `templates/*.md` |
+| lib/common.js | 80+ functions | `lib/common.js` |
 
 ### Key Features
 

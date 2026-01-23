@@ -1,6 +1,8 @@
 # bkit System Architecture
 
 > Architecture guide documenting bkit plugin's internal structure and trigger system
+>
+> **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 
 ## Purpose of This Document
 
@@ -19,23 +21,24 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     bkit Trigger System                         │
+│                bkit Trigger System (v1.4.0)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
 │  │   Skills     │───▶│   Agents     │───▶│   Scripts    │      │
-│  │  (18)        │    │  (11)        │    │  (21)        │      │
+│  │  (18)        │    │  (11)        │    │  (26)        │      │
 │  └──────────────┘    └──────────────┘    └──────────────┘      │
 │         │                   │                   │               │
 │         ▼                   ▼                   ▼               │
 │  ┌──────────────────────────────────────────────────────┐      │
 │  │                    Hooks Layer                        │      │
 │  │  PreToolUse │ PostToolUse │ Stop │ SessionStart      │      │
+│  │  (BeforeTool│ AfterTool   │AgentStop - Gemini CLI)   │      │
 │  └──────────────────────────────────────────────────────┘      │
 │                              │                                  │
 │                              ▼                                  │
 │  ┌──────────────────────────────────────────────────────┐      │
-│  │                  Claude Code Runtime                  │      │
+│  │         Claude Code / Gemini CLI Runtime              │      │
 │  └──────────────────────────────────────────────────────┘      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -47,12 +50,12 @@
 |-----------|-------|------|---------|
 | Skills | 18 | Domain knowledge | [[components/skills/_skills-overview]] |
 | Agents | 11 | Specialized task execution | [[components/agents/_agents-overview]] |
-| Commands | 20 | Slash commands | `/pdca-*`, `/init-*`, `/archive`, etc. |
+| Commands | 20 (×2) | Slash commands | Claude: `commands/*.md`, Gemini: `commands/gemini/*.toml` |
 | Hooks | 3 events | Event-based triggers | [[components/hooks/_hooks-overview]] |
-| Scripts | 21 | Actual logic execution | [[components/scripts/_scripts-overview]] |
-| Lib | 1 | Shared utilities | `lib/common.js` |
+| Scripts | 26 | Actual logic execution | [[components/scripts/_scripts-overview]] |
+| Lib | 1 | Shared utilities | `lib/common.js` (80+ functions) |
 | Config | 1 | Centralized settings | `bkit.config.json` |
-| Templates | 21 | Document templates | PDCA + Pipeline phases |
+| Templates | 20 | Document templates | PDCA + Pipeline phases |
 
 ## Trigger Layers
 
@@ -103,18 +106,21 @@ bkit-system/
 
 ## Source Locations
 
-| Item | Path |
-|------|------|
-| Skills | `skills/*/SKILL.md` |
-| Agents | `agents/*.md` |
-| Scripts | `scripts/*.js` |
-| Commands | `commands/*.md` |
-| Templates | `templates/*.md` |
-| Hooks | `hooks/hooks.json` |
-| Lib | `lib/common.js` |
-| Config | `bkit.config.json` |
+| Item | Claude Code | Gemini CLI |
+|------|-------------|------------|
+| Skills | `skills/*/SKILL.md` | (shared) |
+| Agents | `agents/*.md` | (shared) |
+| Scripts | `scripts/*.js` | (shared) |
+| Commands | `commands/*.md` | `commands/gemini/*.toml` |
+| Templates | `templates/*.md` | (shared) |
+| Hooks | `hooks/hooks.json` | `gemini-extension.json` |
+| Lib | `lib/common.js` | (shared) |
+| Config | `bkit.config.json` | (shared) |
+| Context | `CLAUDE.md` | `GEMINI.md` |
+| Manifest | `.claude-plugin/plugin.json` | `gemini-extension.json` |
 
 > **Note**: The `.claude/` folder is not in version control. All plugin elements are at root level.
+> **v1.4.0**: Skills, Agents, Scripts, Templates, Lib, and Config are shared between both platforms.
 
 ---
 
@@ -149,4 +155,4 @@ The `bkit-system/.obsidian/` folder includes shared settings:
 | `workspace.json` | Personal workspace state | No |
 | `app.json` | Personal app settings | No |
 
-> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 18 skills, 11 agents, and their relationships.
+> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 18 skills, 11 agents, 26 scripts, and their relationships.

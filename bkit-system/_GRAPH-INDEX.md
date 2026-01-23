@@ -13,6 +13,8 @@
 > **v1.3.0 Check-Act Iteration Loop**: Automatic gap analysis and fix cycles with pdca-iterator agent
 >
 > **v1.3.1 Cross-Platform**: All hooks converted from Bash (.sh) to Node.js (.js) for Windows/Mac/Linux compatibility
+>
+> **v1.4.0 Dual Platform Support**: Claude Code + Gemini CLI 동시 지원, 80+ lib/common.js 함수, 8언어 Intent Detection
 
 ## Philosophy (3)
 
@@ -117,36 +119,43 @@ The following skills were consolidated:
 - [[components/hooks/_hooks-overview|PreToolUse]] - Before Write/Edit operations (defined in SKILL.md)
 - [[components/hooks/_hooks-overview|PostToolUse]] - After Write operations (defined in SKILL.md)
 
-## Scripts (21)
+## Scripts (26)
 
 > **Note**: All scripts converted to Node.js (.js) in v1.3.1 for cross-platform compatibility
+>
+> **v1.4.0**: Added 5 new phase completion handlers
 
-### Core Scripts
+### Core Scripts (3)
 - `scripts/pre-write.js` - Unified PreToolUse hook (PDCA + classification + convention)
 - `scripts/pdca-post-write.js` - PostToolUse guidance after Write
 - `scripts/select-template.js` - Template selection by level
 
-### Phase Scripts
+### Phase Scripts (11)
+- `scripts/phase-transition.js` - PDCA phase transition validation (v1.4.0)
+- `scripts/phase1-schema-stop.js` - Schema phase completion (v1.4.0)
 - `scripts/phase2-convention-pre.js` - Convention check before write
+- `scripts/phase2-convention-stop.js` - Convention phase completion (v1.4.0)
+- `scripts/phase3-mockup-stop.js` - Mockup phase completion (v1.4.0)
 - `scripts/phase4-api-stop.js` - Zero Script QA after API implementation
 - `scripts/phase5-design-post.js` - Design token verification
 - `scripts/phase6-ui-post.js` - Layer separation verification
+- `scripts/phase7-seo-stop.js` - SEO/Security phase completion (v1.4.0)
 - `scripts/phase8-review-stop.js` - Review completion guidance
 - `scripts/phase9-deploy-pre.js` - Deployment environment validation
 
-### QA Scripts
+### QA Scripts (3)
 - `scripts/qa-pre-bash.js` - QA setup before Bash
 - `scripts/qa-monitor-post.js` - QA completion guidance
 - `scripts/qa-stop.js` - QA session cleanup
 
-### Agent Scripts
+### Agent Scripts (5)
 - `scripts/design-validator-pre.js` - Design document validation
 - `scripts/gap-detector-post.js` - Gap analysis guidance
 - `scripts/gap-detector-stop.js` - Gap detector completion
 - `scripts/iterator-stop.js` - Iterator completion
 - `scripts/analysis-stop.js` - Analysis completion guidance
 
-### Utility Scripts
+### Utility Scripts (4)
 - `scripts/pdca-pre-write.js` - PDCA pre-write checks
 - `scripts/archive-feature.js` - Feature archiving
 - `scripts/sync-folders.js` - Folder synchronization
@@ -155,26 +164,93 @@ The following skills were consolidated:
 ## Infrastructure
 
 ### Shared Library
-- `lib/common.js` - Shared utility functions (v1.3.1 Node.js, 38 functions)
+- `lib/common.js` - Shared utility functions (v1.4.0 Node.js, **80+ functions**)
+
+#### Platform Detection (v1.4.0)
+  - `detectPlatform()` - Detect current platform ('claude' | 'gemini' | 'unknown')
+  - `isClaudeCode()` - Check if running in Claude Code
+  - `isGeminiCli()` - Check if running in Gemini CLI
+  - `getPluginPath()` - Get plugin root path for current platform
+  - `getBkitConfig()` - Load bkit.config.json with caching
+
+#### Caching System (v1.4.0)
+  - `_cache` - In-memory TTL-based cache object
+  - TTL-based invalidation for config, status, and feature data
+
+#### Debug Logging (v1.4.0)
+  - `debugLog()` - Debug logging with platform-specific paths
+  - Writes to `~/.claude/bkit-debug.log` or `~/.gemini/bkit-debug.log`
+
+#### PDCA Status v2.0 (v1.4.0)
+  - `createInitialStatusV2()` - Create PDCA Status v2.0 schema
+  - `migrateStatusToV2()` - Auto-migrate from v1.0 schema
+  - `getDefaultFeatureStatus()` - Get default status object for a feature
+
+#### Multi-Feature Management (v1.4.0)
+  - `setActiveFeature()` - Set current working feature
+  - `addActiveFeature()` - Add new feature to tracking
+  - `getActiveFeatures()` - Get all tracked features
+  - `switchFeatureContext()` - Switch between feature contexts
+  - `getFeatureContext()` - Get context for specific feature
+
+#### Intent Detection (v1.4.0)
+  - `detectNewFeatureIntent()` - Detect new feature request from user message
+  - `matchImplicitAgentTrigger()` - Match message to agent trigger keywords
+  - `matchImplicitSkillTrigger()` - Match message to skill trigger keywords
+  - **8-language support**: EN, KO, JA, ZH, ES, FR, DE, IT
+
+#### Ambiguity Detection (v1.4.0)
+  - `calculateAmbiguityScore()` - Calculate ambiguity in user request
+  - `generateClarifyingQuestions()` - Generate AskUserQuestion options
+  - `detectAmbiguousTerms()` - Find unclear terms in message
+
+#### Requirement Tracking (v1.4.0)
+  - `extractRequirementsFromPlan()` - Parse requirements from plan document
+  - `calculateRequirementFulfillment()` - Calculate completion percentage
+  - `getUnfulfilledRequirements()` - List incomplete requirements
+
+#### Phase Validation (v1.4.0)
+  - `checkPhaseDeliverables()` - Check required deliverables for phase
+  - `validatePdcaTransition()` - Validate phase transition is allowed
+  - `getPhaseRequirements()` - Get requirements for specific phase
+
+#### Configuration (existing)
   - `getConfig()` - Read from bkit.config.json
+  - `getConfigArray()` - Get array value from config
+
+#### File Classification (existing)
   - `isSourceFile()` - Negative pattern + extension detection (30+ extensions)
   - `isCodeFile()` - Tier-based code file detection
   - `isUiFile()` - UI component files (.tsx, .jsx, .vue, .svelte, .astro)
+  - `isEnvFile()` - Environment file detection
+
+#### Language Tier System (existing)
   - `getLanguageTier()` - Get tier (1-4, experimental, unknown) for file
   - `getTierDescription()` - Get tier description (AI-Native, Mainstream, etc.)
   - `getTierPdcaGuidance()` - Get PDCA guidance based on tier
-  - `isTier1()`, `isTier2()`, etc. - Tier check helpers
+  - `isTier1()`, `isTier2()`, `isTier3()`, `isTier4()` - Tier check helpers
+
+#### Feature Detection (existing)
   - `extractFeature()` - Multi-language feature extraction
+  - `findDesignDoc()` - Find design document for feature
+  - `findPlanDoc()` - Find plan document for feature
+
+#### Task Classification (existing)
   - `classifyTask()`, `classifyTaskByLines()` - Task size classification
-  - `detectLevel()` - Project level detection
-  - `outputAllow()`, `outputBlock()`, `outputEmpty()` - JSON output helpers
+  - `detectLevel()` - Project level detection (Starter/Dynamic/Enterprise)
+  - `getPdcaGuidance()` - Get PDCA guidance for task size
+
+#### JSON Output Helpers (existing)
+  - `outputAllow()`, `outputBlock()`, `outputEmpty()` - Hook response helpers
   - `readStdinSync()`, `parseHookInput()` - Hook input helpers
+
+#### PDCA Task System (existing)
   - `PDCA_PHASES` - PDCA phase definitions constant
-  - `getPdcaTaskMetadata()` - Generate task metadata for Claude Task System
+  - `getPdcaTaskMetadata()` - Generate task metadata
   - `generatePdcaTaskSubject()` - Generate task subject
   - `generatePdcaTaskDescription()` - Generate task description
   - `generateTaskGuidance()` - Generate task creation guidance
-  - `getPreviousPdcaPhase()` - Get previous PDCA phase for dependency
+  - `getPreviousPdcaPhase()` - Get previous PDCA phase
   - `findPdcaStatus()` - Read docs/.pdca-status.json
   - `getCurrentPdcaPhase()` - Get current PDCA phase for feature
 
@@ -206,6 +282,36 @@ bkit supports languages and frameworks organized by tier:
   - Level detection rules
   - PDCA document paths
   - Naming conventions
+
+### Gemini CLI Support (v1.4.0)
+
+bkit supports Gemini CLI as a secondary platform:
+
+| Item | Claude Code | Gemini CLI |
+|------|-------------|------------|
+| Manifest | `.claude-plugin/plugin.json` | `gemini-extension.json` |
+| Context File | `CLAUDE.md` | `GEMINI.md` |
+| Commands | `commands/*.md` (Markdown) | `commands/gemini/*.toml` (TOML) |
+| Hook Events | `PreToolUse` / `PostToolUse` | `BeforeTool` / `AfterTool` |
+| Plugin Root | `$CLAUDE_PLUGIN_ROOT` | `$extensionPath` |
+| Project Dir | `$CLAUDE_PROJECT_DIR` | `$GEMINI_PROJECT_DIR` |
+
+**Hook Mapping**:
+```
+Claude Code         →  Gemini CLI
+─────────────────────────────────
+SessionStart        →  SessionStart
+PreToolUse          →  BeforeTool
+PostToolUse         →  AfterTool
+Stop                →  AgentStop
+```
+
+**Shared Components** (Cross-platform):
+- `skills/` - All 18 skills work on both platforms
+- `agents/` - All 11 agents work on both platforms
+- `scripts/` - All 26 scripts use Node.js (cross-platform)
+- `lib/common.js` - Platform detection via `detectPlatform()`
+- `templates/` - All 20 templates work on both platforms
 
 ## Templates (20)
 

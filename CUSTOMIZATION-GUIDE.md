@@ -128,18 +128,21 @@ For deeper understanding, explore the `bkit-system/` folder:
 
 bkit is not just a collection of prompts—it's a **production-grade plugin architecture** with carefully designed components that work together as a cohesive system.
 
-### Component Inventory (v1.3.0)
+### Component Inventory (v1.4.0)
 
 | Component | Count | Purpose |
 |-----------|-------|---------|
 | **Agents** | 11 | Specialized AI subagents for task delegation |
 | **Skills** | 18 | Domain knowledge and automated behaviors |
-| **Commands** | 20 | User-invocable slash commands |
-| **Scripts** | 21 | Hook execution scripts (Node.js) |
-| **Templates** | 21 | Document templates (PDCA + 9 phases) |
+| **Commands** | 20 (×2) | User-invocable slash commands (Claude + Gemini) |
+| **Scripts** | 26 | Hook execution scripts (Node.js) |
+| **Templates** | 20 | Document templates (PDCA + 9 phases) |
 | **Hooks** | 5 layers | Event-driven automation triggers |
+| **lib/common.js** | 80+ functions | Shared utility library (v1.4.0) |
 
-**Total: 91+ components** working in harmony.
+**Total: 95+ components** working in harmony.
+
+> **v1.4.0**: Dual Platform Support - bkit now works on both Claude Code and Gemini CLI
 
 ### Architectural Excellence
 
@@ -147,18 +150,20 @@ bkit is not just a collection of prompts—it's a **production-grade plugin arch
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     bkit Component Architecture                   │
+│               bkit Component Architecture (v1.4.0)               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Knowledge Layer    │ Skills (18)      │ Domain expertise       │
 │  ─────────────────────────────────────────────────────────────  │
 │  Execution Layer    │ Agents (11)      │ Autonomous task work   │
 │  ─────────────────────────────────────────────────────────────  │
-│  Interface Layer    │ Commands (20)    │ User interaction       │
+│  Interface Layer    │ Commands (20×2)  │ User interaction       │
 │  ─────────────────────────────────────────────────────────────  │
-│  Automation Layer   │ Hooks + Scripts (21) │ Event-driven triggers │
+│  Automation Layer   │ Hooks + Scripts (26) │ Event-driven triggers│
 │  ─────────────────────────────────────────────────────────────  │
-│  Template Layer     │ Templates (21)   │ Document standards     │
+│  Template Layer     │ Templates (20)   │ Document standards     │
+│  ─────────────────────────────────────────────────────────────  │
+│  Shared Library     │ lib/common.js (80+)│ Platform utilities    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -206,7 +211,7 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
    └─ "Triggers:" keywords for auto-activation
 
-Layer 5: Scripts (21 Node.js scripts)
+Layer 5: Scripts (26 Node.js scripts)
    └─ Actual logic execution
 ```
 
@@ -554,7 +559,7 @@ When you install a Claude Code plugin, components are deployed to the global con
 
 ## 6. Configuration Paths by Platform
 
-### User Configuration (Global)
+### Claude Code User Configuration (Global)
 
 | Platform | Path |
 |----------|------|
@@ -563,7 +568,28 @@ When you install a Claude Code plugin, components are deployed to the global con
 | **Windows (PowerShell)** | `%USERPROFILE%\.claude\` or `C:\Users\<username>\.claude\` |
 | **Windows (WSL)** | `/home/<username>/.claude/` (Linux filesystem, NOT `/mnt/c/...`) |
 
-### Managed Settings (Enterprise/Admin)
+### Gemini CLI User Configuration (v1.4.0)
+
+| Platform | Path |
+|----------|------|
+| **macOS** | `~/.gemini/` |
+| **Linux** | `~/.gemini/` |
+| **Windows (PowerShell)** | `%USERPROFILE%\.gemini\` |
+| **Windows (WSL)** | `/home/<username>/.gemini/` |
+
+### Platform Comparison
+
+| Item | Claude Code | Gemini CLI |
+|------|-------------|------------|
+| **Config Directory** | `~/.claude/` | `~/.gemini/` |
+| **Extension Directory** | `~/.claude/plugins/` | `~/.gemini/extensions/` |
+| **Project Root Env** | `$CLAUDE_PROJECT_DIR` | `$GEMINI_PROJECT_DIR` |
+| **Plugin Root Env** | `$CLAUDE_PLUGIN_ROOT` | `$extensionPath` |
+| **Manifest File** | `plugin.json` | `gemini-extension.json` |
+| **Context File** | `CLAUDE.md` | `GEMINI.md` |
+| **Commands Format** | Markdown (`.md`) | TOML (`.toml`) |
+
+### Managed Settings (Enterprise/Admin - Claude Code Only)
 
 | Platform | Path |
 |----------|------|
@@ -610,33 +636,41 @@ A Claude Code plugin like bkit consists of these components:
 | **Templates** | Document templates for standardization | `templates/` |
 | **Scripts** | Helper scripts for automation | `scripts/` |
 
-### bkit Plugin Structure Example
+### bkit Plugin Structure Example (v1.4.0 - Dual Platform)
 
 ```
 bkit-claude-code/
 ├── .claude-plugin/
-│   ├── plugin.json                 # Plugin metadata
+│   ├── plugin.json                 # Claude Code plugin metadata
 │   └── marketplace.json            # Marketplace registration
-├── agents/
+├── gemini-extension.json           # Gemini CLI extension manifest (v1.4.0)
+├── GEMINI.md                       # Gemini CLI context file (v1.4.0)
+├── agents/                         # Shared between platforms
 │   ├── starter-guide.md            # Beginner-friendly agent
 │   ├── enterprise-expert.md        # Enterprise architecture agent
 │   ├── code-analyzer.md            # Code review agent
-│   └── ...
-├── skills/
+│   └── ... (11 total)
+├── skills/                         # Shared between platforms
 │   ├── bkit-rules/SKILL.md         # Core PDCA rules
 │   ├── development-pipeline/SKILL.md
-│   └── phase-*/SKILL.md            # 9-phase pipeline skills
+│   └── phase-*/SKILL.md            # 9-phase pipeline skills (18 total)
 ├── commands/
-│   ├── pdca-plan.md                # /pdca-plan command
-│   ├── pdca-design.md              # /pdca-design command
-│   └── ...
+│   ├── *.md                        # Claude Code commands (20 Markdown files)
+│   └── gemini/                     # Gemini CLI commands (v1.4.0)
+│       └── *.toml                  # (20 TOML files)
 ├── hooks/
-│   ├── hooks.json                  # Hook configuration
+│   ├── hooks.json                  # Claude Code hook configuration
 │   └── session-start.js            # Session initialization (Node.js)
-└── templates/
+├── scripts/                        # Shared between platforms (26 scripts)
+│   └── *.js
+├── lib/
+│   └── common.js                   # Shared library (80+ functions, v1.4.0)
+└── templates/                      # Shared between platforms (20 templates)
     ├── plan.template.md
     └── design.template.md
 ```
+
+> **v1.4.0**: Skills, agents, scripts, lib, and templates are shared between Claude Code and Gemini CLI. Only commands and manifests are platform-specific.
 
 ---
 

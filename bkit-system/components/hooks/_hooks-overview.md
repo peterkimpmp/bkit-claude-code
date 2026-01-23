@@ -1,16 +1,26 @@
 # Hooks Overview
 
-> Hook events triggered during Claude Code operations (v1.3.1)
+> Hook events triggered during Claude Code / Gemini CLI operations (v1.4.0)
 >
+> **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 > **v1.3.1**: All hooks converted from Bash (.sh) to Node.js (.js) for cross-platform compatibility
 
 ## What are Hooks?
 
-Hooks are **scripts that automatically execute on specific Claude Code events**.
+Hooks are **scripts that automatically execute on specific Claude Code / Gemini CLI events**.
 
 **Two Hook Sources:**
-1. **Global Hooks** (`hooks/hooks.json`) - Apply to all sessions
+1. **Global Hooks** (`hooks/hooks.json` for Claude, `gemini-extension.json` for Gemini) - Apply to all sessions
 2. **Skill Frontmatter Hooks** - Defined in SKILL.md/AGENT.md YAML frontmatter
+
+## Platform Hook Mapping (v1.4.0)
+
+| Hook Event | Claude Code | Gemini CLI |
+|------------|-------------|------------|
+| Session initialization | `SessionStart` | `SessionStart` |
+| Before tool execution | `PreToolUse` | `BeforeTool` |
+| After tool execution | `PostToolUse` | `AfterTool` |
+| Agent completion | `Stop` | `AgentStop` |
 
 ## Hook Architecture
 
@@ -185,14 +195,19 @@ PostToolUse (Write)
 
 These scripts are available for skill frontmatter hooks or manual use:
 
-### Phase Scripts
+### Phase Scripts (11)
 
 | Script | Event | Purpose |
 |--------|-------|---------|
+| `phase-transition.js` | - | PDCA phase transition validation (v1.4.0) |
+| `phase1-schema-stop.js` | Stop | Schema phase completion (v1.4.0) |
 | `phase2-convention-pre.js` | PreToolUse | Convention check |
+| `phase2-convention-stop.js` | Stop | Convention phase completion (v1.4.0) |
+| `phase3-mockup-stop.js` | Stop | Mockup phase completion (v1.4.0) |
 | `phase4-api-stop.js` | Stop | Zero Script QA guidance |
 | `phase5-design-post.js` | PostToolUse | Design token verification |
 | `phase6-ui-post.js` | PostToolUse | Layer separation check |
+| `phase7-seo-stop.js` | Stop | SEO/Security phase completion (v1.4.0) |
 | `phase8-review-stop.js` | Stop | Review summary |
 | `phase9-deploy-pre.js` | PreToolUse | Environment validation |
 

@@ -27,7 +27,7 @@ bkit is a plugin/extension that transforms how you build software with AI. It pr
 - **20 Commands** - Automate common development tasks
 - **18 Skills** - Domain-specific knowledge for various development scenarios
 - **11 Agents** - Specialized AI assistants for different tasks
-- **21 Scripts** - Hook execution and automation scripts
+- **26 Scripts** - Hook execution and automation scripts
 - **Check-Act Iteration Loop** - Automatic gap analysis and fix cycles (v1.3.0+)
 
 ---

@@ -1,7 +1,8 @@
 # Scripts Overview
 
-> 21 Node.js Scripts used by bkit hooks (v1.3.1)
+> 26 Node.js Scripts used by bkit hooks (v1.4.0)
 >
+> **v1.4.0**: Added 5 new phase completion handlers, Dual Platform Support (Claude Code + Gemini CLI)
 > **v1.3.1**: All scripts converted from Bash (.sh) to Node.js (.js) for cross-platform support
 > **v1.3.0**: session-start.js enhanced with AskUserQuestion guidance (see [[../hooks/_hooks-overview]])
 
@@ -20,7 +21,7 @@ All scripts are at root level (not in .claude/):
 ```
 bkit-claude-code/
 ├── lib/
-│   └── common.js              # Shared utility library (Node.js)
+│   └── common.js              # Shared utility library (v1.4.0, 80+ functions)
 ├── hooks/
 │   └── session-start.js       # SessionStart hook
 ├── scripts/
@@ -28,10 +29,15 @@ bkit-claude-code/
 │   ├── pdca-post-write.js     # Core: PostToolUse guidance
 │   ├── select-template.js     # Core: Template selection
 │   │
+│   ├── phase-transition.js        # Phase: PDCA phase transition validation (v1.4.0)
+│   ├── phase1-schema-stop.js      # Phase: Schema completion (v1.4.0)
 │   ├── phase2-convention-pre.js   # Phase: Convention check
+│   ├── phase2-convention-stop.js  # Phase: Convention completion (v1.4.0)
+│   ├── phase3-mockup-stop.js      # Phase: Mockup completion (v1.4.0)
 │   ├── phase4-api-stop.js         # Phase: Zero Script QA
 │   ├── phase5-design-post.js      # Phase: Design token verify
 │   ├── phase6-ui-post.js          # Phase: Layer separation
+│   ├── phase7-seo-stop.js         # Phase: SEO/Security completion (v1.4.0)
 │   ├── phase8-review-stop.js      # Phase: Review summary
 │   ├── phase9-deploy-pre.js       # Phase: Deploy validation
 │   │
@@ -46,6 +52,7 @@ bkit-claude-code/
 │   ├── analysis-stop.js           # Agent: Analysis completion
 │   │
 │   ├── pdca-pre-write.js          # Legacy (use pre-write.js)
+│   ├── archive-feature.js         # Utility: Feature archiving
 │   ├── sync-folders.js            # Utility: Folder sync
 │   └── validate-plugin.js         # Utility: Plugin validation
 └── bkit.config.json           # Centralized configuration
@@ -63,14 +70,19 @@ bkit-claude-code/
 
 > **Note**: Task classification logic is integrated into pre-write.js via lib/common.js
 
-### Phase Scripts (6)
+### Phase Scripts (11)
 
 | Script | Hook | Phase | Purpose |
 |--------|------|-------|---------|
+| phase-transition.js | - | All | PDCA phase transition validation (v1.4.0) |
+| phase1-schema-stop.js | Stop | Phase 1 | Schema phase completion (v1.4.0) |
 | phase2-convention-pre.js | PreToolUse | Phase 2 | Convention check before write |
+| phase2-convention-stop.js | Stop | Phase 2 | Convention phase completion (v1.4.0) |
+| phase3-mockup-stop.js | Stop | Phase 3 | Mockup phase completion (v1.4.0) |
 | phase4-api-stop.js | Stop | Phase 4 | Zero Script QA guidance after API |
 | phase5-design-post.js | PostToolUse | Phase 5 | Design token verification |
 | phase6-ui-post.js | PostToolUse | Phase 6 | UI layer separation check |
+| phase7-seo-stop.js | Stop | Phase 7 | SEO/Security phase completion (v1.4.0) |
 | phase8-review-stop.js | Stop | Phase 8 | Review completion summary |
 | phase9-deploy-pre.js | PreToolUse | Phase 9 | Deployment environment validation |
 
@@ -92,15 +104,18 @@ bkit-claude-code/
 | iterator-stop.js | Stop | pdca-iterator | Check-Act iteration: 완료/계속 안내 (v1.3.0) |
 | analysis-stop.js | Stop | code-analyzer | Analysis completion guidance |
 
-### Utility Scripts (3)
+### Utility Scripts (4)
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
 | pdca-pre-write.js | Legacy script | Superseded by pre-write.js |
+| archive-feature.js | Feature archiving | `/archive` command |
 | sync-folders.js | Folder synchronization | Manual maintenance |
 | validate-plugin.js | Plugin validation | CI/CD or manual |
 
 ## Shared Library: lib/common.js
+
+> **v1.4.0**: Expanded from 38 to 80+ functions with dual platform support
 
 All scripts can require common utilities:
 
@@ -108,44 +123,121 @@ All scripts can require common utilities:
 #!/usr/bin/env node
 const common = require('../lib/common.js');
 
+// ═══════════════════════════════════════════════════════════════════
+// Platform Detection (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+const platform = common.detectPlatform();         // 'claude' | 'gemini' | 'unknown'
+common.isClaudeCode();                            // true if Claude Code
+common.isGeminiCli();                             // true if Gemini CLI
+const pluginPath = common.getPluginPath();        // Platform-specific plugin root
+
+// ═══════════════════════════════════════════════════════════════════
+// Debug Logging (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+common.debugLog('message', { data: 'value' });    // Writes to ~/.claude/bkit-debug.log
+
+// ═══════════════════════════════════════════════════════════════════
 // Input Helpers
+// ═══════════════════════════════════════════════════════════════════
 const input = common.readStdinSync();             // Synchronous JSON from stdin
 const { toolName, filePath } = common.parseHookInput(input);
 
-// Configuration
+// ═══════════════════════════════════════════════════════════════════
+// Configuration (with caching)
+// ═══════════════════════════════════════════════════════════════════
+const config = common.getBkitConfig();            // Load bkit.config.json (cached)
 const quickFix = common.getConfig('.pdca.thresholds.quickFix', 50);
 const sourceDirs = common.getConfigArray('.sourceDirectories');
 
+// ═══════════════════════════════════════════════════════════════════
+// PDCA Status v2.0 (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+const status = common.createInitialStatusV2();    // Create v2.0 schema
+common.migrateStatusToV2(oldStatus);              // Auto-migrate from v1.0
+common.getDefaultFeatureStatus();                 // Default status for feature
+
+// ═══════════════════════════════════════════════════════════════════
+// Multi-Feature Management (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+common.setActiveFeature('auth');                  // Set current feature
+common.addActiveFeature('payment');               // Add new feature
+const features = common.getActiveFeatures();      // Get all features
+common.switchFeatureContext('auth', 'payment');   // Switch context
+const ctx = common.getFeatureContext('auth');     // Get feature context
+
+// ═══════════════════════════════════════════════════════════════════
+// Intent Detection (v1.4.0 - 8 languages)
+// ═══════════════════════════════════════════════════════════════════
+common.detectNewFeatureIntent('새 로그인 기능 만들어줘');  // { feature, confidence }
+common.matchImplicitAgentTrigger('검증해줘');     // 'gap-detector'
+common.matchImplicitSkillTrigger('fullstack app'); // 'dynamic'
+
+// ═══════════════════════════════════════════════════════════════════
+// Ambiguity Detection (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+const score = common.calculateAmbiguityScore('make it better');  // 0.0-1.0
+const questions = common.generateClarifyingQuestions(message);   // AskUserQuestion options
+const terms = common.detectAmbiguousTerms(message);              // Unclear terms list
+
+// ═══════════════════════════════════════════════════════════════════
+// Requirement Tracking (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+const reqs = common.extractRequirementsFromPlan(planContent);
+const fulfillment = common.calculateRequirementFulfillment(reqs, code);  // 0-100%
+const unfulfilled = common.getUnfulfilledRequirements(reqs, code);
+
+// ═══════════════════════════════════════════════════════════════════
+// Phase Validation (v1.4.0)
+// ═══════════════════════════════════════════════════════════════════
+common.checkPhaseDeliverables('design', 'auth');  // Check deliverables
+common.validatePdcaTransition('plan', 'do');      // Validate transition
+common.getPhaseRequirements('check');             // Get requirements
+
+// ═══════════════════════════════════════════════════════════════════
 // File Classification (Multi-Language Support)
+// ═══════════════════════════════════════════════════════════════════
 common.isSourceFile('/path/to/file');             // Negative pattern + extension detection
 common.isCodeFile('/path/to/file.ts');            // Check 30+ language extensions
 common.isUiFile('/path/to/Component.tsx');        // Check UI component (.tsx, .jsx, .vue, .svelte, .astro)
 common.isEnvFile('/path/to/.env.local');          // Check env file
 
+// ═══════════════════════════════════════════════════════════════════
 // Feature Detection (Multi-Language Support)
+// ═══════════════════════════════════════════════════════════════════
 common.extractFeature('/src/features/auth/login.ts');  // Next.js features/
 common.extractFeature('/internal/auth/handler.go');    // Go internal/
 common.extractFeature('/app/routers/users.py');        // Python routers/
 common.findDesignDoc('auth');                          // Find design document
 common.findPlanDoc('auth');                            // Find plan document
 
+// ═══════════════════════════════════════════════════════════════════
 // Task Classification
+// ═══════════════════════════════════════════════════════════════════
 common.classifyTask(content);                     // Classify by size
 common.getPdcaGuidance('feature');                // Get PDCA guidance
 
+// ═══════════════════════════════════════════════════════════════════
 // Level Detection
+// ═══════════════════════════════════════════════════════════════════
 common.detectLevel();                             // Starter/Dynamic/Enterprise
 
-// Language Tier
+// ═══════════════════════════════════════════════════════════════════
+// Language Tier System
+// ═══════════════════════════════════════════════════════════════════
 const tier = common.getLanguageTier('file.ts');   // 1-4, 'experimental', 'unknown'
 const desc = common.getTierDescription(tier);     // 'AI-Native Essential', etc.
+common.getTierPdcaGuidance(tier);                 // Get PDCA guidance for tier
 
-// JSON Output
+// ═══════════════════════════════════════════════════════════════════
+// JSON Output Helpers
+// ═══════════════════════════════════════════════════════════════════
 common.outputAllow('context message');            // Allow with context
 common.outputBlock('block reason');               // Block with reason
 common.outputEmpty();                             // Empty response {}
 
-// Task System Integration (v1.3.1)
+// ═══════════════════════════════════════════════════════════════════
+// Task System Integration
+// ═══════════════════════════════════════════════════════════════════
 const { PDCA_PHASES } = common;                   // Phase definitions
 common.getPdcaTaskMetadata('design', 'login');    // { pdcaPhase, pdcaOrder, feature, ... }
 common.generatePdcaTaskSubject('design', 'login');  // "[Design] login"

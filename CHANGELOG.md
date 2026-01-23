@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-01-24
+
+### Added
+- **Dual Platform Support**: bkit now supports both Claude Code and Gemini CLI
+  - New `gemini-extension.json` manifest for Gemini CLI
+  - New `GEMINI.md` context file (equivalent to CLAUDE.md)
+  - New `commands/gemini/` directory with TOML-format commands (20 commands)
+  - Hook mapping: `BeforeTool`/`AfterTool` for Gemini (vs `PreToolUse`/`PostToolUse` for Claude)
+- **PDCA Status v2.0 Schema**: Multi-feature context management
+  - `features` object for tracking multiple features simultaneously
+  - `activeFeature` for current working context
+  - Auto-migration from v1.0 schema via `migrateStatusToV2()`
+- **lib/common.js Expansion**: 80+ functions (up from 38)
+  - **Platform Detection**: `detectPlatform()`, `isGeminiCli()`, `isClaudeCode()`, `getPluginPath()`
+  - **Caching System**: In-memory TTL-based cache (`_cache` object)
+  - **Debug Logging**: `debugLog()` with platform-specific paths
+  - **Multi-Feature Management**: `setActiveFeature()`, `addActiveFeature()`, `getActiveFeatures()`, `switchFeatureContext()`
+  - **Intent Detection**: `detectNewFeatureIntent()`, `matchImplicitAgentTrigger()`, `matchImplicitSkillTrigger()`
+  - **Ambiguity Detection**: `calculateAmbiguityScore()`, `generateClarifyingQuestions()`
+  - **Requirement Tracking**: `extractRequirementsFromPlan()`, `calculateRequirementFulfillment()`
+  - **Phase Validation**: `checkPhaseDeliverables()`, `validatePdcaTransition()`
+- **8-Language Intent Detection**: Extended multilingual support
+  - EN, KO, JA, ZH (existing)
+  - ES (Spanish), FR (French), DE (German), IT (Italian) (new)
+  - Implicit agent/skill triggering via natural language keywords
+- **New Scripts** (5):
+  - `phase-transition.js`: PDCA phase transition validation
+  - `phase1-schema-stop.js`: Schema phase completion handler
+  - `phase2-convention-stop.js`: Convention phase completion handler
+  - `phase3-mockup-stop.js`: Mockup phase completion handler
+  - `phase7-seo-stop.js`: SEO/Security phase completion handler
+
+### Changed
+- **Script Count**: Increased from 21 to 26
+- **hooks/hooks.json**: Updated for Gemini CLI compatibility
+- **Environment Variables**:
+  - `BKIT_PLATFORM`: Auto-set to "claude" or "gemini"
+  - `GEMINI_PROJECT_DIR`: Gemini CLI project directory
+- **Agent Descriptions**: Updated all 11 agents with multilingual triggers
+
+### Compatibility
+- **Claude Code**: Minimum v2.1.15, Recommended v2.1.17
+- **Gemini CLI**: Minimum v1.0.0
+- **Node.js**: Minimum v18.0.0
+
+---
+
 ## [1.3.2] - 2026-01-23
 
 ### Fixed

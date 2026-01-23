@@ -1,6 +1,19 @@
 # Trigger Matrix
 
-> Core matrix showing which components trigger on each event (v1.3.1)
+> Core matrix showing which components trigger on each event (v1.4.0)
+>
+> **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
+
+## Platform Hook Mapping (v1.4.0)
+
+| Hook Event | Claude Code | Gemini CLI | Description |
+|------------|-------------|------------|-------------|
+| Session initialization | `SessionStart` | `SessionStart` | 세션 시작 |
+| Before tool execution | `PreToolUse` | `BeforeTool` | 도구 실행 전 |
+| After tool execution | `PostToolUse` | `AfterTool` | 도구 실행 후 |
+| Agent completion | `Stop` | `AgentStop` | 에이전트 완료 |
+
+---
 
 ## Hook Event Matrix
 
@@ -42,16 +55,22 @@ These hooks are defined in skill YAML frontmatter:
 
 | Skill/Agent | Script | Action |
 |-------------|--------|--------|
+| [[../../skills/phase-1-schema/SKILL|phase-1-schema]] | `phase1-schema-stop.js` | Schema phase completion (v1.4.0) |
+| [[../../skills/phase-2-convention/SKILL|phase-2-convention]] | `phase2-convention-stop.js` | Convention phase completion (v1.4.0) |
+| [[../../skills/phase-3-mockup/SKILL|phase-3-mockup]] | `phase3-mockup-stop.js` | Mockup phase completion (v1.4.0) |
 | [[../../skills/phase-4-api/SKILL|phase-4-api]] | `phase4-api-stop.js` | Zero Script QA guidance |
+| [[../../skills/phase-7-seo-security/SKILL|phase-7-seo-security]] | `phase7-seo-stop.js` | SEO/Security phase completion (v1.4.0) |
 | [[../../skills/phase-8-review/SKILL|phase-8-review]] | `phase8-review-stop.js` | Review summary + gap analysis |
 | [[../../skills/zero-script-qa/SKILL|zero-script-qa]] | `qa-stop.js` | QA session cleanup |
 | [[../../skills/development-pipeline/SKILL|development-pipeline]] | `echo` | Pipeline completion |
 | [[../agents/gap-detector|gap-detector]] | `gap-detector-stop.js` | Check-Act iteration: Match Rate 기반 분기 (v1.3.0) |
 | [[../agents/pdca-iterator|pdca-iterator]] | `iterator-stop.js` | Check-Act iteration: 완료/계속 안내 (v1.3.0) |
 
+> **v1.4.0**: 4개 신규 Phase Stop 스크립트 추가 (phase1-schema, phase2-convention, phase3-mockup, phase7-seo)
+
 ---
 
-## Write/Edit Flow (v1.3.0)
+## Write/Edit Flow (v1.4.0)
 
 When user writes/edits source code files:
 
