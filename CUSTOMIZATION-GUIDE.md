@@ -63,7 +63,7 @@ Layer 1: hooks.json          → SessionStart, PreToolUse, PostToolUse hooks
 Layer 2: Skill Frontmatter   → hooks: PreToolUse, PostToolUse, Stop
 Layer 3: Agent Frontmatter   → hooks: PreToolUse, PostToolUse
 Layer 4: Description Triggers → "Triggers:" keyword matching
-Layer 5: Scripts             → Actual bash logic execution
+Layer 5: Scripts             → Actual Node.js logic execution
 ```
 
 This separation allows fine-grained control over when and how automation triggers.
@@ -135,7 +135,7 @@ bkit is not just a collection of prompts—it's a **production-grade plugin arch
 | **Agents** | 11 | Specialized AI subagents for task delegation |
 | **Skills** | 18 | Domain knowledge and automated behaviors |
 | **Commands** | 20 | User-invocable slash commands |
-| **Scripts** | 21 | Hook execution scripts (bash) |
+| **Scripts** | 21 | Hook execution scripts (Node.js) |
 | **Templates** | 21 | Document templates (PDCA + 9 phases) |
 | **Hooks** | 5 layers | Event-driven automation triggers |
 
@@ -206,7 +206,7 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
    └─ "Triggers:" keywords for auto-activation
 
-Layer 5: Scripts (21 bash scripts)
+Layer 5: Scripts (21 Node.js scripts)
    └─ Actual logic execution
 ```
 
@@ -797,7 +797,7 @@ hooks:                         # Skill-specific hooks
     - matcher: "Write"
       hooks:
         - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh"
+          command: "${CLAUDE_PLUGIN_ROOT}/scripts/validate.js"
 ---
 
 # Skill Content
@@ -1064,7 +1064,7 @@ Create `hooks/hooks.json`:
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh",
+          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.js",
           "timeout": 5000
         }
       ]
@@ -1075,7 +1075,7 @@ Create `hooks/hooks.json`:
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/validate-bash.sh"
+          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/validate-bash.js"
         }
       ]
     },
@@ -1104,11 +1104,11 @@ Create `hooks/hooks.json`:
 ### Hook Types
 
 #### Command Hooks
-Execute shell commands:
+Execute scripts (Node.js recommended for cross-platform):
 ```json
 {
   "type": "command",
-  "command": "/path/to/script.sh",
+  "command": "/path/to/script.js",
   "timeout": 5000
 }
 ```
@@ -1144,7 +1144,7 @@ Inject instructions into Claude's context:
       "hooks": [
         {
           "type": "command",
-          "command": ".claude/hooks/pre-commit.sh"
+          "command": ".claude/hooks/pre-commit.js"
         }
       ]
     }
@@ -1162,42 +1162,59 @@ Inject instructions into Claude's context:
 }
 ```
 
-**Create** `.claude/hooks/pre-commit.sh`:
+**Create** `.claude/hooks/pre-commit.js`:
 
-```bash
-#!/bin/bash
+```javascript
+#!/usr/bin/env node
 
-# Validate before committing
-echo "Running pre-commit checks..."
+const fs = require('fs');
+const path = require('path');
 
-# Check for sensitive data
-if grep -r "API_KEY\|SECRET\|PASSWORD" --include="*.ts" --include="*.js" src/; then
-    cat << 'JSON'
-{
-  "decision": "block",
-  "reason": "Potential sensitive data detected. Please review before committing."
+// Validate before committing
+console.error("Running pre-commit checks...");
+
+// Helper to check file contents
+function checkFiles(pattern, extensions) {
+  const srcDir = path.join(process.cwd(), 'src');
+  if (!fs.existsSync(srcDir)) return false;
+
+  function walk(dir) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        if (walk(filePath)) return true;
+      } else if (extensions.some(ext => file.endsWith(ext))) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        if (pattern.test(content)) return true;
+      }
+    }
+    return false;
+  }
+  return walk(srcDir);
 }
-JSON
-    exit 0
-fi
 
-# Check for console.log
-if grep -r "console\.log" --include="*.ts" --include="*.tsx" src/; then
-    cat << 'JSON'
-{
-  "decision": "block",
-  "reason": "console.log statements found. Remove before committing."
+// Check for sensitive data
+if (checkFiles(/API_KEY|SECRET|PASSWORD/, ['.ts', '.js'])) {
+  console.log(JSON.stringify({
+    decision: "block",
+    reason: "Potential sensitive data detected. Please review before committing."
+  }));
+  process.exit(0);
 }
-JSON
-    exit 0
-fi
 
-# All checks passed
-cat << 'JSON'
-{
-  "decision": "allow"
+// Check for console.log
+if (checkFiles(/console\.log/, ['.ts', '.tsx'])) {
+  console.log(JSON.stringify({
+    decision: "block",
+    reason: "console.log statements found. Remove before committing."
+  }));
+  process.exit(0);
 }
-JSON
+
+// All checks passed
+console.log(JSON.stringify({ decision: "allow" }));
 ```
 
 ---
@@ -1383,7 +1400,7 @@ Provide senior-level guidance on architecture and best practices.
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/init.sh"
+          "command": "${CLAUDE_PLUGIN_ROOT}/hooks/init.js"
         }
       ]
     }

@@ -117,7 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Tier 3 (Domain Specific): Java, Kotlin, Swift, C/C++
   - Tier 4 (Legacy/Niche): PHP, Ruby, C#, Scala, Elixir
   - Experimental: Mojo, Zig, V
-- **New Tier Detection Functions** in `lib/common.sh`:
+- **New Tier Detection Functions** in `lib/common.js`:
   - `get_language_tier()`: Get tier (1-4, experimental, unknown) for file
   - `get_tier_description()`: Get tier description
   - `get_tier_pdca_guidance()`: Get PDCA guidance based on tier
@@ -143,7 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Level detection rules
   - PDCA document paths
   - Template configurations
-- **Shared Utilities**: Added `lib/common.sh` with reusable functions
+- **Shared Utilities**: Added `lib/common.js` with reusable functions
   - `get_config()`: Read values from bkit.config.json
   - `is_source_file()`: Check if path is source code
   - `extract_feature()`: Extract feature name from file path
@@ -155,10 +155,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Skills Frontmatter Hooks**: Added hooks directly in SKILL.md frontmatter for priority skills
   - `bkit-rules`: SessionStart, PreToolUse (Write|Edit), Stop hooks
   - `bkit-templates`: Template selection automation
-- **New Shell Scripts**: Added automation scripts
-  - `pre-write.sh`: Unified pre-write hook combining PDCA and task classification
-  - `select-template.sh`: Template selection based on document type and level
-  - `task-classify.sh`: Task size classification for PDCA guidance
+- **New Scripts**: Added automation scripts
+  - `pre-write.js`: Unified pre-write hook combining PDCA and task classification
+  - `select-template.js`: Template selection based on document type and level
+  - `task-classify.js`: Task size classification for PDCA guidance
 
 ### Changed
 - **Repository Structure**: Removed `.claude/` folder from version control
@@ -174,10 +174,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `analysis-patterns` → merged into `bkit-templates`
   - `document-standards` → merged into `bkit-templates`
   - `evaluator-optimizer` → available via `/pdca-iterate` command
-  - `level-detection` → moved to `lib/common.sh`
+  - `level-detection` → moved to `lib/common.js`
   - `monorepo-architecture` → merged into `enterprise`
   - `pdca-methodology` → merged into `bkit-rules`
-  - `task-classification` → moved to `lib/common.sh`
+  - `task-classification` → moved to `lib/common.js`
 - **Instructions Folder**: Removed deprecated `.claude/instructions/`
   - Content migrated to respective skills
 
