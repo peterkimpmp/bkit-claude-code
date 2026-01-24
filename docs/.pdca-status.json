@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-01-23T20:17:08.325Z",
+  "lastUpdated": "2026-01-24T04:39:12.443Z",
   "activeFeatures": [
     "scripts",
     "bkit-claude-code",
@@ -10,9 +10,11 @@
     "login",
     "bkit-v1.4.0-test",
     "unit",
-    "integration"
+    "integration",
+    "compatibility",
+    "test"
   ],
-  "primaryFeature": "unit",
+  "primaryFeature": "test",
   "features": {
     "scripts": {
       "phase": "do",
@@ -52,7 +54,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-01-23T16:51:30.320Z",
-        "lastUpdated": "2026-01-23T20:00:18.986Z"
+        "lastUpdated": "2026-01-24T04:33:09.057Z"
       }
     },
     "auth": {
@@ -183,6 +185,30 @@
         "started": "2026-01-23T19:59:49.287Z",
         "lastUpdated": "2026-01-23T20:01:31.372Z"
       }
+    },
+    "compatibility": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-01-24T04:33:50.999Z",
+        "lastUpdated": "2026-01-24T04:39:08.445Z"
+      }
+    },
+    "test": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-01-24T04:35:37.070Z",
+        "lastUpdated": "2026-01-24T04:39:12.443Z"
+      }
     }
   },
   "pipeline": {
@@ -193,148 +219,9 @@
   "session": {
     "startedAt": "2026-01-23T19:17:54.030Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-01-23T20:17:08.325Z"
+    "lastActivity": "2026-01-24T04:39:12.443Z"
   },
   "history": [
-    {
-      "timestamp": "2026-01-23T18:55:19.347Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:55:45.108Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:56:00.320Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:56:14.765Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:56:44.535Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:57:02.368Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T18:57:52.877Z",
-      "feature": "scripts",
-      "phase": "check",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:01:28.292Z",
-      "feature": "bkit-claude-code",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:01:50.416Z",
-      "feature": "bkit-claude-code",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:03:11.649Z",
-      "feature": "bkit-claude-code",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:04:14.997Z",
-      "feature": "login",
-      "phase": "check",
-      "action": "analyzed",
-      "details": {
-        "matchRate": 85
-      }
-    },
-    {
-      "timestamp": "2026-01-23T19:04:19.882Z",
-      "feature": "login",
-      "phase": "completed",
-      "action": "completed"
-    },
-    {
-      "timestamp": "2026-01-23T19:04:19.882Z",
-      "feature": "login",
-      "phase": "act",
-      "action": "analyzed",
-      "details": {
-        "matchRate": 92,
-        "iteration": 1
-      }
-    },
-    {
-      "timestamp": "2026-01-23T19:09:16.686Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:09:16.777Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:09:16.864Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:09:16.955Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:09:17.045Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:10:56.020Z",
-      "feature": "bkit-claude-code",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:11:07.247Z",
-      "feature": "bkit-claude-code",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:11:15.299Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
-    {
-      "timestamp": "2026-01-23T19:11:24.240Z",
-      "feature": "scripts",
-      "phase": "do",
-      "action": "updated"
-    },
     {
       "timestamp": "2026-01-23T19:16:55.221Z",
       "feature": "bkit-claude-code",
@@ -803,6 +690,138 @@
     {
       "timestamp": "2026-01-23T20:17:08.325Z",
       "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:33:09.057Z",
+      "feature": "test-scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:33:50.999Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:33:51.165Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:33:51.343Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:34:26.765Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:34:26.934Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:35:24.288Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:35:24.463Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:35:24.654Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:35:37.070Z",
+      "feature": "test",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:02.967Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:08.505Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:14.237Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:29.082Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:40.446Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:36:49.755Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:37:53.901Z",
+      "feature": "test",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:38:01.730Z",
+      "feature": "test",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:38:28.306Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:38:44.918Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:39:08.445Z",
+      "feature": "compatibility",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-01-24T04:39:12.443Z",
+      "feature": "test",
       "phase": "do",
       "action": "updated"
     }
