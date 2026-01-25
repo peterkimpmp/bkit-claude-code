@@ -12,6 +12,10 @@ description: |
 
   Do NOT use for: implementation code review, gap analysis (use gap-detector instead),
   or initial planning phase.
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/api-patterns.md
+context: fork
+mergeResult: false
 permissionMode: plan
 disallowedTools:
   - Write

@@ -16,6 +16,9 @@ description: |
 
   Do NOT use for: design document review (use design-validator), gap analysis
   (use gap-detector), or writing/modifying code (this agent is read-only).
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/error-handling-patterns.md
+  - ${PLUGIN_ROOT}/templates/shared/naming-conventions.md
 permissionMode: plan
 model: opus
 tools:
@@ -29,7 +32,8 @@ hooks:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "echo '{\"decision\": \"block\", \"reason\": \"Code analyzer agent is read-only and cannot modify files\"}'"
+          command: "node ${CLAUDE_PLUGIN_ROOT}/scripts/code-analyzer-pre.js"
+          timeout: 5000
   Stop:
     - hooks:
         - type: command

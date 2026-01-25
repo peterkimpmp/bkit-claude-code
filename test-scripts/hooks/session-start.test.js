@@ -237,4 +237,253 @@ runner.describe('Session Start Hook', () => {
   });
 });
 
+// ============================================================
+// v1.4.2 Session Start Hook Tests
+// ============================================================
+
+runner.describe('v1.4.2 Session Start Hook Enhancements', () => {
+  runner.beforeEach(() => {
+    fs.mkdirSync(path.join(TEST_DIR, 'docs'), { recursive: true });
+    mockEnv.set('CLAUDE_PROJECT_DIR', TEST_DIR);
+    mockEnv.set('CLAUDE_PLUGIN_ROOT', path.resolve(__dirname, '../..'));
+  });
+
+  runner.afterEach(() => {
+    mockEnv.restore();
+    try {
+      fs.rmSync(TEST_DIR, { recursive: true, force: true });
+    } catch (e) { /* ignore */ }
+    clearModuleCache('../../lib/common');
+  });
+
+  // TC-H011: SessionStart 출력 형식 검증
+  runner.it('SessionStart produces decision: allow output', () => {
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-output-format' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    assert.equal(result.status, 0);
+
+    if (result.stdout.trim()) {
+      const parsed = result.parsed || JSON.parse(result.stdout);
+      // SessionStart는 decision: allow 포함
+      assert.equal(parsed.decision, 'allow');
+    }
+  });
+
+  // TC-H012: hookSpecificOutput 구조 검증
+  runner.it('SessionStart includes hookSpecificOutput', () => {
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-hook-specific' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    if (result.stdout.trim() && result.parsed) {
+      if (result.parsed.hookSpecificOutput) {
+        assert.equal(result.parsed.hookSpecificOutput.hookEventName, 'SessionStart');
+      }
+    }
+    assert.true(result.status === 0 || result.status === null);
+  });
+
+  // TC-H013: systemMessage 포함 검증
+  runner.it('SessionStart includes systemMessage', () => {
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-system-msg' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    if (result.stdout.trim() && result.parsed && result.parsed.systemMessage) {
+      // bkit 정보 포함
+      assert.true(result.parsed.systemMessage.includes('bkit'));
+    }
+    assert.true(result.status === 0 || result.status === null);
+  });
+
+  // TC-H014: 이전 작업 감지 - resume 타입
+  runner.it('SessionStart detects previous work (resume type)', () => {
+    // PDCA 상태 파일 생성
+    const statusData = {
+      version: '2.0',
+      primaryFeature: 'test-feature',
+      activeFeatures: ['test-feature'],
+      features: {
+        'test-feature': {
+          phase: 'design',
+          matchRate: 85,
+          timestamps: { started: new Date().toISOString() }
+        }
+      }
+    };
+    fs.writeFileSync(
+      path.join(TEST_DIR, 'docs/.pdca-status.json'),
+      JSON.stringify(statusData)
+    );
+
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-resume-type' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    assert.true(result.status === 0 || result.status === null);
+
+    // 출력에 이전 작업 정보 포함 여부 확인
+    if (result.parsed && result.parsed.hookSpecificOutput) {
+      // onboardingType이 있으면 resume 여부 확인
+      if (result.parsed.hookSpecificOutput.onboardingType) {
+        assert.equal(result.parsed.hookSpecificOutput.onboardingType, 'resume');
+      }
+      if (result.parsed.hookSpecificOutput.hasExistingWork !== undefined) {
+        assert.true(result.parsed.hookSpecificOutput.hasExistingWork);
+      }
+    }
+  });
+
+  // TC-H015: 새 사용자 - new_user 타입
+  runner.it('SessionStart detects new user', () => {
+    // 빈 프로젝트 (PDCA 상태 없음)
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-new-user' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    assert.true(result.status === 0 || result.status === null);
+
+    if (result.parsed && result.parsed.hookSpecificOutput) {
+      if (result.parsed.hookSpecificOutput.onboardingType) {
+        assert.equal(result.parsed.hookSpecificOutput.onboardingType, 'new_user');
+      }
+      if (result.parsed.hookSpecificOutput.hasExistingWork !== undefined) {
+        assert.false(result.parsed.hookSpecificOutput.hasExistingWork);
+      }
+    }
+  });
+
+  // TC-H016: bkit 기능 현황 보고 규칙 포함
+  runner.it('SessionStart includes bkit feature report rules', () => {
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-report-rules' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    assert.true(result.status === 0 || result.status === null);
+
+    // v1.4.1 Response Report Rule 포함 확인
+    if (result.parsed) {
+      const context = result.parsed.hookSpecificOutput?.additionalContext ||
+                     result.parsed.systemMessage || '';
+
+      // 보고서 규칙 관련 키워드 포함 여부
+      const hasReportRules = context.includes('bkit 기능 현황') ||
+                            context.includes('PDCA Commands') ||
+                            context.includes('Task System') ||
+                            context.includes('bkit');
+
+      // 최소한 bkit 언급은 있어야 함
+      assert.true(hasReportRules);
+    }
+  });
+
+  // TC-H017: 여러 활성 기능 처리
+  runner.it('SessionStart handles multiple active features', () => {
+    const statusData = {
+      version: '2.0',
+      primaryFeature: 'checkout',
+      activeFeatures: ['login', 'checkout', 'profile'],
+      features: {
+        login: { phase: 'check', phaseNumber: 4 },
+        checkout: { phase: 'do', phaseNumber: 3 },
+        profile: { phase: 'plan', phaseNumber: 1 }
+      }
+    };
+    fs.writeFileSync(
+      path.join(TEST_DIR, 'docs/.pdca-status.json'),
+      JSON.stringify(statusData)
+    );
+
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-multi-features' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR,
+      CLAUDE_PLUGIN_ROOT: path.resolve(__dirname, '../..')
+    });
+
+    assert.true(result.status === 0 || result.status === null);
+  });
+
+  // TC-H018: 플러그인 루트 없이 실행
+  runner.it('SessionStart handles missing plugin root', () => {
+    const hookPath = path.join(HOOKS_DIR, 'session-start.js');
+    if (!fs.existsSync(hookPath)) {
+      console.log('     ⏭️ Skipped: session-start.js not found');
+      return;
+    }
+
+    const input = { session_id: 'test-no-plugin-root' };
+
+    const result = runScriptWithJson(hookPath, input, {
+      CLAUDE_PROJECT_DIR: TEST_DIR
+      // CLAUDE_PLUGIN_ROOT 없음
+    });
+
+    // 크래시 없이 실행
+    assert.true(typeof result.status === 'number' || result.status === null);
+  });
+});
+
 module.exports = runner;

@@ -31,29 +31,8 @@ runner.describe('PDCA Scripts Integration', () => {
     } catch (e) { /* ignore */ }
   });
 
-  // TC-I001
-  runner.it('pdca-pre-write.js runs without error', () => {
-    const scriptPath = path.join(SCRIPTS_DIR, 'pdca-pre-write.js');
-    if (!fs.existsSync(scriptPath)) {
-      console.log('     ⏭️ Skipped: pdca-pre-write.js not found');
-      return;
-    }
-
-    const input = {
-      tool_name: 'Write',
-      tool_input: {
-        file_path: path.join(TEST_DIR, 'src/test.ts'),
-        content: 'test content'
-      }
-    };
-
-    const result = runScriptWithJson(scriptPath, input, {
-      CLAUDE_PROJECT_DIR: TEST_DIR
-    });
-
-    // Script should exit without error
-    assert.true(result.status === 0 || result.status === null || result.status === 2);
-  });
+  // TC-I001: REMOVED - pdca-pre-write.js was deprecated and deleted in v1.4.2
+  // Functionality merged into pre-write.js
 
   // TC-I002
   runner.it('pdca-post-write.js processes file write', () => {

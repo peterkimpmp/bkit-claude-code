@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 /**
- * pre-write.js - Unified PreToolUse/BeforeTool hook for Write|Edit operations (v1.4.0)
+ * pre-write.js - Unified PreToolUse/BeforeTool hook for Write|Edit operations (v1.4.2)
  * Supports: Claude Code (PreToolUse), Gemini CLI (BeforeTool)
  *
- * Purpose: PDCA check, task classification, convention hints
+ * Purpose: PDCA check, task classification, convention hints, permission check
  * Hook: PreToolUse (Claude Code) / BeforeTool (Gemini CLI)
  * Philosophy: Automation First - Guide, don't block
+ *
+ * v1.4.2 Changes:
+ * - Added permission check integration (FR-05)
  *
  * v1.4.0 Changes:
  * - Added debug logging for hook verification
@@ -26,11 +29,21 @@ const {
   classifyTaskByLines,
   getPdcaLevel,
   outputAllow,
+  outputBlock,
   outputEmpty,
   generateTaskGuidance,
   debugLog,
   updatePdcaStatus
 } = require('../lib/common.js');
+
+// v1.4.2: Permission Manager (FR-05)
+let permissionManager;
+try {
+  permissionManager = require('../lib/permission-manager.js');
+} catch (e) {
+  // Fallback if module not available
+  permissionManager = null;
+}
 
 // Read input from stdin
 const input = readStdinSync();
@@ -48,6 +61,25 @@ if (!filePath) {
 
 // Collect context messages
 const contextParts = [];
+
+// ============================================================
+// 0. Permission Check (v1.4.2 - FR-05)
+// ============================================================
+if (permissionManager) {
+  const toolName = input.tool_name || 'Write';  // Write or Edit
+  const permission = permissionManager.checkPermission(toolName, filePath);
+
+  if (permission === 'deny') {
+    debugLog('PreToolUse', 'Permission denied', { filePath, tool: toolName });
+    outputBlock(`${toolName} to ${filePath} is denied by permission policy.`);
+    process.exit(2);
+  }
+
+  if (permission === 'ask') {
+    contextParts.push(`${toolName} to ${filePath} requires confirmation.`);
+    debugLog('PreToolUse', 'Permission requires confirmation', { filePath, tool: toolName });
+  }
+}
 
 // ============================================================
 // 1. Task Classification (v1.3.0 - Line-based, Automation First)

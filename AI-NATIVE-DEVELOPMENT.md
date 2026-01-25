@@ -126,7 +126,7 @@ According to Addy Osmani's research on AI-Native engineers, effective practition
 - Test edge cases and error handling
 - Validate against requirements
 
-### 4. Context Engineering (v1.4.1 Enhanced)
+### 4. Context Engineering (v1.4.2 Enhanced)
 
 Context Engineering is the **systematic design of information flow to LLMs**—going beyond simple prompt crafting to build entire systems that consistently guide AI behavior.
 
@@ -140,7 +140,7 @@ Context Engineering is the **systematic design of information flow to LLMs**—g
 ```
 Domain Knowledge (18 Skills) ─┐
 Behavioral Rules (11 Agents) ─┼─→ 5-Layer Hook System ─→ Dynamic Context Injection
-State Management (76+ funcs) ─┘
+State Management (86+ funcs) ─┘
 ```
 
 See [bkit-system/philosophy/context-engineering.md](bkit-system/philosophy/context-engineering.md) for detailed implementation.
@@ -178,7 +178,7 @@ bkit implements **Context Engineering**—the systematic curation of context tok
 | **CLAUDE.md Files** | Project-specific AI instructions |
 | **Skill System (18 skills)** | Domain-specific knowledge |
 | **5-Layer Hook System** | Context injection at multiple points |
-| **lib/common.js (76+ functions)** | State management, intent detection, ambiguity handling |
+| **lib/*.js (86+ functions)** | State management, intent detection, ambiguity handling |
 
 **Context Engineering Architecture**:
 ```

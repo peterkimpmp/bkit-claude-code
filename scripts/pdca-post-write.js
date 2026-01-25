@@ -68,7 +68,7 @@ if (hasDesignDoc) {
     guidanceProvided: true
   });
 
-  outputAllow(context);
+  outputAllow(context, 'PostToolUse');
 } else {
   debugLog('PostToolUse', 'Hook completed', {
     feature: feature || 'none',

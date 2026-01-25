@@ -55,7 +55,7 @@ if (/font-size:\s*\d+/.test(content)) {
 
 // Output warnings if any
 if (warnings.length > 0) {
-  outputAllow(`Design System Check: ${warnings.join(' | ')}`);
+  outputAllow(`Design System Check: ${warnings.join(' | ')}`, 'PostToolUse');
 } else {
   outputEmpty();
 }

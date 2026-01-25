@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 /**
- * bkit Vibecoding Kit - SessionStart Hook (v1.4.1)
+ * bkit Vibecoding Kit - SessionStart Hook (v1.4.2)
  * Cross-platform Node.js implementation
  * Supports: Claude Code, Gemini CLI
+ *
+ * v1.4.2 Changes:
+ * - Added session context initialization (FR-01)
+ * - Multi-Level Context Hierarchy support
+ * - UserPromptSubmit plugin bug detection (GitHub #20659)
+ * - Skill fork configuration scanning
+ * - Import preloading for performance
  *
  * v1.4.1 Changes:
  * - Added bkit feature usage report rule (Response Report Rule)
@@ -36,6 +43,42 @@ let {
   generateClarifyingQuestions
 } = require('../lib/common.js');
 
+// v1.4.2: Context Hierarchy (FR-01)
+let contextHierarchy;
+try {
+  contextHierarchy = require('../lib/context-hierarchy.js');
+} catch (e) {
+  // Fallback if module not available
+  contextHierarchy = null;
+}
+
+// v1.4.2: Memory Store (FR-08)
+let memoryStore;
+try {
+  memoryStore = require('../lib/memory-store.js');
+} catch (e) {
+  // Fallback if module not available
+  memoryStore = null;
+}
+
+// v1.4.2: Import Resolver (FR-02)
+let importResolver;
+try {
+  importResolver = require('../lib/import-resolver.js');
+} catch (e) {
+  // Fallback if module not available
+  importResolver = null;
+}
+
+// v1.4.2: Context Fork (FR-03)
+let contextFork;
+try {
+  contextFork = require('../lib/context-fork.js');
+} catch (e) {
+  // Fallback if module not available
+  contextFork = null;
+}
+
 // Force-detect Gemini if gemini-extension.json exists (Fix for stale BKIT_PLATFORM)
 try {
   const extensionJsonPath = path.join(__dirname, '../gemini-extension.json');
@@ -57,6 +100,179 @@ debugLog('SessionStart', 'Hook executed', {
 
 // Initialize PDCA status file if not exists
 initPdcaStatusIfNotExists();
+
+// v1.4.2: Initialize session context (FR-01)
+if (contextHierarchy) {
+  try {
+    // Clear any stale session context from previous session
+    contextHierarchy.clearSessionContext();
+
+    // Set initial session values
+    const pdcaStatus = getPdcaStatusFull();
+    contextHierarchy.setSessionContext('sessionStartedAt', new Date().toISOString());
+    contextHierarchy.setSessionContext('platform', BKIT_PLATFORM);
+    contextHierarchy.setSessionContext('level', detectLevel());
+    if (pdcaStatus && pdcaStatus.primaryFeature) {
+      contextHierarchy.setSessionContext('primaryFeature', pdcaStatus.primaryFeature);
+    }
+
+    debugLog('SessionStart', 'Session context initialized', {
+      platform: BKIT_PLATFORM,
+      level: detectLevel()
+    });
+  } catch (e) {
+    debugLog('SessionStart', 'Failed to initialize session context', { error: e.message });
+  }
+}
+
+// v1.4.2: Memory Store Integration (FR-08)
+if (memoryStore) {
+  try {
+    // Track session count
+    const sessionCount = memoryStore.getMemory('sessionCount', 0);
+    memoryStore.setMemory('sessionCount', sessionCount + 1);
+
+    // Store session info
+    const previousSession = memoryStore.getMemory('lastSession', null);
+    memoryStore.setMemory('lastSession', {
+      startedAt: new Date().toISOString(),
+      platform: BKIT_PLATFORM,
+      level: detectLevel()
+    });
+
+    debugLog('SessionStart', 'Memory store initialized', {
+      sessionCount: sessionCount + 1,
+      hasPreviousSession: !!previousSession
+    });
+  } catch (e) {
+    debugLog('SessionStart', 'Failed to initialize memory store', { error: e.message });
+  }
+}
+
+// v1.4.2: Import Resolver Integration (FR-02) - Load startup context
+if (importResolver) {
+  try {
+    const config = getBkitConfig();
+    const startupImports = config.startupImports || [];
+
+    if (startupImports.length > 0) {
+      const { content, errors } = importResolver.resolveImports(
+        { imports: startupImports },
+        path.join(process.cwd(), 'bkit.config.json')
+      );
+
+      if (errors.length > 0) {
+        debugLog('SessionStart', 'Startup import errors', { errors });
+      }
+
+      if (content) {
+        debugLog('SessionStart', 'Startup imports loaded', {
+          importCount: startupImports.length,
+          contentLength: content.length
+        });
+      }
+    }
+  } catch (e) {
+    debugLog('SessionStart', 'Failed to load startup imports', { error: e.message });
+  }
+}
+
+// v1.4.2: Context Fork Cleanup (FR-03) - Clear stale forks from previous session
+if (contextFork) {
+  try {
+    const activeForks = contextFork.getActiveForks();
+    if (activeForks.length > 0) {
+      contextFork.clearAllForks();
+      debugLog('SessionStart', 'Cleared stale forks', { count: activeForks.length });
+    }
+  } catch (e) {
+    debugLog('SessionStart', 'Failed to clear stale forks', { error: e.message });
+  }
+}
+
+// v1.4.2 FIX-03: UserPromptSubmit Plugin Bug Detection (GitHub #20659)
+function checkUserPromptSubmitBug() {
+  // Check if UserPromptSubmit is registered in plugin hooks but may not work
+  const hooksJsonPath = path.join(__dirname, 'hooks.json');
+  try {
+    if (fs.existsSync(hooksJsonPath)) {
+      const hooksConfig = JSON.parse(fs.readFileSync(hooksJsonPath, 'utf8'));
+      if (hooksConfig.hooks?.UserPromptSubmit) {
+        // Plugin has UserPromptSubmit - warn about potential bug
+        return `⚠️ Known Issue: UserPromptSubmit hook in plugins may not trigger (GitHub #20659). Workaround: Add to ~/.claude/settings.json. See docs/TROUBLESHOOTING.md`;
+      }
+    }
+  } catch (e) {
+    debugLog('SessionStart', 'UserPromptSubmit bug check failed', { error: e.message });
+  }
+  return null;
+}
+
+// v1.4.2 FIX-04: Scan Skills for context:fork Configuration
+function scanSkillsForForkConfig() {
+  const skillsDir = path.join(__dirname, '../skills');
+  const forkEnabledSkills = [];
+
+  try {
+    if (fs.existsSync(skillsDir)) {
+      const skills = fs.readdirSync(skillsDir);
+      for (const skill of skills) {
+        const skillMdPath = path.join(skillsDir, skill, 'SKILL.md');
+        if (fs.existsSync(skillMdPath)) {
+          const content = fs.readFileSync(skillMdPath, 'utf8');
+          // Check for context: fork in frontmatter
+          const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+          if (frontmatterMatch) {
+            const frontmatter = frontmatterMatch[1];
+            if (frontmatter.includes('context: fork') || frontmatter.includes('context:fork')) {
+              const mergeResult = !frontmatter.includes('mergeResult: false');
+              forkEnabledSkills.push({ name: skill, mergeResult });
+            }
+          }
+        }
+      }
+    }
+
+    if (forkEnabledSkills.length > 0 && contextHierarchy) {
+      contextHierarchy.setSessionContext('forkEnabledSkills', forkEnabledSkills);
+      debugLog('SessionStart', 'Fork-enabled skills detected', { skills: forkEnabledSkills });
+    }
+  } catch (e) {
+    debugLog('SessionStart', 'Skill fork scan failed', { error: e.message });
+  }
+
+  return forkEnabledSkills;
+}
+
+// v1.4.2 FIX-05: Preload Common Imports for Performance
+function preloadCommonImports() {
+  if (!importResolver) return;
+
+  const commonImports = [
+    '${PLUGIN_ROOT}/templates/shared/api-patterns.md',
+    '${PLUGIN_ROOT}/templates/shared/error-handling.md'
+  ];
+
+  let loadedCount = 0;
+  for (const importPath of commonImports) {
+    try {
+      const resolved = importPath.replace('${PLUGIN_ROOT}', path.join(__dirname, '..'));
+      if (fs.existsSync(resolved)) {
+        // Just check existence for now - actual caching happens on first use
+        loadedCount++;
+      }
+    } catch (e) {
+      // Ignore individual import errors
+    }
+  }
+
+  debugLog('SessionStart', 'Import preload check', { available: loadedCount, total: commonImports.length });
+}
+
+// Execute v1.4.2 fixes
+const userPromptBugWarning = checkUserPromptSubmitBug();
+const forkEnabledSkills = scanSkillsForForkConfig();
+preloadCommonImports();
 
 /**
  * Detect current PDCA phase from status file
@@ -258,7 +474,7 @@ if (isGeminiCli()) {
   // ------------------------------------------------------------
 
   let output = `
-\x1b[36m🤖 bkit Vibecoding Kit v1.4.1 (Gemini Edition)\x1b[0m
+\x1b[36m🤖 bkit Vibecoding Kit v1.4.2 (Gemini Edition)\x1b[0m
 ====================================================
 PDCA Cycle & AI-Native Development Environment
 `;
@@ -399,7 +615,7 @@ AskUserQuestion, SessionStart Hook
 `;
 
   const response = {
-    systemMessage: `bkit Vibecoding Kit v1.4.1 activated (Claude Code)`,
+    systemMessage: `bkit Vibecoding Kit v1.4.2 activated (Claude Code)`,
     hookSpecificOutput: {
       hookEventName: "SessionStart",
       onboardingType: onboardingData.type,

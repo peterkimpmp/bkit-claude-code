@@ -9,6 +9,9 @@ description: |
   Triggers: API design, REST API, backend, endpoint, API 설계, API設計, API设计
 
   Do NOT use for: frontend-only projects, static websites, or Starter level projects.
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/api-patterns.md
+  - ${PLUGIN_ROOT}/templates/shared/error-handling-patterns.md
 hooks:
   Stop:
     - hooks:

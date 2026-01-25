@@ -12,6 +12,8 @@ description: |
 
   Do NOT use for: unit testing with test scripts, frontend-only testing without Docker,
   or design document validation.
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/error-handling-patterns.md
 permissionMode: acceptEdits
 hooks:
   PreToolUse:

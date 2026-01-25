@@ -19,9 +19,9 @@ async function run(options = {}) {
     .filter(f => f.endsWith('.js'));
 
   // Scripts that should produce JSON output
+  // Note: pdca-pre-write.js was deprecated and deleted in v1.4.2
   const jsonOutputScripts = [
-    'pre-write.js',
-    'pdca-pre-write.js'
+    'pre-write.js'
   ];
 
   // Scripts that may produce output or be silent

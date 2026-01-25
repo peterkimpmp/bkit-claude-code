@@ -128,23 +128,23 @@ For deeper understanding, explore the `bkit-system/` folder:
 
 bkit is not just a collection of prompts—it's a **production-grade plugin architecture** with carefully designed components that work together as a cohesive system.
 
-### Component Inventory (v1.4.1)
+### Component Inventory (v1.4.2)
 
 | Component | Count | Purpose |
 |-----------|-------|---------|
 | **Agents** | 11 | Specialized AI subagents for task delegation |
 | **Skills** | 18 | Domain knowledge and automated behaviors |
 | **Commands** | 20 (×2) | User-invocable slash commands (Claude + Gemini) |
-| **Scripts** | 26 | Hook execution scripts (Node.js) |
-| **Templates** | 20 | Document templates (PDCA + 9 phases) |
-| **Hooks** | 5 layers | Event-driven automation triggers |
-| **lib/common.js** | 76+ functions | Shared utility library (v1.4.1) |
+| **Scripts** | 28 | Hook execution scripts (Node.js) |
+| **Templates** | 23 | Document templates (PDCA + 9 phases + shared) |
+| **Hooks** | 5 events | Event-driven automation triggers |
+| **lib/*.js** | 6 modules (86+ functions) | Shared utility library (v1.4.2) |
 
-**Total: 95+ components** working in harmony.
+**Total: 100+ components** working in harmony.
 
 > **v1.4.0**: Dual Platform Support - bkit now works on both Claude Code and Gemini CLI
 
-### Context Engineering Architecture (v1.4.1)
+### Context Engineering Architecture (v1.4.2)
 
 bkit is a **practical implementation of Context Engineering**—the art of curating optimal tokens for LLM inference. Unlike traditional prompt engineering that focuses on single prompts, Context Engineering designs an entire system of context delivery.
 
@@ -170,7 +170,7 @@ bkit is a **practical implementation of Context Engineering**—the art of curat
 │  │  L2: Skill Frontmatter (PreToolUse/PostToolUse/Stop)     │  │
 │  │  L3: Agent Frontmatter (PreToolUse/PostToolUse)          │  │
 │  │  L4: Description Triggers (keyword matching)             │  │
-│  │  L5: Scripts (26 Node.js modules)                        │  │
+│  │  L5: Scripts (28 Node.js modules)                        │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                 │                               │
 │                                 ▼                               │
@@ -206,7 +206,7 @@ For detailed Context Engineering documentation, see [bkit-system/philosophy/cont
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│               bkit Component Architecture (v1.4.1)               │
+│               bkit Component Architecture (v1.4.2)               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Knowledge Layer    │ Skills (18)      │ Domain expertise       │
@@ -215,11 +215,11 @@ For detailed Context Engineering documentation, see [bkit-system/philosophy/cont
 │  ─────────────────────────────────────────────────────────────  │
 │  Interface Layer    │ Commands (20×2)  │ User interaction       │
 │  ─────────────────────────────────────────────────────────────  │
-│  Automation Layer   │ Hooks + Scripts (26) │ Event-driven triggers│
+│  Automation Layer   │ Hooks + Scripts (28) │ Event-driven triggers│
 │  ─────────────────────────────────────────────────────────────  │
-│  Template Layer     │ Templates (20)   │ Document standards     │
+│  Template Layer     │ Templates (23)   │ Document standards     │
 │  ─────────────────────────────────────────────────────────────  │
-│  Shared Library     │ lib/common.js (76+)│ Platform utilities    │
+│  Shared Library     │ lib/*.js (86+ funcs)│ Platform utilities    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -267,7 +267,7 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
    └─ "Triggers:" keywords for auto-activation
 
-Layer 5: Scripts (26 Node.js scripts)
+Layer 5: Scripts (28 Node.js scripts)
    └─ Actual logic execution
 ```
 
@@ -307,7 +307,7 @@ When you customize bkit, you inherit:
 
 | Metric | bkit Value | Industry Typical |
 |--------|------------|------------------|
-| Component Count | 91+ | 10-20 |
+| Component Count | 100+ | 10-20 |
 | Hook Layers | 5 | 1-2 |
 | Template Coverage | 100% PDCA | Partial |
 | Language Support | 8 | 1-2 |
@@ -584,7 +584,7 @@ Maintain and operate enterprise systems with AI assistance:
 
 | Reason | Explanation |
 |--------|-------------|
-| **Proven Foundation** | 91+ components tested in production |
+| **Proven Foundation** | 100+ components tested in production |
 | **Enterprise-Ready** | Clean Architecture + Microservices support |
 | **Future-Proof** | AI-Native methodology adapts to new AI capabilities |
 | **Team Scalable** | Works for solo developers and large teams |
@@ -717,11 +717,11 @@ bkit-claude-code/
 ├── hooks/
 │   ├── hooks.json                  # Claude Code hook configuration
 │   └── session-start.js            # Session initialization (Node.js)
-├── scripts/                        # Shared between platforms (26 scripts)
+├── scripts/                        # Shared between platforms (28 scripts)
 │   └── *.js
 ├── lib/
-│   └── common.js                   # Shared library (80+ functions, v1.4.0)
-└── templates/                      # Shared between platforms (20 templates)
+│   └── *.js                        # Shared library (6 modules, 86+ functions, v1.4.2)
+└── templates/                      # Shared between platforms (23 templates)
     ├── plan.template.md
     └── design.template.md
 ```

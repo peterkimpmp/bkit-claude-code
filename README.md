@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-v2.1.15+-purple.svg)](https://docs.anthropic.com/en/docs/claude-code/getting-started)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v1.0.0+-4285F4.svg)](https://geminicli.dev)
-[![Version](https://img.shields.io/badge/Version-1.4.1-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.4.2-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + AI coding assistant mastery for AI-native development**
@@ -38,18 +38,18 @@ bkit implements Context Engineering through three interconnected layers:
 |-------|------------|---------|
 | **Domain Knowledge** | 18 Skills | Structured expert knowledge (phases, levels, specialized domains) |
 | **Behavioral Rules** | 11 Agents | Role-based constraints with model selection (opus/sonnet/haiku) |
-| **State Management** | 76+ Functions | PDCA status, intent detection, ambiguity scoring, multi-feature context |
+| **State Management** | 86+ Functions | PDCA status, intent detection, ambiguity scoring, multi-feature context |
 
 ### 5-Layer Hook System
 
 Context injection occurs at five distinct layers:
 
 ```
-Layer 1: hooks.json (Global)     → Session initialization, PDCA onboarding
+Layer 1: hooks.json (Global)     → SessionStart, UserPromptSubmit, PreCompact (v1.4.2)
 Layer 2: Skill Frontmatter       → Domain-specific hooks (PreToolUse, PostToolUse, Stop)
 Layer 3: Agent Frontmatter       → Task-specific hooks with constraints
 Layer 4: Description Triggers    → Semantic matching in 8 languages
-Layer 5: Scripts (26 modules)    → Actual Node.js execution logic
+Layer 5: Scripts (28 modules)    → Actual Node.js execution logic
 ```
 
 > **Learn more**: See [Context Engineering Principles](bkit-system/philosophy/context-engineering.md) for detailed implementation.
@@ -60,7 +60,7 @@ Layer 5: Scripts (26 modules)    → Actual Node.js execution logic
 
 ![bkit Features](images/bkit-features.png)
 
-- **Context Engineering (v1.4.1)** - Systematic context curation for optimal LLM inference with 5-layer hook system
+- **Context Engineering (v1.4.2)** - Systematic context curation with 6 library modules and 5-layer hook system
 - **PDCA Methodology** - Structured development workflow with automatic documentation
 - **Evaluator-Optimizer Pattern** - Automatic iteration cycles from Anthropic's agent architecture
 - **9-Stage Development Pipeline** - From schema design to deployment
@@ -69,8 +69,8 @@ Layer 5: Scripts (26 modules)    → Actual Node.js execution logic
 - **20 Commands** - Automate common development tasks
 - **18 Skills** - Domain-specific knowledge for various development scenarios
 - **11 Agents** - Specialized AI assistants for different tasks
-- **26 Scripts** - Hook execution and automation scripts
-- **76+ Utility Functions** - lib/common.js with state management, intent detection, ambiguity handling
+- **28 Scripts** - Hook execution and automation scripts
+- **86+ Utility Functions** - 6 library modules with state management, intent detection, ambiguity handling
 - **Check-Act Iteration Loop** - Automatic gap analysis and fix cycles (v1.3.0+)
 
 ---
@@ -311,7 +311,7 @@ bkit is **primarily designed for software development**. However, some component
 ### Current Reference (bkit-system/)
 
 - **[System Architecture](bkit-system/README.md)** - Plugin structure and trigger system overview
-- **[Context Engineering](bkit-system/philosophy/context-engineering.md)** - LLM context curation principles (v1.4.1) ⭐ NEW
+- **[Context Engineering](bkit-system/philosophy/context-engineering.md)** - LLM context curation principles (v1.4.2)
 - **[Core Mission & Philosophy](bkit-system/philosophy/core-mission.md)** - 3 core philosophies (Automation First, No Guessing, Docs=Code)
 - **[AI-Native Principles](bkit-system/philosophy/ai-native-principles.md)** - AI-Native development and 3 core competencies
 - **[PDCA Methodology](bkit-system/philosophy/pdca-methodology.md)** - PDCA cycle and 9-stage pipeline relationship

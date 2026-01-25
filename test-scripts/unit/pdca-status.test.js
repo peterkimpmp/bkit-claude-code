@@ -242,4 +242,127 @@ runner.describe('PDCA Status Management', () => {
   });
 });
 
+// ============================================================
+// TR-06: updatePdcaStatus() 반환값 검증 (v1.4.2)
+// ============================================================
+
+runner.describe('TR-06: updatePdcaStatus() Return Value', () => {
+  runner.beforeEach(() => {
+    // 테스트 디렉토리 생성
+    fs.mkdirSync(path.join(TEST_DIR, 'docs'), { recursive: true });
+    mockEnv.set('CLAUDE_PROJECT_DIR', TEST_DIR);
+    clearModuleCache('../../lib/common');
+  });
+
+  runner.afterEach(() => {
+    mockEnv.restore();
+    try {
+      fs.rmSync(TEST_DIR, { recursive: true, force: true });
+    } catch (e) {
+      // 무시
+    }
+  });
+
+  // TR-06.1
+  runner.it('Returns success: true on valid update', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    const result = common.updatePdcaStatus('test-feature', 'plan', {});
+
+    assert.exists(result);
+    assert.equal(result.success, true);
+    assert.equal(result.feature, 'test-feature');
+    assert.equal(result.phase, 'plan');
+  });
+
+  // TR-06.2
+  runner.it('Returns feature and phase in result', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    const result = common.updatePdcaStatus('my-feature', 'check', { matchRate: 85 });
+
+    assert.exists(result);
+    assert.equal(result.feature, 'my-feature');
+    assert.equal(result.phase, 'check');
+  });
+
+  // TR-06.3
+  runner.it('Returns success: true for phase transitions', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    // Plan → Design → Do → Check → Act
+    const phases = ['plan', 'design', 'do', 'check', 'act'];
+    for (const phase of phases) {
+      clearModuleCache('../../lib/common');
+      const freshCommon = require('../../lib/common');
+      const result = freshCommon.updatePdcaStatus('transition-test', phase, {});
+
+      assert.exists(result);
+      assert.equal(result.success, true);
+      assert.equal(result.phase, phase);
+    }
+  });
+
+  // TR-06.4
+  runner.it('Returns success: true with matchRate data', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    const result = common.updatePdcaStatus('analyzed-feature', 'check', { matchRate: 92.5 });
+
+    assert.exists(result);
+    assert.equal(result.success, true);
+    assert.equal(result.feature, 'analyzed-feature');
+    assert.equal(result.phase, 'check');
+  });
+
+  // TR-06.5
+  runner.it('Returns success: true for completed phase', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    const result = common.updatePdcaStatus('done-feature', 'completed', {});
+
+    assert.exists(result);
+    assert.equal(result.success, true);
+    assert.equal(result.phase, 'completed');
+  });
+
+  // TR-06.6
+  runner.it('Result object has correct structure', () => {
+    const common = require('../../lib/common');
+    if (typeof common.updatePdcaStatus !== 'function') {
+      console.log('     ⏭️ Skipped: updatePdcaStatus not exported');
+      return;
+    }
+
+    const result = common.updatePdcaStatus('struct-test', 'design', {});
+
+    // 필수 필드 확인
+    assert.exists(result.success);
+    assert.exists(result.feature);
+    assert.exists(result.phase);
+    // 성공 시 error 필드 없음
+    assert.equal(result.error, undefined);
+  });
+});
+
 module.exports = runner;

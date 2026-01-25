@@ -29,7 +29,7 @@ Recommended actions:
 2. Run /pdca-iterate for auto-fix
 3. Re-run Zero Script QA after fixes`;
 
-    outputAllow(message);
+    outputAllow(message, 'PostToolUse');
   } else {
     const message = `✅ QA Report saved. No critical issues detected.
 
@@ -37,7 +37,7 @@ Next steps:
 1. Review warning items if any
 2. Proceed to next phase when ready`;
 
-    outputAllow(message);
+    outputAllow(message, 'PostToolUse');
   }
 } else {
   outputEmpty();

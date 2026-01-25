@@ -1,7 +1,8 @@
 # Hooks Overview
 
-> Hook events triggered during Claude Code / Gemini CLI operations (v1.4.1)
+> Hook events triggered during Claude Code / Gemini CLI operations
 >
+> **v1.4.2**: Added UserPromptSubmit (FR-04) and PreCompact (FR-07) hook events
 > **v1.4.1**: Added Context Engineering perspective - 5-Layer Hook System
 > **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 > **v1.3.1**: All hooks converted from Bash (.sh) to Node.js (.js) for cross-platform compatibility
@@ -22,11 +23,12 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    5-Layer Hook System                           │
+│                    5-Layer Hook System (v1.4.2)                  │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  Layer 1: hooks.json (Global)                                   │
-│           └── SessionStart only (AskUserQuestion guidance)      │
+│           └── SessionStart, UserPromptSubmit, PreCompact        │
+│               PreToolUse (Write|Edit), PostToolUse (Write)      │
 │                                                                  │
 │  Layer 2: Skill Frontmatter                                     │
 │           └── hooks: { PreToolUse, PostToolUse, Stop }          │
@@ -37,7 +39,7 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 │  Layer 4: Description Triggers                                  │
 │           └── "Triggers:" keyword matching (8 languages)        │
 │                                                                  │
-│  Layer 5: Scripts (26 modules)                                  │
+│  Layer 5: Scripts (28 modules)                                  │
 │           └── Actual Node.js logic execution                    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -48,38 +50,50 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 | Event | Timing | Injection Type |
 |-------|--------|----------------|
 | **SessionStart** | Session start | Onboarding, PDCA status, trigger table |
-| **PreToolUse** | Before tool execution | Validation checklist, convention hints |
+| **UserPromptSubmit** | Before AI processing (v1.4.2) | Intent detection, agent/skill triggers, ambiguity score |
+| **PreToolUse** | Before tool execution | Validation checklist, convention hints, permission check |
 | **PostToolUse** | After tool execution | Next step guide, analysis suggestions |
+| **PreCompact** | Before context compaction (v1.4.2) | PDCA state snapshot, context preservation |
 | **Stop** | Agent termination | State transition, user choice prompt |
 
-## Platform Hook Mapping (v1.4.0)
+## Platform Hook Mapping (v1.4.2)
 
-| Hook Event | Claude Code | Gemini CLI |
-|------------|-------------|------------|
-| Session initialization | `SessionStart` | `SessionStart` |
-| Before tool execution | `PreToolUse` | `BeforeTool` |
-| After tool execution | `PostToolUse` | `AfterTool` |
-| Agent completion | `Stop` | `AgentStop` |
+| Hook Event | Claude Code | Gemini CLI | Added |
+|------------|-------------|------------|:-----:|
+| Session initialization | `SessionStart` | `SessionStart` | v1.0 |
+| User input preprocessing | `UserPromptSubmit` | `UserPromptSubmit` | v1.4.2 |
+| Before tool execution | `PreToolUse` | `BeforeTool` | v1.0 |
+| After tool execution | `PostToolUse` | `AfterTool` | v1.0 |
+| Before context compaction | `PreCompact` | `PreCompact` | v1.4.2 |
+| Agent completion | `Stop` | `AgentStop` | v1.0 |
 
-## Hook Architecture
+## Hook Architecture (v1.4.2)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Hook Sources                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  hooks/hooks.json (Global)     skills/*/SKILL.md (Local)    │
-│  ┌─────────────────────┐       ┌─────────────────────┐      │
-│  │ SessionStart        │       │ PreToolUse          │      │
-│  │ └─ session-start.js │       │ PostToolUse         │      │
-│  └─────────────────────┘       │ Stop                │      │
-│                                └─────────────────────┘      │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Hook Sources                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  hooks/hooks.json (Global)              skills/*/SKILL.md (Local)   │
+│  ┌───────────────────────────────┐      ┌─────────────────────┐     │
+│  │ SessionStart                  │      │ PreToolUse          │     │
+│  │   └─ session-start.js         │      │ PostToolUse         │     │
+│  │ UserPromptSubmit (v1.4.2)     │      │ Stop                │     │
+│  │   └─ user-prompt-handler.js   │      └─────────────────────┘     │
+│  │ PreToolUse (Write|Edit)       │                                  │
+│  │   └─ pre-write.js             │      agents/*.md (Local)         │
+│  │ PostToolUse (Write)           │      ┌─────────────────────┐     │
+│  │   └─ pdca-post-write.js       │      │ PreToolUse          │     │
+│  │ PreCompact (v1.4.2)           │      │ PostToolUse         │     │
+│  │   └─ context-compaction.js    │      │ context: fork       │     │
+│  └───────────────────────────────┘      └─────────────────────┘     │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Global Hooks Configuration
 
-Global hooks are defined in `hooks/hooks.json`:
+Global hooks are defined in `hooks/hooks.json` (v1.4.2 includes 5 hook events):
 
 ```json
 {
@@ -91,6 +105,13 @@ Global hooks are defined in `hooks/hooks.json`:
         "once": true,
         "hooks": [
           { "type": "command", "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.js", "timeout": 5000 }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/user-prompt-handler.js", "timeout": 3000 }
         ]
       }
     ],
@@ -109,12 +130,20 @@ Global hooks are defined in `hooks/hooks.json`:
           { "type": "command", "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/pdca-post-write.js", "timeout": 5000 }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto|manual",
+        "hooks": [
+          { "type": "command", "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/context-compaction.js", "timeout": 5000 }
+        ]
+      }
     ]
   }
 }
 ```
 
-> **Note**: `SessionStart`, `PreToolUse`, and `PostToolUse` are all defined in `hooks/hooks.json` for global PDCA enforcement. Skill frontmatter can define additional hooks for contextual features.
+> **Note**: v1.4.2 adds `UserPromptSubmit` (FR-04) for user input preprocessing and `PreCompact` (FR-07) for PDCA state preservation during context compaction. Skill/Agent frontmatter can define additional hooks for contextual features.
 
 ## Hook Events
 
@@ -147,7 +176,32 @@ Global hooks are defined in `hooks/hooks.json`:
 }
 ```
 
-### 2. PreToolUse (Global + Skill Frontmatter)
+### 2. UserPromptSubmit (Global - hooks.json) (v1.4.2)
+
+**Trigger**: When user submits a prompt, before AI processing
+**Defined in**: `hooks/hooks.json` (global)
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/user-prompt-handler.js` | Intent detection, agent/skill triggers, ambiguity scoring |
+
+**Features** (FR-04):
+- Feature intent detection from user message
+- Implicit agent trigger matching (8 languages)
+- Implicit skill trigger matching
+- Ambiguity score calculation
+
+**Output**:
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "UserPromptSubmit",
+    "additionalContext": "Detected intent: new feature 'auth-system'. Suggested: pdca-plan"
+  }
+}
+```
+
+### 3. PreToolUse (Global + Skill Frontmatter)
 
 **Trigger**: Before Write/Edit tool operations
 **Defined in**: `hooks/hooks.json` (global) + Skill YAML frontmatter (contextual)
@@ -178,7 +232,7 @@ Global hooks are defined in `hooks/hooks.json`:
 }
 ```
 
-### 3. PostToolUse (Global + Skill Frontmatter)
+### 4. PostToolUse (Global + Skill Frontmatter)
 
 **Trigger**: After Write tool operations complete
 **Defined in**: `hooks/hooks.json` (global) + Skill YAML frontmatter (contextual)
@@ -192,20 +246,58 @@ Global hooks are defined in `hooks/hooks.json`:
 - Next step suggestions
 - Issue detection and notification
 
-## Hook Flow Diagram
+### 5. PreCompact (Global - hooks.json) (v1.4.2)
+
+**Trigger**: Before context compaction (auto or manual)
+**Defined in**: `hooks/hooks.json` (global)
+
+| Matcher | Script | Purpose |
+|---------|--------|---------|
+| `auto\|manual` | `scripts/context-compaction.js` | PDCA state snapshot and preservation |
+
+**Features** (FR-07):
+- Creates PDCA state snapshot to `docs/.pdca-snapshots/`
+- Automatic cleanup (keeps 10 most recent snapshots)
+- Outputs state summary for context restoration
+
+**Output**:
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreCompact",
+    "additionalContext": "PDCA state preserved. Active: auth-system (design phase)"
+  }
+}
+```
+
+## Hook Flow Diagram (v1.4.2)
 
 ```
 SessionStart (once)
     │
+    ├─ session-start.js
+    │   ├─ Context hierarchy loading (FR-01)
+    │   ├─ Import resolution (FR-02)
+    │   ├─ Stale fork cleanup (FR-03)
+    │   └─ Memory initialization (FR-08)
+    │
     ▼
 ┌─────────────────────────────────────────┐
-│            User Action                   │
+│            User Message                  │
 └─────────────────────────────────────────┘
+    │
+    ▼
+UserPromptSubmit (v1.4.2)
+    ├─ user-prompt-handler.js
+    │   ├─ Feature intent detection
+    │   ├─ Agent/Skill trigger matching
+    │   └─ Ambiguity scoring
     │
     ▼
 PreToolUse (Write|Edit)
     ├─ pre-write.js
-    │   ├─ Task classification (Quick Fix → Major Feature)
+    │   ├─ Permission check (FR-05)
+    │   ├─ Task classification
     │   ├─ PDCA phase detection
     │   └─ Convention hints
     │
@@ -220,15 +312,23 @@ PostToolUse (Write)
     └─ pdca-post-write.js
         ├─ Extract feature name
         └─ Suggest gap analysis
+    │
+    ▼
+PreCompact (when context limit reached) (v1.4.2)
+    └─ context-compaction.js
+        ├─ PDCA state snapshot
+        └─ Auto-cleanup (10 recent)
 ```
 
 ## Script Dependencies
 
 | Hook | Script | Dependencies |
 |------|--------|--------------|
-| SessionStart | `session-start.js` | `lib/common.js`, `bkit.config.json` |
-| PreToolUse | `pre-write.js` | `lib/common.js`, `bkit.config.json` |
+| SessionStart | `session-start.js` | `lib/common.js`, `lib/context-hierarchy.js`, `lib/import-resolver.js`, `lib/context-fork.js`, `lib/memory-store.js` |
+| UserPromptSubmit | `user-prompt-handler.js` | `lib/common.js`, `lib/import-resolver.js` |
+| PreToolUse | `pre-write.js` | `lib/common.js`, `lib/permission-manager.js`, `bkit.config.json` |
 | PostToolUse | `pdca-post-write.js` | `lib/common.js` |
+| PreCompact | `context-compaction.js` | `lib/common.js` |
 
 ## Additional Scripts (Not in hooks.json)
 

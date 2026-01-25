@@ -1,7 +1,8 @@
 # Scripts Overview
 
-> 26 Node.js Scripts used by bkit hooks (v1.4.1)
+> 28 Node.js Scripts used by bkit hooks (v1.4.2)
 >
+> **v1.4.2**: Added UserPromptSubmit + PreCompact hooks, Context Engineering library modules
 > **v1.4.1**: Added Context Engineering perspective - State Management Layer via lib/common.js
 > **v1.4.0**: Added 5 new phase completion handlers, Dual Platform Support (Claude Code + Gemini CLI)
 > **v1.3.1**: All scripts converted from Bash (.sh) to Node.js (.js) for cross-platform support
@@ -64,7 +65,12 @@ All scripts are at root level (not in .claude/):
 ```
 bkit-claude-code/
 ├── lib/
-│   └── common.js              # Shared utility library (v1.4.0, 80+ functions)
+│   ├── common.js              # Shared utility library (v1.4.2, 86+ functions)
+│   ├── context-hierarchy.js   # Multi-level context management (v1.4.2)
+│   ├── import-resolver.js     # @import directive processing (v1.4.2)
+│   ├── context-fork.js        # Context isolation (v1.4.2)
+│   ├── permission-manager.js  # Permission hierarchy (v1.4.2)
+│   └── memory-store.js        # Persistent memory storage (v1.4.2)
 ├── hooks/
 │   └── session-start.js       # SessionStart hook
 ├── scripts/
@@ -93,11 +99,14 @@ bkit-claude-code/
 │   ├── gap-detector-stop.js       # Agent: Gap detector completion (v1.3.0)
 │   ├── iterator-stop.js           # Agent: Iterator completion (v1.3.0)
 │   ├── analysis-stop.js           # Agent: Analysis completion
+│   ├── code-analyzer-pre.js       # Agent: Code analyzer read-only block (v1.4.2)
 │   │
-│   ├── pdca-pre-write.js          # Legacy (use pre-write.js)
 │   ├── archive-feature.js         # Utility: Feature archiving
 │   ├── sync-folders.js            # Utility: Folder sync
-│   └── validate-plugin.js         # Utility: Plugin validation
+│   ├── validate-plugin.js         # Utility: Plugin validation
+│   │
+│   ├── user-prompt-handler.js     # Hook: UserPromptSubmit (v1.4.2)
+│   └── context-compaction.js      # Hook: PreCompact (v1.4.2)
 └── bkit.config.json           # Centralized configuration
 ```
 
@@ -159,18 +168,38 @@ bkit-claude-code/
 
 > **Note**: `gap-detector-post.js` exists in scripts/ but is **not currently used** by any agent. The gap-detector agent only uses Stop hook.
 
-### Utility Scripts (4)
+### Utility Scripts (3)
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| pdca-pre-write.js | Legacy script | Superseded by pre-write.js |
 | archive-feature.js | Feature archiving | `/archive` command |
 | sync-folders.js | Folder synchronization | Manual maintenance |
 | validate-plugin.js | Plugin validation | CI/CD or manual |
 
-## Shared Library: lib/common.js
+### Global Hook Scripts (2) - v1.4.2
 
+| Script | Hook Event | Purpose |
+|--------|------------|---------|
+| user-prompt-handler.js | UserPromptSubmit | User input preprocessing, agent suggestion |
+| context-compaction.js | PreCompact | PDCA state preservation during context compaction |
+
+> **Note**: pdca-pre-write.js was deprecated and deleted in v1.4.2. Its functionality is integrated into pre-write.js.
+
+## Shared Library: lib/*.js
+
+> **v1.4.2**: 6 library modules with 86+ functions total
 > **v1.4.0**: Expanded from 38 to 80+ functions with dual platform support
+
+### Library Modules (v1.4.2)
+
+| Module | Functions | Purpose |
+|--------|-----------|---------|
+| common.js | 86+ | Core utilities, PDCA status, intent detection |
+| context-hierarchy.js | 4 | Multi-level context management (Plugin → User → Project → Session) |
+| import-resolver.js | 3 | @import directive processing |
+| context-fork.js | 2 | Skill/Agent isolated context execution |
+| permission-manager.js | 3 | Permission hierarchy (deny → ask → allow) |
+| memory-store.js | 4 | Session-persistent data storage (MEMORY variable) |
 
 All scripts can require common utilities:
 

@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-01-26
+
+### Added
+- **FR-01: Multi-Level Context Hierarchy** - 4-level context (Plugin → User → Project → Session)
+- **FR-02: @import Directive** - External context file loading support
+- **FR-03: context:fork** - Skill/Agent isolated context execution
+- **FR-04: UserPromptSubmit Hook** - User input preprocessing
+- **FR-05: Permission Hierarchy** - deny → ask → allow permission chain
+- **FR-06: Task Dependency Chain** - PDCA phase-based task blocking
+- **FR-07: Context Compaction Hook** - PDCA state preservation during compaction
+- **FR-08: MEMORY Variable** - Session-persistent data storage
+
+### Fixed
+- **outputAllow() API Schema**: Removed invalid `decision: 'allow'` from UserPromptSubmit, added `hookEventName` field
+- **PreCompact Hook Registration**: Registered in hooks.json to activate context-compaction.js
+- **UserPromptSubmit Bug Detection**: Auto-detection for GitHub #20659 plugin bug
+- **context:fork Scanning**: SessionStart scans skills for fork configuration
+- **Import Preloading**: Common imports checked at session start
+
+### New Files
+- `lib/context-hierarchy.js` - Multi-level context management
+- `lib/import-resolver.js` - @import directive processing
+- `lib/context-fork.js` - Context isolation
+- `lib/permission-manager.js` - Permission hierarchy
+- `lib/memory-store.js` - Persistent memory storage
+- `scripts/user-prompt-handler.js` - UserPromptSubmit hook
+- `scripts/context-compaction.js` - PreCompact hook
+
+### Compatibility
+- **Claude Code**: Minimum v2.1.15, Recommended v2.1.19
+- **Gemini CLI**: Minimum v1.0.0
+- **Node.js**: Minimum v18.0.0
+
+---
+
 ## [1.4.1] - 2026-01-24
 
 ### Added
@@ -41,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `features` object for tracking multiple features simultaneously
   - `activeFeature` for current working context
   - Auto-migration from v1.0 schema via `migrateStatusToV2()`
-- **lib/common.js Expansion**: 80+ functions (up from 38)
+- **lib/common.js Expansion**: 86+ functions (up from 38)
   - **Platform Detection**: `detectPlatform()`, `isGeminiCli()`, `isClaudeCode()`, `getPluginPath()`
   - **Caching System**: In-memory TTL-based cache (`_cache` object)
   - **Debug Logging**: `debugLog()` with platform-specific paths

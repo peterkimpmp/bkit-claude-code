@@ -5,6 +5,8 @@
 > **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 >
 > **v1.4.1**: Context Engineering perspective added - Optimal token curation for LLM reasoning
+>
+> **v1.4.2**: Context Engineering modules + Task Management integration + UserPromptSubmit/PreCompact hooks
 
 ## Purpose of This Document
 
@@ -46,7 +48,7 @@ bkit is a practical implementation of **Context Engineering**. Context Engineeri
 │  │  L2: Skill Frontmatter (PreToolUse/PostToolUse/Stop)     │  │
 │  │  L3: Agent Frontmatter (PreToolUse/PostToolUse)          │  │
 │  │  L4: Description Triggers (keyword matching)             │  │
-│  │  L5: Scripts (26 Node.js modules)                        │  │
+│  │  L5: Scripts (28 Node.js modules)                        │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                 │                               │
 │                                 ▼                               │
@@ -78,19 +80,19 @@ Details: [[philosophy/context-engineering]]
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                bkit Trigger System (v1.4.0)                      │
+│                bkit Trigger System (v1.4.2)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
 │  │   Skills     │───▶│   Agents     │───▶│   Scripts    │      │
-│  │  (18)        │    │  (11)        │    │  (26)        │      │
+│  │  (18)        │    │  (11)        │    │  (28)        │      │
 │  └──────────────┘    └──────────────┘    └──────────────┘      │
 │         │                   │                   │               │
 │         ▼                   ▼                   ▼               │
 │  ┌──────────────────────────────────────────────────────┐      │
-│  │                    Hooks Layer                        │      │
-│  │  PreToolUse │ PostToolUse │ Stop │ SessionStart      │      │
-│  │  (BeforeTool│ AfterTool   │AgentStop - Gemini CLI)   │      │
+│  │                    Hooks Layer (5 events)             │      │
+│  │  SessionStart │ UserPromptSubmit │ PreToolUse │       │      │
+│  │  PostToolUse  │ PreCompact       │ (+ Stop)           │      │
 │  └──────────────────────────────────────────────────────┘      │
 │                              │                                  │
 │                              ▼                                  │
@@ -108,25 +110,25 @@ Details: [[philosophy/context-engineering]]
 | Skills | 18 | Domain knowledge | [[components/skills/_skills-overview]] |
 | Agents | 11 | Specialized task execution | [[components/agents/_agents-overview]] |
 | Commands | 20 (×2) | Slash commands | Claude: `commands/*.md`, Gemini: `commands/gemini/*.toml` |
-| Hooks | 3 events | Event-based triggers | [[components/hooks/_hooks-overview]] |
-| Scripts | 26 | Actual logic execution | [[components/scripts/_scripts-overview]] |
-| Lib | 1 | Shared utilities | `lib/common.js` (80+ functions) |
+| Hooks | 5 events | Event-based triggers | [[components/hooks/_hooks-overview]] |
+| Scripts | 28 | Actual logic execution | [[components/scripts/_scripts-overview]] |
+| Lib | 6 | Shared utilities | `lib/*.js` (86+ functions) |
 | Config | 1 | Centralized settings | `bkit.config.json` |
-| Templates | 20 | Document templates | PDCA + Pipeline phases |
+| Templates | 23 | Document templates | PDCA + Pipeline + Shared |
 
 ## Trigger Layers
 
 bkit triggers occur across 5 layers:
 
 ```
-Layer 1: hooks.json (Global) → SessionStart only (with AskUserQuestion guidance)
+Layer 1: hooks.json (Global) → SessionStart, UserPromptSubmit, PreCompact (v1.4.2)
 Layer 2: Skill Frontmatter   → hooks: PreToolUse, PostToolUse, Stop
 Layer 3: Agent Frontmatter   → hooks: PreToolUse, PostToolUse
 Layer 4: Description Triggers → "Triggers:" keyword matching
-Layer 5: Scripts             → Actual Node.js logic execution
+Layer 5: Scripts             → Actual Node.js logic execution (28 modules)
 ```
 
-> **Note**: Only SessionStart is in global hooks.json. PreToolUse/PostToolUse hooks are defined in skill/agent frontmatter for contextual activation.
+> **Note**: Global hooks.json contains 5 hook events. PreToolUse/PostToolUse hooks are also defined in skill/agent frontmatter for contextual activation.
 
 Details: [[triggers/trigger-matrix]]
 
@@ -212,4 +214,4 @@ The `bkit-system/.obsidian/` folder includes shared settings:
 | `workspace.json` | Personal workspace state | No |
 | `app.json` | Personal app settings | No |
 
-> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 18 skills, 11 agents, 26 scripts, and their relationships.
+> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 18 skills, 11 agents, 28 scripts, and their relationships.

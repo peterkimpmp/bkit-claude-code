@@ -20,7 +20,7 @@ if (filePath.includes('.analysis.md') || filePath.includes('-analysis.md')) {
 
 If match rate is below 70%, run /pdca-iterate to automatically improve the implementation.`;
 
-  outputAllow(message);
+  outputAllow(message, 'PostToolUse');
 } else {
   outputEmpty();
 }

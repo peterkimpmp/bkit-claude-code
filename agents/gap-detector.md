@@ -15,6 +15,10 @@ description: |
   está bien?, es correcto?, c'est correct?, ist das richtig?, è giusto?, va bene?
 
   Do NOT use for: documentation-only tasks, initial planning, or design creation.
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/api-patterns.md
+context: fork
+mergeResult: false
 permissionMode: plan
 disallowedTools:
   - Write

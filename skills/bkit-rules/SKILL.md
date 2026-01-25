@@ -10,6 +10,8 @@ description: |
   개발, 기능, 버그, 코드, 설계, 문서, 開発, 機能, バグ, 开发, 功能, 代码
 
   Do NOT use for: documentation-only tasks, research, or exploration without code changes.
+imports:
+  - ${PLUGIN_ROOT}/templates/shared/naming-conventions.md
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

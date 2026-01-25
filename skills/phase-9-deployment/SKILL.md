@@ -15,6 +15,7 @@ hooks:
       hooks:
         - type: command
           command: "node ${CLAUDE_PLUGIN_ROOT}/scripts/phase9-deploy-pre.js"
+          timeout: 5000
 agent: infra-architect
 allowed-tools:
   - Read

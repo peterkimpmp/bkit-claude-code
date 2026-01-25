@@ -30,14 +30,14 @@ if (isUiLayer) {
 - Follow: Components → hooks → services → apiClient
 - No business logic in UI components`;
 
-  outputAllow(message);
+  outputAllow(message, 'PostToolUse');
 } else if (isServiceLayer) {
   const message = `🔍 Service Layer Check:
 - Services should only call apiClient
 - No direct DOM manipulation
 - Keep domain logic isolated`;
 
-  outputAllow(message);
+  outputAllow(message, 'PostToolUse');
 } else {
   outputEmpty();
 }
