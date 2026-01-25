@@ -15,7 +15,7 @@
 | [[01-AI-NATIVE-TRANSFORMATION]] | As-Is/To-Be, ROI, 3 core competencies | → [[../../bkit-system/philosophy/ai-native-principles]] |
 | [[02-BKIT-PLUGIN-DESIGN]] | Plugin structure, hooks format | → [[../../bkit-system/components/hooks/_hooks-overview]] |
 | [[03-BKIT-FEATURES]] | PDCA vs Pipeline, level features | → [[../../bkit-system/philosophy/pdca-methodology]] |
-| [[04-HOOKS-AND-COMPONENTS-GUIDE]] | Implementation details, hook schemas | → [[../../bkit-system/components/]] |
+| [[04-HOOKS-AND-COMPONENTS-GUIDE]] | Implementation details, hook schemas | → [[../../bkit-system/README]] |
 
 ## Usage
 
@@ -34,6 +34,6 @@
 
 ## Related Documents
 
-- [[../_INDEX]] - Archive 인덱스
+- [[../2026-01/_INDEX]] - 최신 Archive 인덱스
 - [[../../../bkit-system/README]] - 현재 시스템 개요
 - [[../../../bkit-system/philosophy/core-mission]] - 현재 철학 문서

@@ -6,7 +6,7 @@
 >
 > **v1.2.1 Multi-Language Support**: Extension-based file detection, 20+ language support, configurable patterns
 >
-> **v1.2.1 Language Tier System**: AI-Native 개발 및 Vibe Coding 트렌드 반영한 4단계 언어 분류 체계
+> **v1.2.1 Language Tier System**: 4-tier language classification reflecting AI-Native development and Vibe Coding trends
 >
 > **v1.2.3 SessionStart Enhancement**: AskUserQuestion guidance with 4 options for session initialization
 >
@@ -14,25 +14,25 @@
 >
 > **v1.3.1 Cross-Platform**: All hooks converted from Bash (.sh) to Node.js (.js) for Windows/Mac/Linux compatibility
 >
-> **v1.4.0 Dual Platform Support**: Claude Code + Gemini CLI 동시 지원, 80+ lib/common.js 함수, 8언어 Intent Detection
+> **v1.4.0 Dual Platform Support**: Claude Code + Gemini CLI simultaneous support, 80+ lib/common.js functions, 8-language Intent Detection
 >
-> **v1.4.1 Context Engineering**: LLM 추론을 위한 최적의 토큰 큐레이션 관점 추가, Response Report Rule
+> **v1.4.1 Context Engineering**: Optimal token curation perspective for LLM reasoning, Response Report Rule
 
 ## Philosophy (4)
 
 ### Context Engineering (NEW)
 
-bkit은 **Context Engineering**의 실제 구현체입니다:
+bkit is a practical implementation of **Context Engineering**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │              bkit Context Engineering Components                 │
 ├─────────────────────────────────────────────────────────────────┤
-│  Domain Knowledge (18 Skills)  → 구조화된 도메인 지식            │
-│  Behavioral Rules (11 Agents)  → 역할 기반 행동 규칙             │
-│  State Management (lib/common) → 상태 관리 76+ 함수             │
-│  5-Layer Hook System           → 컨텍스트 주입 타이밍 제어       │
-│  Dynamic Injection             → 조건부 컨텍스트 선택            │
+│  Domain Knowledge (18 Skills)  → Structured domain knowledge     │
+│  Behavioral Rules (11 Agents)  → Role-based behavioral rules     │
+│  State Management (lib/common) → State management 76+ functions  │
+│  5-Layer Hook System           → Context injection timing ctrl   │
+│  Dynamic Injection             → Conditional context selection   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

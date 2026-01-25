@@ -1,6 +1,6 @@
 # PDCA Methodology in bkit
 
-> PDCA 사이클과 9단계 파이프라인의 관계
+> Relationship between PDCA cycle and 9-stage pipeline
 
 ## PDCA Cycle
 
@@ -20,17 +20,17 @@
 
 | Phase | Document Location | Command | Purpose |
 |-------|-------------------|---------|---------|
-| **Plan** | `docs/01-plan/` | `/pdca-plan` | 목표, 범위, 성공 기준 정의 |
-| **Design** | `docs/02-design/` | `/pdca-design` | 아키텍처, 데이터 모델, API 스펙 |
-| **Do** | Code | - | 설계 기반 구현 |
-| **Check** | `docs/03-analysis/` | `/pdca-analyze` | 설계-구현 Gap 분석 |
-| **Act** | `docs/04-report/` | `/pdca-report` | 완료 보고서, 학습 사항 정리 |
+| **Plan** | `docs/01-plan/` | `/pdca-plan` | Define goals, scope, success criteria |
+| **Design** | `docs/02-design/` | `/pdca-design` | Architecture, data model, API spec |
+| **Do** | Code | - | Implement based on design |
+| **Check** | `docs/03-analysis/` | `/pdca-analyze` | Design-implementation gap analysis |
+| **Act** | `docs/04-report/` | `/pdca-report` | Completion report, lessons learned |
 
 ---
 
 ## 9-Stage Development Pipeline
 
-전체 프로젝트 개발을 위한 9단계 파이프라인:
+A 9-stage pipeline for full project development:
 
 ```
 Phase 1: Schema       → Data modeling, terminology
@@ -85,37 +85,37 @@ Phase 4: API Implementation
 
 ## Auto-Apply Rules
 
-`bkit-rules` skill이 자동으로 PDCA 적용:
+`bkit-rules` skill automatically applies PDCA:
 
 ### 1. Task Classification
 
 ```
-코드 변경 시 자동 분류:
+Auto-classification on code changes:
 
-Quick Fix      (< 10 lines)   → PDCA 선택적
-Minor Change   (< 50 lines)   → PDCA 권장
-Feature        (< 200 lines)  → PDCA 필수
-Major Feature  (>= 200 lines) → PDCA + 분할 권장
+Quick Fix      (< 10 lines)   → PDCA optional
+Minor Change   (< 50 lines)   → PDCA recommended
+Feature        (< 200 lines)  → PDCA required
+Major Feature  (>= 200 lines) → PDCA + split recommended
 ```
 
 ### 2. Design Document Check
 
 ```
-Write/Edit 시 (PreToolUse hook):
+On Write/Edit (PreToolUse hook):
 
-1. 해당 기능의 design doc 존재 확인
-2. 없으면 → "설계 먼저 작성할까요?" 제안
-3. 있으면 → 설계 참조하여 구현
+1. Check if design doc exists for the feature
+2. If not exists → Suggest "Shall I write the design first?"
+3. If exists → Reference design during implementation
 ```
 
 ### 3. Gap Analysis Suggestion
 
 ```
-구현 완료 후 (PostToolUse hook):
+After implementation (PostToolUse hook):
 
-1. 변경 파일 감지
-2. Feature 크기 분석
-3. "Gap Analysis 실행할까요?" 제안
+1. Detect changed files
+2. Analyze feature size
+3. Suggest "Shall I run Gap Analysis?"
 ```
 
 ### 4. Check-Act Iteration Loop (v1.3.0)
@@ -124,20 +124,20 @@ Write/Edit 시 (PreToolUse hook):
 gap-detector Agent (Check)
     ↓ (Stop hook)
 gap-detector-stop.js
-    ├── >= 90% Match Rate → report-generator 제안 → /archive 가능
-    ├── 70-89% Match Rate → 선택지 제공 (수동/자동)
-    └── < 70% Match Rate  → pdca-iterator 강력 권장
+    ├── >= 90% Match Rate → Suggest report-generator → Enable /archive
+    ├── 70-89% Match Rate → Provide options (manual/auto)
+    └── < 70% Match Rate  → Strongly recommend pdca-iterator
                                ↓
                           pdca-iterator Agent (Act)
                                ↓ (Stop hook)
                           iterator-stop.js
-                               ├── 완료 → report-generator 제안
-                               └── 진행 중 → gap-detector 재실행 안내
+                               ├── Complete → Suggest report-generator
+                               └── In progress → Guide to re-run gap-detector
                                     ↓
-                               반복 (최대 5회)
+                               Repeat (max 5 times)
 ```
 
-**v1.3.0 핵심 개선**: Stop hooks를 통해 Check-Act 반복이 자동화됨.
+**v1.3.0 Key Improvement**: Check-Act iteration automated through Stop hooks.
 
 ---
 
@@ -145,51 +145,51 @@ gap-detector-stop.js
 
 | Template | Purpose | Key Sections |
 |----------|---------|--------------|
-| `plan.template.md` | 계획 문서 | Goals, Scope, Success Criteria, Schedule |
-| `design.template.md` | 설계 문서 | Architecture, Data Model, API Spec, Test Plan |
-| `design-starter.template.md` | Starter용 간소화 설계 | Goals, User Flow, Components |
-| `design-enterprise.template.md` | Enterprise용 상세 설계 | Service Architecture, Infrastructure |
-| `analysis.template.md` | Gap 분석 문서 | Match Rate, Missing/Added/Changed, Recommendations |
-| `report.template.md` | 완료 보고서 | Completed Items, Learnings, Improvements |
+| `plan.template.md` | Plan document | Goals, Scope, Success Criteria, Schedule |
+| `design.template.md` | Design document | Architecture, Data Model, API Spec, Test Plan |
+| `design-starter.template.md` | Simplified design for Starter | Goals, User Flow, Components |
+| `design-enterprise.template.md` | Detailed design for Enterprise | Service Architecture, Infrastructure |
+| `analysis.template.md` | Gap analysis document | Match Rate, Missing/Added/Changed, Recommendations |
+| `report.template.md` | Completion report | Completed Items, Learnings, Improvements |
 
 ---
 
 ## Archive Rules
 
-PDCA 사이클 완료 후 archive로 이동:
+Move to archive after PDCA cycle completion:
 
 ### Archive Trigger
 
 | Condition | Action |
 |-----------|--------|
-| Gap Analysis >= 90% match | Archive 가능 |
-| Report 생성 완료 | Archive 권장 |
-| 사용자 명시적 완료 선언 | Archive 실행 |
+| Gap Analysis >= 90% match | Archive enabled |
+| Report generation complete | Archive recommended |
+| User explicit completion declaration | Execute archive |
 
 ### Archive Process
 
 ```
-1. 완료 조건 확인
-   └── docs/03-analysis/{feature}.analysis.md 존재
-   └── match rate >= 90% 또는 사용자 승인
+1. Verify completion conditions
+   └── docs/03-analysis/{feature}.analysis.md exists
+   └── match rate >= 90% or user approval
 
-2. Archive 폴더 생성
+2. Create archive folder
    └── docs/archive/YYYY-MM/{feature}/
 
-3. 관련 문서 이동
+3. Move related documents
    ├── docs/pdca/01-plan/features/{feature}.plan.md → archive
    ├── docs/pdca/02-design/features/{feature}.design.md → archive
    └── docs/pdca/03-analysis/{feature}.analysis.md → archive
 
-4. 인덱스 업데이트
-   └── docs/archive/YYYY-MM/_INDEX.md에 추가
+4. Update index
+   └── Add to docs/archive/YYYY-MM/_INDEX.md
 ```
 
 ---
 
 ## Zero Script QA
 
-전통적인 테스트 스크립트 없이 QA를 수행하는 방법론:
+A methodology for performing QA without traditional test scripts:
 
 ### Traditional vs Zero Script
 
@@ -238,8 +238,8 @@ PDCA 사이클 완료 후 archive로 이동:
 
 ## Related Documents
 
-- [[core-mission]] - 핵심 사명과 철학
-- [[ai-native-principles]] - AI-Native 원칙
-- [[../components/skills/_skills-overview]] - Skill 상세
-- [[../scenarios/scenario-new-feature]] - 새 기능 시나리오
-- [[../../skills/development-pipeline/SKILL]] - 파이프라인 skill
+- [[core-mission]] - Core mission and philosophies
+- [[ai-native-principles]] - AI-Native principles
+- [[../components/skills/_skills-overview]] - Skill details
+- [[../scenarios/scenario-new-feature]] - New feature scenario
+- [[../../skills/development-pipeline/SKILL]] - Pipeline skill

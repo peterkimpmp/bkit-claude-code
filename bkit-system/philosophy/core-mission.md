@@ -1,6 +1,6 @@
 # bkit Core Mission & Philosophy
 
-> bkit의 핵심 사명과 3가지 철학
+> Core mission and 3 philosophies of bkit
 
 ## Core Mission
 
@@ -32,19 +32,19 @@
 
 ### Stage 1: Session Start
 
-SessionStart Hook이 자동으로 환영 메시지를 표시:
+SessionStart Hook automatically displays welcome message:
 
 ```
-사용자 선택:
-1. 첫 프로젝트 → /first-claude-code
-2. Claude Code 학습 → /learn-claude-code
-3. 프로젝트 설정 → /setup-claude-code
-4. 설정 업그레이드 → /upgrade-claude-code
+User Options:
+1. First Project → /first-claude-code
+2. Learn Claude Code → /learn-claude-code
+3. Project Setup → /setup-claude-code
+4. Upgrade Settings → /upgrade-claude-code
 ```
 
 ### Stage 2: Level Detection
 
-Claude가 프로젝트를 분석하여 자동으로 레벨 감지:
+Claude analyzes the project and automatically detects the level:
 
 | Level | Detection Conditions | Target Users |
 |-------|---------------------|--------------|
@@ -54,23 +54,23 @@ Claude가 프로젝트를 분석하여 자동으로 레벨 감지:
 
 ### Stage 3: PDCA Auto-Apply
 
-사용자가 "기능 만들어줘" 요청 시:
+When user requests "create a feature":
 
 ```
-1. Plan 확인 → docs/01-plan/features/{feature}.plan.md 존재?
-2. Design 확인 → docs/02-design/features/{feature}.design.md 존재?
-3. 없으면 생성 제안 → 있으면 참조하여 구현
-4. 구현 완료 후 → Gap Analysis 제안
+1. Check Plan → Does docs/01-plan/features/{feature}.plan.md exist?
+2. Check Design → Does docs/02-design/features/{feature}.design.md exist?
+3. If not exists → Suggest creation | If exists → Reference and implement
+4. After implementation → Suggest Gap Analysis
 ```
 
 ### Stage 4: Continuous Improvement
 
-Gap Analysis 결과에 따라:
+Based on Gap Analysis results:
 
 | Match Rate | Next Action |
 |------------|-------------|
-| >= 90% | "PDCA 완료, 보고서 생성할까요?" |
-| < 70% | "자동 수정(iterate) 실행할까요?" |
+| >= 90% | "PDCA complete, shall I generate a report?" |
+| < 70% | "Shall I run auto-fix (iterate)?" |
 
 ---
 
@@ -143,7 +143,7 @@ After:  /learn-claude-code → Systematic training
 
 ## Related Documents
 
-- [[ai-native-principles]] - AI-Native 핵심 역량
-- [[pdca-methodology]] - PDCA 방법론 상세
-- [[../README]] - 시스템 개요
-- [[../_GRAPH-INDEX]] - Obsidian 그래프 허브
+- [[ai-native-principles]] - AI-Native core competencies
+- [[pdca-methodology]] - PDCA methodology details
+- [[../README]] - System overview
+- [[../_GRAPH-INDEX]] - Obsidian graph hub

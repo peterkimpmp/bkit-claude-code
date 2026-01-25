@@ -2,7 +2,7 @@
 
 > 26 Node.js Scripts used by bkit hooks (v1.4.1)
 >
-> **v1.4.1**: Context Engineering 관점 추가 - 상태 관리 계층 via lib/common.js
+> **v1.4.1**: Added Context Engineering perspective - State Management Layer via lib/common.js
 > **v1.4.0**: Added 5 new phase completion handlers, Dual Platform Support (Claude Code + Gemini CLI)
 > **v1.3.1**: All scripts converted from Bash (.sh) to Node.js (.js) for cross-platform support
 > **v1.3.0**: session-start.js enhanced with AskUserQuestion guidance (see [[../hooks/_hooks-overview]])
@@ -15,9 +15,9 @@ Scripts are **the actual logic executed by Hooks**.
 - Provide allow/block decisions and additionalContext
 - **Cross-platform**: Windows (Native), macOS, Linux
 
-## Context Engineering 관점 (v1.4.1)
+## Context Engineering Perspective (v1.4.1)
 
-Scripts와 `lib/common.js`는 bkit의 **State Management Layer**를 구성하며, [[../../philosophy/context-engineering|Context Engineering]] 원칙에 따라 동적 컨텍스트 주입을 구현합니다.
+Scripts and `lib/common.js` form bkit's **State Management Layer**, implementing dynamic context injection according to [[../../philosophy/context-engineering|Context Engineering]] principles.
 
 ### Dynamic Context Injection Patterns
 
@@ -40,22 +40,22 @@ Scripts와 `lib/common.js`는 bkit의 **State Management Layer**를 구성하며
 │  │   Intent Detection   │  │   Ambiguity          │             │
 │  │   (8 Languages)      │  │   Detection          │             │
 │  │                      │  │                      │             │
-│  │  EN, KO, JA, ZH      │  │  • Score 계산        │             │
-│  │  ES, FR, DE, IT      │  │  • 명확화 질문 생성   │             │
+│  │  EN, KO, JA, ZH      │  │  • Score calculation │             │
+│  │  ES, FR, DE, IT      │  │  • Clarifying Qs     │             │
 │  │                      │  │  • Magic Word Bypass │             │
 │  └──────────────────────┘  └──────────────────────┘             │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Context Injection 패턴
+### Context Injection Patterns
 
 | Pattern | Implementation | Purpose |
 |---------|----------------|---------|
-| **Task Size → PDCA Level** | `classifyTaskByLines()` | 작업 규모에 따른 PDCA 적용 수준 결정 |
-| **User Intent → Agent Trigger** | `matchImplicitAgentTrigger()` | 자연어에서 암시적 Agent 매칭 |
-| **Ambiguity Score → Questions** | `calculateAmbiguityScore()` | 모호한 요청 시 명확화 질문 생성 |
-| **Match Rate → Iteration** | Gap Analysis → Check-Act | 90% 미만 시 자동 개선 루프 |
+| **Task Size → PDCA Level** | `classifyTaskByLines()` | Determine PDCA application level by task size |
+| **User Intent → Agent Trigger** | `matchImplicitAgentTrigger()` | Match implicit agent from natural language |
+| **Ambiguity Score → Questions** | `calculateAmbiguityScore()` | Generate clarifying questions for ambiguous requests |
+| **Match Rate → Iteration** | Gap Analysis → Check-Act | Auto-improvement loop when below 90% |
 
 ## Source Location
 
@@ -115,7 +115,7 @@ bkit-claude-code/
 
 ### Phase Scripts (11)
 
-**Active Phase Scripts** (SKILL.md frontmatter에 연결됨):
+**Active Phase Scripts** (Connected to SKILL.md frontmatter):
 
 | Script | Hook | Phase | Purpose |
 |--------|------|-------|---------|
@@ -127,16 +127,16 @@ bkit-claude-code/
 | phase8-review-stop.js | Stop | Phase 8 | Review completion summary |
 | phase9-deploy-pre.js | PreToolUse | Phase 9 | Deployment environment validation |
 
-**Prepared Scripts** (스크립트 존재, SKILL.md hooks 미연결):
+**Prepared Scripts** (Script exists, hook not connected in SKILL.md):
 
 | Script | Hook | Phase | Status |
 |--------|------|-------|--------|
-| phase1-schema-stop.js | Stop | Phase 1 | 스크립트 준비됨, hook 미연결 |
-| phase2-convention-stop.js | Stop | Phase 2 | 스크립트 준비됨, hook 미연결 |
-| phase3-mockup-stop.js | Stop | Phase 3 | 스크립트 준비됨, hook 미연결 |
-| phase7-seo-stop.js | Stop | Phase 7 | 스크립트 준비됨, hook 미연결 |
+| phase1-schema-stop.js | Stop | Phase 1 | Script ready, hook not connected |
+| phase2-convention-stop.js | Stop | Phase 2 | Script ready, hook not connected |
+| phase3-mockup-stop.js | Stop | Phase 3 | Script ready, hook not connected |
+| phase7-seo-stop.js | Stop | Phase 7 | Script ready, hook not connected |
 
-> **Note**: v1.4.0에서 스크립트가 추가되었으나, 해당 SKILL.md에 hooks frontmatter가 아직 추가되지 않았습니다.
+> **Note**: Scripts added in v1.4.0, but hooks frontmatter not yet added to corresponding SKILL.md files.
 
 ### QA Scripts (3)
 
@@ -151,8 +151,8 @@ bkit-claude-code/
 | Script | Hook | Agent(s) | Purpose |
 |--------|------|----------|---------|
 | design-validator-pre.js | PreToolUse | design-validator | Design document checklist |
-| gap-detector-stop.js | Stop | gap-detector | Check-Act iteration: Match Rate 분기 (v1.3.0) |
-| iterator-stop.js | Stop | pdca-iterator | Check-Act iteration: 완료/계속 안내 (v1.3.0) |
+| gap-detector-stop.js | Stop | gap-detector | Check-Act iteration: Match Rate branching (v1.3.0) |
+| iterator-stop.js | Stop | pdca-iterator | Check-Act iteration: Complete/Continue guidance (v1.3.0) |
 | analysis-stop.js | Stop | code-analyzer | Analysis completion guidance |
 | qa-pre-bash.js | PreToolUse | qa-monitor | Block destructive commands during QA |
 | qa-monitor-post.js | PostToolUse | qa-monitor | Critical issue notification |
@@ -485,7 +485,7 @@ common.outputAllow('Guidance message');
 
 ## Related Documents
 
-- [[../../philosophy/context-engineering]] - Context Engineering 원칙 ⭐ NEW
+- [[../../philosophy/context-engineering]] - Context Engineering Principles ⭐ NEW
 - [[../hooks/_hooks-overview]] - Hook event details
 - [[../skills/_skills-overview]] - Skill details
 - [[../agents/_agents-overview]] - Agent details

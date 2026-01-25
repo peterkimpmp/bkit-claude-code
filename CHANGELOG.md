@@ -8,19 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4.1] - 2026-01-24
 
 ### Added
-- **Response Report Rule**: AI Agent가 매 답변 끝에 bkit 기능 사용 현황 자동 보고
-  - Claude Code: `hooks/session-start.js` additionalContext에 규칙 추가
-  - Gemini CLI: `GEMINI.md`에 Response Report Rule 섹션 추가
-  - 보고 형식: 사용 기능, 미사용 이유, PDCA 단계별 추천
-- **Claude Code 2.1.19 Compatibility**: 호환성 테스트 완료
-  - 99개 컴포넌트 테스트 통과
-  - Breaking Change 없음 확인
-  - 새 기능 (additionalContext, Task System) 문서화
+- **Response Report Rule**: AI Agent automatically reports bkit feature usage at the end of each response
+  - Claude Code: Rule added to `hooks/session-start.js` additionalContext
+  - Gemini CLI: Response Report Rule section added to `GEMINI.md`
+  - Report format: Used features, unused reasons, PDCA phase-based recommendations
+- **Claude Code 2.1.19 Compatibility**: Compatibility testing completed
+  - 99 components tested and passed
+  - No breaking changes confirmed
+  - New features (additionalContext, Task System) documented
 
 ### Changed
 - **Version references**: Updated all version references from 1.4.0 to 1.4.1
-- **session-start.js**: v1.4.1 Changes 주석 및 보고 규칙 추가 (+62 lines)
-- **GEMINI.md**: Response Report Rule 섹션 추가 (+50 lines)
+- **session-start.js**: v1.4.1 Changes comment and report rule added (+62 lines)
+- **GEMINI.md**: Response Report Rule section added (+50 lines)
 
 ### Compatibility
 - **Claude Code**: Minimum v2.1.15, Recommended v2.1.19
@@ -143,7 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **SessionStart Enhancement**: AskUserQuestion integration for session initialization
   - 4 options: Learn bkit, Learn Claude Code, Continue Previous Work, Start New Project
 - **Trigger Keyword Mapping**: Agent auto-triggering based on user keywords
-  - 검증/verify → gap-detector, 개선/improve → pdca-iterator, etc.
+  - verify → gap-detector, improve → pdca-iterator, etc.
 - **Task Size Rules**: PDCA application guidance based on change size
   - Quick Fix (<10 lines): No PDCA needed
   - Minor Change (<50 lines): Light PDCA optional

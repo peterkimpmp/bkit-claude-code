@@ -1,109 +1,109 @@
 # Scenario: Write Code
 
-> 사용자가 코드를 작성/수정할 때 bkit이 어떻게 동작하는지 (v1.2.1)
+> How bkit behaves when user writes/modifies code (v1.2.1)
 
-## 시나리오 개요
+## Scenario Overview
 
 ```
-사용자: "login.ts 파일을 수정해줘"
-→ Claude가 Write/Edit 도구 사용
-→ 여러 Hooks 발동
-→ 사용자에게 안내 제공
+User: "Modify login.ts file"
+→ Claude uses Write/Edit tool
+→ Multiple Hooks fire
+→ Guidance provided to user
 ```
 
-## 발동 순서 (Flow)
+## Trigger Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1. 사용자 요청: "login.ts 수정"                                 │
+│  1. User Request: "Modify login.ts"                              │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  2. Claude가 Write/Edit 도구 호출 준비                           │
+│  2. Claude Prepares Write/Edit Tool Invocation                   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  3. PreToolUse Hooks 실행 (Unified Hook v1.2.0)                 │
+│  3. PreToolUse Hooks Execute (Unified Hook v1.2.0)               │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ [[../../skills/bkit-rules/SKILL|bkit-rules]] → pre-write.js      │   │
-│  │ (통합 hook: PDCA + Task Classification + Convention)    │   │
+│  │ [[../../skills/bkit-rules/SKILL|bkit-rules]] → pre-write.js     │   │
+│  │ (Unified hook: PDCA + Task Classification + Convention) │   │
 │  │                                                          │   │
-│  │ 1. 소스 파일 감지 (is_source_file - 확장자 기반 v1.2.1)  │   │
-│  │    • 20+ 언어 지원 (.ts, .py, .go, .rs, .rb 등)          │   │
-│  │    • 제외 패턴: node_modules, __pycache__, .git 등       │   │
+│  │ 1. Source file detection (is_source_file - ext-based v1.2.1)│
+│  │    • 20+ languages supported (.ts, .py, .go, .rs, .rb, etc.)│
+│  │    • Exclude patterns: node_modules, __pycache__, .git, etc.│
 │  │                                                          │   │
-│  │ 2. feature 이름 추출 (extract_feature - 다중 언어 지원)  │   │
+│  │ 2. Feature name extraction (extract_feature - multi-lang) │   │
 │  │    • Next.js: features/, modules/                        │   │
 │  │    • Go: internal/, cmd/                                 │   │
 │  │    • Python: routers/, views/                            │   │
 │  │                                                          │   │
-│  │ 3. design doc 존재 확인                                   │   │
-│  │    • 있으면: "design doc 참조" 안내                      │   │
-│  │    • 없으면: 빈 출력                                     │   │
+│  │ 3. Design doc existence check                            │   │
+│  │    • If exists: "Reference design doc" guidance          │   │
+│  │    • If not: Empty output                                │   │
 │  │                                                          │   │
-│  │ 4. Task Classification (통합)                            │   │
-│  │    • < 50자: Quick Fix                                   │   │
-│  │    • < 200자: Minor Change                               │   │
-│  │    • < 1000자: Feature (PDCA 권장)                       │   │
-│  │    • >= 1000자: Major Feature (PDCA 필수)                │   │
+│  │ 4. Task Classification (unified)                         │   │
+│  │    • < 50 chars: Quick Fix                               │   │
+│  │    • < 200 chars: Minor Change                           │   │
+│  │    • < 1000 chars: Feature (PDCA recommended)            │   │
+│  │    • >= 1000 chars: Major Feature (PDCA required)        │   │
 │  │                                                          │   │
-│  │ 5. Convention Hints (통합)                               │   │
-│  │    • 파일 타입별 코딩 컨벤션 안내                        │   │
+│  │ 5. Convention Hints (unified)                            │   │
+│  │    • Coding convention guidance by file type             │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  4. 실제 Write/Edit 실행                                        │
+│  4. Actual Write/Edit Execution                                  │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  5. PostToolUse Hooks 실행                                      │
+│  5. PostToolUse Hooks Execute                                    │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ [[../../skills/bkit-rules/SKILL|bkit-rules]] → pdca-post-write.js │   │
-│  │ • design doc 있으면: "/pdca-analyze 권장" 안내           │   │
+│  │ [[../../skills/bkit-rules/SKILL|bkit-rules]] → pdca-post-write.js│   │
+│  │ • If design doc exists: "/pdca-analyze recommended" guidance│
 │  └─────────────────────────────────────────────────────────┘   │
 │                              │                                  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ (UI 파일인 경우 - 확장자 기반 v1.2.1)                     │   │
-│  │ 감지: .tsx, .jsx, .vue, .svelte (is_ui_file)             │   │
+│  │ (If UI file - extension-based v1.2.1)                    │   │
+│  │ Detected: .tsx, .jsx, .vue, .svelte (is_ui_file)        │   │
 │  │                                                          │   │
-│  │ [[../../skills/phase-5-design-system/SKILL|phase-5-design-system]]           │   │
+│  │ [[../../skills/phase-5-design-system/SKILL|phase-5-design-system]]          │   │
 │  │ → phase5-design-post.js                                  │   │
-│  │ • 하드코딩 색상 검사                                     │   │
-│  │ • 디자인 토큰 사용 권장                                  │   │
+│  │ • Hardcoded color check                                  │   │
+│  │ • Design token usage recommendation                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                              │                                  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ (UI 파일 또는 pages/components/features 경로)            │   │
-│  │ [[../../skills/phase-6-ui-integration/SKILL|phase-6-ui-integration]]          │   │
+│  │ (If UI file or pages/components/features path)           │   │
+│  │ [[../../skills/phase-6-ui-integration/SKILL|phase-6-ui-integration]]         │   │
 │  │ → phase6-ui-post.js                                      │   │
-│  │ • UI 레이어 분리 검증                                    │   │
+│  │ • UI layer separation verification                       │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  6. Claude가 additionalContext 종합하여 사용자에게 안내         │
+│  6. Claude Synthesizes additionalContext and Guides User         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## 예시: src/features/auth/login.ts 수정
+## Example: Modifying src/features/auth/login.ts
 
-### 입력
+### Input
 
 ```
-파일: src/features/auth/login.ts
-변경 내용: 50줄 추가 (약 1500 chars)
-design doc: docs/02-design/features/auth.design.md 존재
+File: src/features/auth/login.ts
+Changes: 50 lines added (approximately 1500 chars)
+Design doc: docs/02-design/features/auth.design.md exists
 ```
 
-### PreToolUse 결과
+### PreToolUse Result
 
 **bkit-rules (pre-write.js - Unified Hook v1.2.0)**:
 ```
@@ -126,10 +126,10 @@ PDCA documentation is essential.
 - Files: kebab-case or PascalCase
 ```
 
-> **Note (v1.2.0)**: 이전 버전의 3개 hook이 pre-write.js로 통합되었습니다.
-> **Note (v1.3.1)**: 모든 스크립트가 Node.js(.js)로 변환되었습니다.
+> **Note (v1.2.0)**: Previous 3 hooks were unified into pre-write.js.
+> **Note (v1.3.1)**: All scripts converted to Node.js (.js).
 
-### PostToolUse 결과
+### PostToolUse Result
 
 **bkit-rules (pdca-post-write.js)**:
 ```
@@ -149,55 +149,55 @@ design-implementation alignment.
 
 ---
 
-## 파일별 발동 차이 (v1.2.1)
+## Trigger Differences by File (v1.2.1)
 
-### 확장자 기반 감지 (Extension-Based Detection)
+### Extension-Based Detection
 
-| 파일 확장자 | 발동되는 Hooks |
-|------------|---------------|
+| File Extension | Fired Hooks |
+|----------------|-------------|
 | `.tsx`, `.jsx` | pre-write (unified), pdca-post-write, phase-5-design, phase-6-ui |
 | `.vue`, `.svelte` | pre-write (unified), pdca-post-write, phase-5-design, phase-6-ui |
 | `.ts`, `.js` | pre-write (unified), pdca-post-write |
 | `.py`, `.go`, `.rs` | pre-write (unified), pdca-post-write |
-| `.md` | design-validator (설계 문서인 경우) |
+| `.md` | design-validator (if design document) |
 
-### 경로 기반 감지 (Path-Based Detection)
+### Path-Based Detection
 
-| 파일 경로 | 추가 발동 |
-|----------|----------|
-| `pages/`, `components/`, `features/` | phase-6-ui (레이어 검증) |
-| `services/`, `api/`, `lib/` | phase-6-ui (서비스 레이어 검증) |
+| File Path | Additional Triggers |
+|-----------|---------------------|
+| `pages/`, `components/`, `features/` | phase-6-ui (layer verification) |
+| `services/`, `api/`, `lib/` | phase-6-ui (service layer verification) |
 
-### 제외 패턴 (Exclude Patterns)
+### Exclude Patterns
 
-> 환경변수 `BKIT_EXCLUDE_PATTERNS`로 커스터마이징 가능
+> Customizable via `BKIT_EXCLUDE_PATTERNS` environment variable
 
-| 패턴 | 설명 |
-|-----|------|
-| `node_modules` | npm 패키지 |
-| `__pycache__`, `.venv` | Python 캐시/가상환경 |
-| `.git`, `dist`, `build` | 빌드/버전관리 |
-| `target`, `.cargo` | Rust 빌드 |
-| `vendor` | Go/Ruby 의존성 |
-
----
-
-## 테스트 체크리스트
-
-- [ ] 소스 파일 수정 시 PreToolUse (pre-write.js) 발동 확인
-- [ ] design doc 있을 때 PDCA 안내 메시지 확인
-- [ ] design doc 없을 때 빈 출력 확인
-- [ ] 50자 미만 수정 시 "Quick Fix" 분류 확인
-- [ ] 1000자 이상 수정 시 "Major Feature" 분류 확인
-- [ ] .tsx/.jsx/.vue/.svelte 파일 수정 후 디자인 토큰 검증 확인
-- [ ] UI 파일 수정 후 레이어 분리 검증 확인
-- [ ] .py/.go/.rs 파일 수정 시 소스 파일로 감지 확인
-- [ ] node_modules/, __pycache__/ 내 파일은 무시 확인
+| Pattern | Description |
+|---------|-------------|
+| `node_modules` | npm packages |
+| `__pycache__`, `.venv` | Python cache/virtual environment |
+| `.git`, `dist`, `build` | Build/version control |
+| `target`, `.cargo` | Rust build |
+| `vendor` | Go/Ruby dependencies |
 
 ---
 
-## 관련 문서
+## Test Checklist
 
-- [[../triggers/trigger-matrix]] - 전체 트리거 매트릭스
-- [[../components/scripts/_scripts-overview]] - 스크립트 상세
-- [[scenario-new-feature]] - 새 기능 요청 시나리오
+- [ ] Verify PreToolUse (pre-write.js) fires on source file modification
+- [ ] Verify PDCA guidance message when design doc exists
+- [ ] Verify empty output when design doc doesn't exist
+- [ ] Verify "Quick Fix" classification for changes under 50 chars
+- [ ] Verify "Major Feature" classification for changes over 1000 chars
+- [ ] Verify design token verification after .tsx/.jsx/.vue/.svelte file modification
+- [ ] Verify layer separation verification after UI file modification
+- [ ] Verify .py/.go/.rs files detected as source files
+- [ ] Verify files in node_modules/, __pycache__/ are ignored
+
+---
+
+## Related Documents
+
+- [[../triggers/trigger-matrix]] - Full trigger matrix
+- [[../components/scripts/_scripts-overview]] - Script details
+- [[scenario-new-feature]] - New feature request scenario

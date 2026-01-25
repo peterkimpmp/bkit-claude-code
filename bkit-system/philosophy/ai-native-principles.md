@@ -1,27 +1,27 @@
 # AI-Native Development Principles
 
-> AI-Native 개발의 핵심 원칙과 3대 역량
+> Core principles and 3 competencies of AI-Native development
 
-## AI-Native Development란?
+## What is AI-Native Development?
 
 ```
 Claude Code + PDCA Methodology + 9-Stage Pipeline + Zero Script QA
 = AI-Native Development Framework
 ```
 
-AI가 단순 코드 생성 도구가 아닌, **개발 프로세스 전체를 함께 이끄는 파트너**로 작동하는 개발 방식.
+A development approach where AI operates as **a partner leading the entire development process together**, not just a simple code generation tool.
 
 ---
 
 ## 3 Core Competencies
 
-AI-Native 개발에서 인간에게 요구되는 3가지 핵심 역량:
+Three essential competencies required of humans in AI-Native development:
 
 | Competency | Description | Without It |
 |------------|-------------|------------|
-| **Verification Ability** | AI 출력물이 올바른지 판단 | 그럴듯하지만 틀린 코드 생산 |
-| **Direction Setting** | 무엇을 만들지 명확히 정의 | AI가 추측 기반 결과물 생성 |
-| **Quality Standards** | 좋은 코드의 기준 제시 | 일관성 없는 코드베이스 |
+| **Verification Ability** | Judge whether AI output is correct | Plausible but incorrect code production |
+| **Direction Setting** | Clearly define what to build | AI generates guess-based results |
+| **Quality Standards** | Provide criteria for good code | Inconsistent codebase |
 
 ### Implementation in bkit
 
@@ -119,7 +119,7 @@ To-Be: Monitor logs, discover edge cases with AI assistance
 
 ## Language Tier System (v1.2.1)
 
-bkit은 AI-Native 개발에 최적화된 언어를 4단계로 분류:
+bkit classifies languages optimized for AI-Native development into 4 tiers:
 
 | Tier | Category | Languages/Frameworks |
 |------|----------|---------------------|
@@ -160,7 +160,7 @@ bkit은 AI-Native 개발에 최적화된 언어를 4단계로 분류:
 
 ## Related Documents
 
-- [[core-mission]] - 핵심 사명과 철학
-- [[pdca-methodology]] - PDCA 방법론
-- [[../components/agents/_agents-overview]] - Agent 시스템
-- [[../../skills/enterprise/SKILL]] - Enterprise skill (AI-Native 상세)
+- [[core-mission]] - Core mission and philosophies
+- [[pdca-methodology]] - PDCA methodology
+- [[../components/agents/_agents-overview]] - Agent system
+- [[../../skills/enterprise/SKILL]] - Enterprise skill (AI-Native details)

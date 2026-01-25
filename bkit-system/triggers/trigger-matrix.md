@@ -8,10 +8,10 @@
 
 | Hook Event | Claude Code | Gemini CLI | Description |
 |------------|-------------|------------|-------------|
-| Session initialization | `SessionStart` | `SessionStart` | 세션 시작 |
-| Before tool execution | `PreToolUse` | `BeforeTool` | 도구 실행 전 |
-| After tool execution | `PostToolUse` | `AfterTool` | 도구 실행 후 |
-| Agent completion | `Stop` | `AgentStop` | 에이전트 완료 |
+| Session initialization | `SessionStart` | `SessionStart` | Session start |
+| Before tool execution | `PreToolUse` | `BeforeTool` | Before tool execution |
+| After tool execution | `PostToolUse` | `AfterTool` | After tool execution |
+| Agent completion | `Stop` | `AgentStop` | Agent completion |
 
 ---
 
@@ -52,7 +52,7 @@ These hooks are defined in skill YAML frontmatter:
 
 #### Stop
 
-**Active Stop Hooks** (SKILL.md frontmatter에 정의됨):
+**Active Stop Hooks** (Defined in SKILL.md frontmatter):
 
 | Skill/Agent | Script | Action |
 |-------------|--------|--------|
@@ -60,21 +60,21 @@ These hooks are defined in skill YAML frontmatter:
 | [[../../skills/phase-8-review/SKILL|phase-8-review]] | `phase8-review-stop.js` | Review summary + gap analysis |
 | [[../../skills/zero-script-qa/SKILL|zero-script-qa]] | `qa-stop.js` | QA session cleanup |
 | [[../../skills/development-pipeline/SKILL|development-pipeline]] | `echo` | Pipeline completion |
-| [[../agents/gap-detector|gap-detector]] | `gap-detector-stop.js` | Check-Act iteration: Match Rate 기반 분기 (v1.3.0) |
-| [[../agents/pdca-iterator|pdca-iterator]] | `iterator-stop.js` | Check-Act iteration: 완료/계속 안내 (v1.3.0) |
-| [[../agents/code-analyzer|code-analyzer]] | `analysis-stop.js` | 분석 완료 시 이슈 요약 및 다음 액션 안내 |
-| [[../agents/qa-monitor|qa-monitor]] | `qa-stop.js` | QA 세션 종료 시 결과 요약 및 정리 |
+| [[../agents/gap-detector|gap-detector]] | `gap-detector-stop.js` | Check-Act iteration: Match Rate based branching (v1.3.0) |
+| [[../agents/pdca-iterator|pdca-iterator]] | `iterator-stop.js` | Check-Act iteration: Complete/Continue guidance (v1.3.0) |
+| [[../agents/code-analyzer|code-analyzer]] | `analysis-stop.js` | Issue summary and next action guidance on analysis completion |
+| [[../agents/qa-monitor|qa-monitor]] | `qa-stop.js` | Result summary and cleanup on QA session end |
 
-**Prepared Scripts** (스크립트 존재하지만 SKILL.md hooks 미연결):
+**Prepared Scripts** (Script exists but not connected in SKILL.md hooks):
 
 | Skill | Script | Status |
 |-------|--------|--------|
-| [[../../skills/phase-1-schema/SKILL|phase-1-schema]] | `phase1-schema-stop.js` | 스크립트 준비됨, hook 미연결 |
-| [[../../skills/phase-2-convention/SKILL|phase-2-convention]] | `phase2-convention-stop.js` | 스크립트 준비됨, hook 미연결 |
-| [[../../skills/phase-3-mockup/SKILL|phase-3-mockup]] | `phase3-mockup-stop.js` | 스크립트 준비됨, hook 미연결 |
-| [[../../skills/phase-7-seo-security/SKILL|phase-7-seo-security]] | `phase7-seo-stop.js` | 스크립트 준비됨, hook 미연결 |
+| [[../../skills/phase-1-schema/SKILL|phase-1-schema]] | `phase1-schema-stop.js` | Script ready, hook not connected |
+| [[../../skills/phase-2-convention/SKILL|phase-2-convention]] | `phase2-convention-stop.js` | Script ready, hook not connected |
+| [[../../skills/phase-3-mockup/SKILL|phase-3-mockup]] | `phase3-mockup-stop.js` | Script ready, hook not connected |
+| [[../../skills/phase-7-seo-security/SKILL|phase-7-seo-security]] | `phase7-seo-stop.js` | Script ready, hook not connected |
 
-> **Note**: v1.4.0에서 스크립트가 추가되었으나, 해당 SKILL.md 파일들에 hooks frontmatter가 아직 추가되지 않았습니다.
+> **Note**: Scripts added in v1.4.0, but hooks frontmatter not yet added to corresponding SKILL.md files.
 
 ---
 
@@ -118,26 +118,26 @@ Automatic iteration cycle for quality improvement:
 gap-detector Agent (Check)
     ↓ (Stop hook)
 gap-detector-stop.js
-    ├── >= 90% Match Rate → report-generator 제안
-    ├── 70-89% Match Rate → 선택지 제공 (수동/자동)
-    └── < 70% Match Rate  → pdca-iterator 강력 권장
+    ├── >= 90% Match Rate → Suggest report-generator
+    ├── 70-89% Match Rate → Provide options (manual/auto)
+    └── < 70% Match Rate  → Strongly recommend pdca-iterator
                                ↓
                           pdca-iterator Agent (Act)
                                ↓ (Stop hook)
                           iterator-stop.js
-                               ├── 완료 감지 → report-generator 제안
-                               └── 진행 중 → gap-detector 재실행 안내
+                               ├── Completion detected → Suggest report-generator
+                               └── In progress → Guide to re-run gap-detector
 ```
 
 ### Stop Hook Flow
 
 | Agent | Condition | Action |
 |-------|-----------|--------|
-| gap-detector | Match Rate >= 90% | `/pdca-report` 제안 → `/archive` 가능 |
-| gap-detector | Match Rate 70-89% | 수동 수정 or pdca-iterator 선택 |
-| gap-detector | Match Rate < 70% | pdca-iterator 강력 권장 |
-| pdca-iterator | 완료 메시지 감지 | gap-detector 재실행 또는 완료 안내 |
-| pdca-iterator | 진행 중 | gap-detector로 Check 수행 안내 |
+| gap-detector | Match Rate >= 90% | Suggest `/pdca-report` → Enable `/archive` |
+| gap-detector | Match Rate 70-89% | Manual fix or pdca-iterator choice |
+| gap-detector | Match Rate < 70% | Strongly recommend pdca-iterator |
+| pdca-iterator | Completion message detected | Re-run gap-detector or completion guidance |
+| pdca-iterator | In progress | Guide to Check with gap-detector |
 
 ---
 

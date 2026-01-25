@@ -4,7 +4,7 @@
 >
 > **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 >
-> **v1.4.1**: Context Engineering 관점 추가 - LLM 추론을 위한 최적의 토큰 큐레이션
+> **v1.4.1**: Context Engineering perspective added - Optimal token curation for LLM reasoning
 
 ## Purpose of This Document
 
@@ -22,7 +22,7 @@
 
 ## Context Engineering Overview (v1.4.1)
 
-bkit은 **Context Engineering**의 실제 구현체입니다. Context Engineering이란 LLM의 추론에 사용될 컨텍스트 토큰을 최적으로 큐레이션하는 작업입니다.
+bkit is a practical implementation of **Context Engineering**. Context Engineering is the discipline of optimally curating context tokens for LLM reasoning.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -65,12 +65,12 @@ bkit은 **Context Engineering**의 실제 구현체입니다. Context Engineerin
 
 | Pattern | Implementation | Purpose |
 |---------|----------------|---------|
-| **Role Definition** | Agent frontmatter | 전문 분야, 책임 범위, 레벨 명시 |
-| **Structured Instructions** | Skill SKILL.md | 체크리스트, 테이블, 다이어그램으로 지식 구조화 |
-| **Few-shot Examples** | Agent/Skill prompts | 코드 패턴, 출력 템플릿, 대화 예제 |
-| **Constraint Specification** | Hook + Permission Mode | 도구 제한, 점수 임계값, 워크플로우 규칙 |
-| **State Injection** | SessionStart + Scripts | PDCA 상태, 기능 컨텍스트, 반복 카운터 |
-| **Adaptive Guidance** | lib/common.js | 레벨별 분기, 언어별 트리거, 모호성 대응 |
+| **Role Definition** | Agent frontmatter | Specify expertise, responsibility scope, level |
+| **Structured Instructions** | Skill SKILL.md | Structure knowledge with checklists, tables, diagrams |
+| **Few-shot Examples** | Agent/Skill prompts | Code patterns, output templates, conversation examples |
+| **Constraint Specification** | Hook + Permission Mode | Tool restrictions, score thresholds, workflow rules |
+| **State Injection** | SessionStart + Scripts | PDCA state, feature context, iteration counters |
+| **Adaptive Guidance** | lib/common.js | Level-based branching, language-specific triggers, ambiguity handling |
 
 Details: [[philosophy/context-engineering]]
 

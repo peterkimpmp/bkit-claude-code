@@ -2,7 +2,7 @@
 
 > 18 Skills defined in bkit (v1.4.1)
 >
-> **v1.4.1**: Context Engineering 관점 추가 - 도메인 지식 계층
+> **v1.4.1**: Added Context Engineering perspective - Domain Knowledge Layer
 > **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 
 ## What are Skills?
@@ -12,11 +12,11 @@ Skills are **domain-specific expert knowledge** components.
 - Automated behavior via frontmatter hooks
 - Auto-activation via "Triggers:" keywords in description
 
-## Context Engineering 관점 (v1.4.1)
+## Context Engineering Perspective (v1.4.1)
 
-Skills는 bkit의 **Domain Knowledge Layer**를 구성하며, [[../../philosophy/context-engineering|Context Engineering]] 원칙에 따라 설계되었습니다.
+Skills form bkit's **Domain Knowledge Layer**, designed according to [[../../philosophy/context-engineering|Context Engineering]] principles.
 
-### Skill Context Engineering 패턴
+### Skill Context Engineering Patterns
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -26,33 +26,33 @@ Skills는 bkit의 **Domain Knowledge Layer**를 구성하며, [[../../philosophy
 │  ┌──────────────────────┐  ┌──────────────────────┐             │
 │  │ Structured Knowledge │  │ Conditional Select   │             │
 │  │                      │  │                      │             │
-│  │ • 계층 구조 테이블     │  │ • Level 분기         │             │
-│  │ • ASCII 다이어그램    │  │ • Phase 분기         │             │
-│  │ • 체크리스트          │  │ • 8개 언어 트리거     │             │
-│  │ • 코드 예제           │  │ • Magic Word Bypass  │             │
+│  │ • Hierarchical Tables│  │ • Level Branching    │             │
+│  │ • ASCII Diagrams     │  │ • Phase Branching    │             │
+│  │ • Checklists         │  │ • 8-Language Triggers│             │
+│  │ • Code Examples      │  │ • Magic Word Bypass  │             │
 │  └──────────────────────┘  └──────────────────────┘             │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │              Skill Classification                         │   │
 │  │                                                          │   │
-│  │  Core (2)     → 전역 규칙, 템플릿 기준                       │   │
+│  │  Core (2)     → Global rules, template standards         │   │
 │  │  Level (3)    → Starter/Dynamic/Enterprise               │   │
-│  │  Pipeline(10) → 9-Phase 단계별 가이드                       │   │
-│  │  Specialized(3) → QA, Mobile, Desktop 특수 도메인           │   │
+│  │  Pipeline(10) → 9-Phase step-by-step guides              │   │
+│  │  Specialized(3) → QA, Mobile, Desktop special domains    │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Context Engineering 기법 적용
+### Context Engineering Techniques Applied
 
-| 기법 | Skill 구현 | 효과 |
-|------|-----------|------|
-| **계층 구조 테이블** | 레벨별/Phase별 적용 방법 | 조건부 지식 선택 |
-| **ASCII 다이어그램** | 아키텍처 시각화 | 구조적 이해 |
-| **체크리스트** | 완료 조건 명확화 | 자동화 가능 |
-| **코드 예제** | 즉시 적용 가능한 참조 | 일관된 구현 |
-| **Few-shot Examples** | 대화/출력 패턴 | 예측 가능한 응답 |
+| Technique | Skill Implementation | Effect |
+|-----------|---------------------|--------|
+| **Hierarchical Tables** | Level/Phase-specific methods | Conditional knowledge selection |
+| **ASCII Diagrams** | Architecture visualization | Structural understanding |
+| **Checklists** | Clear completion criteria | Enables automation |
+| **Code Examples** | Ready-to-apply references | Consistent implementation |
+| **Few-shot Examples** | Conversation/output patterns | Predictable responses |
 
 ## Skill List (18)
 
@@ -119,7 +119,7 @@ description: |
 
   Use proactively when user...
 
-  Triggers: keyword1, keyword2, keyword3
+  Triggers: keyword1, keyword2, keyword3, 한글키워드, キーワード, 关键词
 
   Do NOT use for: exclusion conditions
 agent: connected-agent-name
@@ -201,7 +201,7 @@ bkit-claude-code/
 
 ## Related Documents
 
-- [[../../philosophy/context-engineering]] - Context Engineering 원칙 ⭐ NEW
+- [[../../philosophy/context-engineering]] - Context Engineering Principles ⭐ NEW
 - [[../hooks/_hooks-overview]] - Hook event details
 - [[../scripts/_scripts-overview]] - Script details
 - [[../agents/_agents-overview]] - Agent details

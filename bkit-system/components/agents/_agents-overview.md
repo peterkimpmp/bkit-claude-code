@@ -1,22 +1,22 @@
 # Agents Overview
 
-> bkit에 정의된 11개 Agents 목록과 각각의 역할 (v1.4.1)
+> List of 11 Agents defined in bkit and their roles (v1.4.1)
 >
-> **v1.4.1**: Context Engineering 관점 추가 - 역할 기반 행동 규칙 계층
+> **v1.4.1**: Added Context Engineering perspective - Role-based Behavioral Rules Layer
 > **v1.4.0**: Dual Platform Support (Claude Code + Gemini CLI)
 
-## Agents란?
+## What are Agents?
 
-Agents는 **특정 작업에 특화된 AI 서브에이전트**입니다.
-- Task tool로 호출되어 독립적으로 작업 수행
-- 각자의 allowed-tools와 전문 프롬프트 보유
-- Frontmatter hooks로 특정 동작 트리거
+Agents are **AI sub-agents specialized for specific tasks**.
+- Invoked via Task tool to perform work independently
+- Each has its own allowed-tools and specialized prompts
+- Frontmatter hooks trigger specific behaviors
 
-## Context Engineering 관점 (v1.4.1)
+## Context Engineering Perspective (v1.4.1)
 
-Agents는 bkit의 **Behavioral Rules Layer**를 구성하며, [[../../philosophy/context-engineering|Context Engineering]] 원칙에 따라 설계되었습니다.
+Agents form bkit's **Behavioral Rules Layer**, designed according to [[../../philosophy/context-engineering|Context Engineering]] principles.
 
-### Agent Context Engineering 패턴
+### Agent Context Engineering Patterns
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -35,70 +35,70 @@ Agents는 bkit의 **Behavioral Rules Layer**를 구성하며, [[../../philosophy
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │              Model Selection Strategy                     │   │
 │  │                                                          │   │
-│  │  opus   → 복잡한 분석, 전략적 판단                          │   │
-│  │  sonnet → 실행, 가이드, 반복 작업                          │   │
-│  │  haiku  → 빠른 모니터링, 문서 생성                         │   │
+│  │  opus   → Complex analysis, strategic decisions          │   │
+│  │  sonnet → Execution, guidance, iterative tasks           │   │
+│  │  haiku  → Fast monitoring, document generation           │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Agent별 모델 선택 전략
+### Model Selection Strategy by Agent
 
-| Model | Agents | 특성 |
-|-------|--------|------|
-| **opus** | code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect | 복잡한 분석, 전략적 판단 |
-| **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide | 실행, 가이드, 반복 |
-| **haiku** | qa-monitor, report-generator | 빠른 모니터링, 문서 생성 |
+| Model | Agents | Characteristics |
+|-------|--------|-----------------|
+| **opus** | code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect | Complex analysis, strategic decisions |
+| **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide | Execution, guidance, iteration |
+| **haiku** | qa-monitor, report-generator | Fast monitoring, document generation |
 
-## 전체 목록
+## Full List
 
-### Level-Based Agents (4개)
+### Level-Based Agents (4)
 
-프로젝트 레벨에 따라 자동 추천되는 에이전트들:
+Agents auto-recommended based on project level:
 
-| Agent | 대상 레벨 | 역할 | Hooks |
-|-------|----------|------|-------|
-| [[../../../agents/starter-guide|starter-guide]] | Starter | 초보자 친화적 가이드 | - |
-| [[../../../agents/bkend-expert|bkend-expert]] | Dynamic | BaaS/풀스택 전문가 | - |
-| [[../../../agents/enterprise-expert|enterprise-expert]] | Enterprise | CTO급 아키텍처 가이드 | - |
-| [[../../../agents/infra-architect|infra-architect]] | Enterprise | AWS/K8s/Terraform 전문가 | - |
+| Agent | Target Level | Role | Hooks |
+|-------|--------------|------|-------|
+| [[../../../agents/starter-guide|starter-guide]] | Starter | Beginner-friendly guide | - |
+| [[../../../agents/bkend-expert|bkend-expert]] | Dynamic | BaaS/Fullstack expert | - |
+| [[../../../agents/enterprise-expert|enterprise-expert]] | Enterprise | CTO-level architecture guide | - |
+| [[../../../agents/infra-architect|infra-architect]] | Enterprise | AWS/K8s/Terraform expert | - |
 
-### Task-Based Agents (7개)
+### Task-Based Agents (7)
 
-특정 작업에 따라 자동 호출되는 에이전트들:
+Agents auto-invoked based on specific tasks:
 
-| Agent | 트리거 조건 | 역할 | Hooks |
-|-------|-----------|------|-------|
-| [[../../../agents/pipeline-guide|pipeline-guide]] | "뭐부터", "어디서부터" | 9단계 파이프라인 안내 | - |
-| [[../../../agents/gap-detector|gap-detector]] | "갭 분석", "설계-구현 비교" | 설계 vs 구현 갭 분석 | Stop |
-| [[../../../agents/design-validator|design-validator]] | "설계 검증", "스펙 확인" | 설계 문서 검증 | PreToolUse |
-| [[../../../agents/code-analyzer|code-analyzer]] | "코드 분석", "품질 검사" | 코드 품질/보안 분석 | PreToolUse (block), Stop |
-| [[../../../agents/qa-monitor|qa-monitor]] | "QA", "테스트", "로그 분석" | Zero Script QA 실행 | PreToolUse, PostToolUse, Stop |
-| [[../../../agents/pdca-iterator|pdca-iterator]] | "고쳐줘", "개선해줘", "반복" | 자동 반복 개선 | Stop |
-| [[../../../agents/report-generator|report-generator]] | "보고서", "요약", "완료" | PDCA 보고서 생성 | - |
+| Agent | Trigger Conditions | Role | Hooks |
+|-------|-------------------|------|-------|
+| [[../../../agents/pipeline-guide|pipeline-guide]] | "where to start", "what first" | 9-stage pipeline guidance | - |
+| [[../../../agents/gap-detector|gap-detector]] | "gap analysis", "design-implementation compare" | Design vs Implementation gap analysis | Stop |
+| [[../../../agents/design-validator|design-validator]] | "design validation", "spec check" | Design document validation | PreToolUse |
+| [[../../../agents/code-analyzer|code-analyzer]] | "code analysis", "quality check" | Code quality/security analysis | PreToolUse (block), Stop |
+| [[../../../agents/qa-monitor|qa-monitor]] | "QA", "test", "log analysis" | Zero Script QA execution | PreToolUse, PostToolUse, Stop |
+| [[../../../agents/pdca-iterator|pdca-iterator]] | "fix it", "improve it", "iterate" | Auto iterative improvement | Stop |
+| [[../../../agents/report-generator|report-generator]] | "report", "summary", "complete" | PDCA report generation | - |
 
 ---
 
-## Agent 자동 호출 규칙
+## Agent Auto-Invoke Rules
 
-`auto-trigger-agents.md` instruction에 정의된 규칙:
+Rules defined in `auto-trigger-agents.md` instruction:
 
 ### Rule 1: Level-Based Selection
 
 ```
-사용자가 기능 개발 요청 시:
-1. 프로젝트 레벨 감지
-2. 레벨에 맞는 Agent 준비
+When user requests feature development:
+1. Detect project level
+2. Prepare matching Agent
    - Starter → starter-guide
    - Dynamic → bkend-expert
-   - Enterprise → enterprise-expert 또는 infra-architect
+   - Enterprise → enterprise-expert or infra-architect
 ```
 
 ### Rule 2: Task-Based Selection
 
 ```
-키워드 매칭:
+Keyword matching:
 - "code review", "security scan" → code-analyzer
 - "gap analysis" → gap-detector
 - "QA", "test", "log analysis" → qa-monitor
@@ -108,27 +108,27 @@ Agents는 bkit의 **Behavioral Rules Layer**를 구성하며, [[../../philosophy
 ### Rule 3: Proactive Suggestions
 
 ```
-코드 구현 후 → "코드 품질 분석할까요? (code-analyzer)"
-설계 문서 작성 후 → "설계 검증할까요? (design-validator)"
-기능 완료 후 → "갭 분석할까요? (gap-detector)"
-PDCA 사이클 후 → "완료 보고서 생성할까요? (report-generator)"
+After code implementation → "Run code quality analysis? (code-analyzer)"
+After design document creation → "Validate design? (design-validator)"
+After feature completion → "Run gap analysis? (gap-detector)"
+After PDCA cycle → "Generate completion report? (report-generator)"
 ```
 
 ---
 
-## Agent Frontmatter 구조
+## Agent Frontmatter Structure
 
 ```yaml
 ---
 name: agent-name
 description: |
-  Agent 설명.
+  Agent description.
 
   Use proactively when user...
 
-  Triggers: keyword1, keyword2, 한글키워드
+  Triggers: keyword1, keyword2, 한글키워드, キーワード, 关键词
 
-  Do NOT use for: 제외 조건
+  Do NOT use for: exclusion conditions
 allowed-tools:
   - Read
   - Write
@@ -151,7 +151,7 @@ hooks:
 
 ---
 
-## Agent별 Hooks
+## Agent Hooks
 
 | Agent | PreToolUse | PostToolUse | Stop |
 |-------|-----------|-------------|------|
@@ -163,21 +163,21 @@ hooks:
 
 ---
 
-## Agent vs Skill 차이
+## Agent vs Skill Differences
 
-| 구분 | Skill | Agent |
-|------|-------|-------|
-| 역할 | 지식/컨텍스트 제공 | 독립적 작업 수행 |
-| 호출 | 자동 활성화 | Task tool로 명시적 호출 |
-| 범위 | 현재 대화에 컨텍스트 추가 | 별도 대화로 작업 후 결과 반환 |
-| 예시 | phase-4-api → API 설계 지식 | qa-monitor → 실제 QA 수행 |
+| Aspect | Skill | Agent |
+|--------|-------|-------|
+| Role | Provide knowledge/context | Perform independent tasks |
+| Invocation | Auto-activation | Explicit invocation via Task tool |
+| Scope | Add context to current conversation | Work in separate conversation, return results |
+| Example | phase-4-api → API design knowledge | qa-monitor → Actual QA execution |
 
 ---
 
-## Skill → Agent 연결
+## Skill → Agent Connections
 
-| Skill | 연결된 Agent |
-|-------|-------------|
+| Skill | Connected Agent |
+|-------|-----------------|
 | starter | starter-guide |
 | dynamic | bkend-expert |
 | enterprise | enterprise-expert, infra-architect |
@@ -188,7 +188,7 @@ hooks:
 
 ---
 
-## Agent 소스 위치
+## Agent Source Location
 
 Agents are at root level (not in .claude/):
 
@@ -210,10 +210,10 @@ bkit-claude-code/
 
 ---
 
-## 관련 문서
+## Related Documents
 
-- [[../../philosophy/context-engineering]] - Context Engineering 원칙 ⭐ NEW
-- [[../skills/_skills-overview]] - Skill 상세
-- [[../hooks/_hooks-overview]] - Hook 이벤트 상세
-- [[../scripts/_scripts-overview]] - Script 상세
-- [[../../triggers/trigger-matrix]] - 트리거 매트릭스
+- [[../../philosophy/context-engineering]] - Context Engineering Principles ⭐ NEW
+- [[../skills/_skills-overview]] - Skill Details
+- [[../hooks/_hooks-overview]] - Hook Event Details
+- [[../scripts/_scripts-overview]] - Script Details
+- [[../../triggers/trigger-matrix]] - Trigger Matrix

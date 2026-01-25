@@ -1,42 +1,42 @@
 # Test Checklist
 
-> bkit 기능 검증을 위한 테스트 체크리스트
+> Test checklist for verifying bkit features
 
-## 테스트 목적
+## Test Objectives
 
-1. **Hooks 발동 검증**: 예상한 시점에 hooks가 발동하는지
-2. **Script 출력 검증**: 올바른 JSON이 출력되는지
-3. **시나리오 검증**: 사용자 시나리오별 예상 동작 확인
+1. **Hook Trigger Verification**: Verify hooks fire at expected times
+2. **Script Output Verification**: Verify correct JSON is output
+3. **Scenario Verification**: Confirm expected behavior per user scenario
 
 ---
 
-## 1. PreToolUse Hooks 테스트
+## 1. PreToolUse Hooks Tests
 
 ### 1.1 bkit-rules (pre-write.js - unified hook)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 1.1.1 | src/features/auth/login.ts Write (design doc 있음) | "Design doc 참조" 안내 | [ ] |
-| 1.1.2 | src/features/auth/login.ts Write (design doc 없음) | 빈 출력 | [ ] |
-| 1.1.3 | src/features/auth/login.ts Write (plan doc만 있음) | "Design 먼저 만드세요" 경고 | [ ] |
-| 1.1.4 | README.md Write | 빈 출력 (docs 파일) | [ ] |
-| 1.1.5 | src/lib/utils.ts Write | 빈 출력 (feature 아님) | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 1.1.1 | src/features/auth/login.ts Write (design doc exists) | "Reference design doc" guidance | [ ] |
+| 1.1.2 | src/features/auth/login.ts Write (no design doc) | Empty output | [ ] |
+| 1.1.3 | src/features/auth/login.ts Write (only plan doc exists) | "Create design first" warning | [ ] |
+| 1.1.4 | README.md Write | Empty output (docs file) | [ ] |
+| 1.1.5 | src/lib/utils.ts Write | Empty output (not a feature) | [ ] |
 
 ### 1.1.1 Multi-Language Support (v1.2.1)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 1.1.6 | internal/auth/handler.go Write | 소스 파일 감지 (Go) | [ ] |
-| 1.1.7 | app/routers/users.py Write | 소스 파일 감지 (Python) | [ ] |
-| 1.1.8 | src/main.rs Write | 소스 파일 감지 (Rust) | [ ] |
-| 1.1.9 | packages/api/index.ts Write | 소스 파일 감지 (Monorepo) | [ ] |
-| 1.1.10 | node_modules/pkg/index.js Write | 빈 출력 (exclude pattern) | [ ] |
-| 1.1.11 | __pycache__/module.py Write | 빈 출력 (exclude pattern) | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 1.1.6 | internal/auth/handler.go Write | Source file detected (Go) | [ ] |
+| 1.1.7 | app/routers/users.py Write | Source file detected (Python) | [ ] |
+| 1.1.8 | src/main.rs Write | Source file detected (Rust) | [ ] |
+| 1.1.9 | packages/api/index.ts Write | Source file detected (Monorepo) | [ ] |
+| 1.1.10 | node_modules/pkg/index.js Write | Empty output (exclude pattern) | [ ] |
+| 1.1.11 | __pycache__/module.py Write | Empty output (exclude pattern) | [ ] |
 
 ### 1.1.2 Language Tier Detection (v1.2.1)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
 | 1.1.12 | get_language_tier "test.py" | "1" (Tier 1 - AI-Native) | [ ] |
 | 1.1.13 | get_language_tier "test.ts" | "1" (Tier 1 - AI-Native) | [ ] |
 | 1.1.14 | get_language_tier "test.go" | "2" (Tier 2 - Mainstream) | [ ] |
@@ -49,8 +49,8 @@
 
 ### 1.1.3 New Extension Support (v1.2.1)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
 | 1.1.21 | is_code_file "app.dart" | true (Flutter/Dart) | [ ] |
 | 1.1.22 | is_code_file "page.astro" | true (Astro) | [ ] |
 | 1.1.23 | is_code_file "doc.mdx" | true (MDX) | [ ] |
@@ -62,27 +62,27 @@
 
 > **Note**: Task classification is now integrated into `pre-write.js` (v1.2.0)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 1.2.1 | 30자 수정 | "Quick Fix" (no PDCA) | [ ] |
-| 1.2.2 | 100자 수정 | "Minor Change" (check /pdca-status) | [ ] |
-| 1.2.3 | 500자 수정 | "Feature" (design doc recommended) | [ ] |
-| 1.2.4 | 1500자 수정 | "Major Feature" (design doc required, may block) | [ ] |
-| 1.2.5 | docs/README.md 수정 | 빈 출력 (src/ 외부) | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 1.2.1 | 30 char modification | "Quick Fix" (no PDCA) | [ ] |
+| 1.2.2 | 100 char modification | "Minor Change" (check /pdca-status) | [ ] |
+| 1.2.3 | 500 char modification | "Feature" (design doc recommended) | [ ] |
+| 1.2.4 | 1500 char modification | "Major Feature" (design doc required, may block) | [ ] |
+| 1.2.5 | docs/README.md modification | Empty output (outside src/) | [ ] |
 
 ### 1.3 Convention Hints (integrated in pre-write.js)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 1.3.1 | .ts 파일 Write | TypeScript 컨벤션 안내 | [ ] |
-| 1.3.2 | .tsx 파일 Write | TypeScript 컨벤션 안내 | [ ] |
-| 1.3.3 | .env 파일 Write | 환경변수 컨벤션 안내 | [ ] |
-| 1.3.4 | .md 파일 Write | 빈 출력 | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 1.3.1 | .ts file Write | TypeScript convention guidance | [ ] |
+| 1.3.2 | .tsx file Write | TypeScript convention guidance | [ ] |
+| 1.3.3 | .env file Write | Environment variable convention guidance | [ ] |
+| 1.3.4 | .md file Write | Empty output | [ ] |
 
 ### 1.4 zero-script-qa (qa-pre-bash.js)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
 | 1.4.1 | `docker compose logs -f` | Allow | [ ] |
 | 1.4.2 | `rm -rf /tmp/*` | Block | [ ] |
 | 1.4.3 | `DROP TABLE users` | Block | [ ] |
@@ -90,183 +90,183 @@
 
 ### 1.5 phase-9-deployment (phase9-deploy-pre.js)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 1.5.1 | `vercel deploy` (.env.example 있음) | Allow + "✅ 체크 완료" | [ ] |
-| 1.5.2 | `vercel deploy` (.env.example 없음) | Allow + "⚠️ 체크 필요" | [ ] |
-| 1.5.3 | `npm install` | 빈 출력 (배포 아님) | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 1.5.1 | `vercel deploy` (.env.example exists) | Allow + "✅ Check complete" | [ ] |
+| 1.5.2 | `vercel deploy` (no .env.example) | Allow + "⚠️ Check needed" | [ ] |
+| 1.5.3 | `npm install` | Empty output (not deployment) | [ ] |
 
 ---
 
-## 2. PostToolUse Hooks 테스트
+## 2. PostToolUse Hooks Tests
 
 ### 2.1 bkit-rules (pdca-post-write.js)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 2.1.1 | src/features/auth/ Write (design doc 있음) | "/pdca-analyze 권장" | [ ] |
-| 2.1.2 | src/features/auth/ Write (design doc 없음) | 빈 출력 | [ ] |
-| 2.1.3 | src/lib/utils.ts Write | 빈 출력 | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 2.1.1 | src/features/auth/ Write (design doc exists) | "/pdca-analyze recommended" | [ ] |
+| 2.1.2 | src/features/auth/ Write (no design doc) | Empty output | [ ] |
+| 2.1.3 | src/lib/utils.ts Write | Empty output | [ ] |
 
 ### 2.2 phase-5-design-system (phase5-design-post.js)
 
 > **Note**: Extension-based detection (v1.2.1) - .tsx, .jsx, .vue, .svelte
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 2.2.1 | components/Button.tsx Write (하드코딩 색상 있음) | "⚠️ 디자인 토큰 사용" 경고 | [ ] |
-| 2.2.2 | components/Button.tsx Write (하드코딩 없음) | "✅ 디자인 토큰 올바름" | [ ] |
-| 2.2.3 | src/lib/api.ts Write | 빈 출력 (.ts는 UI 아님) | [ ] |
-| 2.2.4 | src/App.vue Write (하드코딩 색상 있음) | "⚠️ 디자인 토큰 사용" 경고 | [ ] |
-| 2.2.5 | src/Button.svelte Write | UI 파일 감지 | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 2.2.1 | components/Button.tsx Write (hardcoded colors) | "⚠️ Use design tokens" warning | [ ] |
+| 2.2.2 | components/Button.tsx Write (no hardcoding) | "✅ Design tokens correct" | [ ] |
+| 2.2.3 | src/lib/api.ts Write | Empty output (.ts is not UI) | [ ] |
+| 2.2.4 | src/App.vue Write (hardcoded colors) | "⚠️ Use design tokens" warning | [ ] |
+| 2.2.5 | src/Button.svelte Write | UI file detected | [ ] |
 
 ### 2.3 phase-6-ui-integration (phase6-ui-post.js)
 
 > **Note**: Extension-based UI detection (v1.2.1) + path-based layer detection
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 2.3.1 | pages/login.tsx Write | "UI Layer Check" 안내 | [ ] |
-| 2.3.2 | features/auth/LoginForm.tsx Write | "UI Layer Check" 안내 | [ ] |
-| 2.3.3 | services/authService.ts Write | "Service Layer Check" 안내 | [ ] |
-| 2.3.4 | lib/utils.ts Write | 빈 출력 | [ ] |
-| 2.3.5 | src/components/Modal.vue Write | "UI Layer Check" 안내 | [ ] |
-| 2.3.6 | src/Card.svelte Write | "UI Layer Check" 안내 | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 2.3.1 | pages/login.tsx Write | "UI Layer Check" guidance | [ ] |
+| 2.3.2 | features/auth/LoginForm.tsx Write | "UI Layer Check" guidance | [ ] |
+| 2.3.3 | services/authService.ts Write | "Service Layer Check" guidance | [ ] |
+| 2.3.4 | lib/utils.ts Write | Empty output | [ ] |
+| 2.3.5 | src/components/Modal.vue Write | "UI Layer Check" guidance | [ ] |
+| 2.3.6 | src/Card.svelte Write | "UI Layer Check" guidance | [ ] |
 
 ### 2.4 qa-monitor (qa-monitor-post.js)
 
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 2.4.1 | QA 보고서 Write (Critical 있음) | "🚨 Critical 감지, /pdca-iterate 권장" | [ ] |
-| 2.4.2 | QA 보고서 Write (Critical 없음) | "✅ No critical issues" | [ ] |
-| 2.4.3 | 일반 파일 Write | 빈 출력 | [ ] |
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 2.4.1 | QA report Write (Critical exists) | "🚨 Critical detected, /pdca-iterate recommended" | [ ] |
+| 2.4.2 | QA report Write (no Critical) | "✅ No critical issues" | [ ] |
+| 2.4.3 | Regular file Write | Empty output | [ ] |
 
 ---
 
-## 3. Stop Hooks 테스트
+## 3. Stop Hooks Tests
 
-| # | Skill | 테스트 방법 | 예상 결과 | Pass |
-|---|-------|-----------|----------|------|
-| 3.1 | phase-4-api | API 작업 완료 후 | "Zero Script QA 안내" | [ ] |
-| 3.2 | phase-8-review | 리뷰 작업 완료 후 | "리뷰 완료 요약" | [ ] |
-| 3.3 | bkit-templates (via gap-detector) | 갭 분석 완료 후 | "분석 결과 안내" | [ ] |
-| 3.4 | zero-script-qa | QA 세션 종료 | "다음 단계 안내" | [ ] |
-
----
-
-## 4. SessionStart Hook 테스트
-
-| # | 테스트 케이스 | 예상 결과 | Pass |
-|---|-------------|----------|------|
-| 4.1 | 새 세션 시작 | session-start.js 실행, 인사 메시지 | [ ] |
-| 4.2 | once: true 설정 | 한 번만 실행 | [ ] |
+| # | Skill | Test Method | Expected Result | Pass |
+|---|-------|-------------|-----------------|------|
+| 3.1 | phase-4-api | After API work completion | "Zero Script QA guidance" | [ ] |
+| 3.2 | phase-8-review | After review work completion | "Review completion summary" | [ ] |
+| 3.3 | bkit-templates (via gap-detector) | After gap analysis completion | "Analysis result guidance" | [ ] |
+| 3.4 | zero-script-qa | QA session end | "Next steps guidance" | [ ] |
 
 ---
 
-## 5. Skill 활성화 테스트
+## 4. SessionStart Hook Tests
 
-### 5.1 키워드 매칭
+| # | Test Case | Expected Result | Pass |
+|---|-----------|-----------------|------|
+| 4.1 | New session start | session-start.js executes, greeting message | [ ] |
+| 4.2 | once: true setting | Executes only once | [ ] |
 
-| # | 사용자 입력 | 활성화 예상 Skill | Pass |
-|---|-----------|------------------|------|
-| 5.1.1 | "정적 웹사이트 만들어줘" | starter | [ ] |
-| 5.1.2 | "로그인 기능 구현해줘" | dynamic, phase-4-api | [ ] |
-| 5.1.3 | "쿠버네티스 배포 설정해줘" | enterprise, phase-9-deployment | [ ] |
-| 5.1.4 | "API 설계해줘" | phase-4-api | [ ] |
-| 5.1.5 | "디자인 시스템 구축해줘" | phase-5-design-system | [ ] |
-| 5.1.6 | "갭 분석해줘" | bkit-templates, gap-detector agent | [ ] |
-| 5.1.7 | "QA 해줘" | zero-script-qa | [ ] |
+---
 
-### 5.2 Level 감지
+## 5. Skill Activation Tests
 
-| # | 프로젝트 구조 | 감지 레벨 | Pass |
-|---|-------------|----------|------|
-| 5.2.1 | index.html만 있음 | Starter | [ ] |
-| 5.2.2 | package.json + bkend 설정 | Dynamic | [ ] |
+### 5.1 Keyword Matching
+
+| # | User Input | Expected Activated Skill | Pass |
+|---|------------|--------------------------|------|
+| 5.1.1 | "Create a static website" | starter | [ ] |
+| 5.1.2 | "Implement login feature" | dynamic, phase-4-api | [ ] |
+| 5.1.3 | "Set up Kubernetes deployment" | enterprise, phase-9-deployment | [ ] |
+| 5.1.4 | "Design the API" | phase-4-api | [ ] |
+| 5.1.5 | "Build a design system" | phase-5-design-system | [ ] |
+| 5.1.6 | "Run gap analysis" | bkit-templates, gap-detector agent | [ ] |
+| 5.1.7 | "Do QA" | zero-script-qa | [ ] |
+
+### 5.2 Level Detection
+
+| # | Project Structure | Detected Level | Pass |
+|---|-------------------|----------------|------|
+| 5.2.1 | Only index.html exists | Starter | [ ] |
+| 5.2.2 | package.json + bkend config | Dynamic | [ ] |
 | 5.2.3 | kubernetes/ + terraform/ | Enterprise | [ ] |
-| 5.2.4 | CLAUDE.md에 "Level: Dynamic" | Dynamic | [ ] |
+| 5.2.4 | "Level: Dynamic" in CLAUDE.md | Dynamic | [ ] |
 
 ---
 
-## 6. Agent 자동 호출 테스트
+## 6. Agent Auto-Invoke Tests
 
-| # | 조건 | 호출 Agent | Pass |
-|---|------|-----------|------|
-| 6.1 | Level=Starter + 코딩 요청 | starter-guide | [ ] |
-| 6.2 | Level=Dynamic + 백엔드 작업 | bkend-expert | [ ] |
-| 6.3 | Level=Enterprise + 아키텍처 | enterprise-expert | [ ] |
-| 6.4 | "코드 리뷰해줘" | code-analyzer | [ ] |
-| 6.5 | "갭 분석해줘" | gap-detector | [ ] |
-| 6.6 | "QA 해줘" | qa-monitor | [ ] |
-| 6.7 | 구현 완료 후 | Gap Analysis 제안 | [ ] |
-| 6.8 | 갭 분석 < 70% 후 | pdca-iterator 제안 | [ ] |
-
----
-
-## 7. 시나리오 통합 테스트
-
-### 7.1 새 기능 구현 전체 플로우
-
-```
-1. "로그인 기능 만들어줘" 요청
-2. design doc 확인 → 없으면 생성 제안
-3. 구현 중 Write hooks 발동 확인
-4. 구현 완료 후 Gap Analysis 제안
-5. 분석 후 iterate 또는 report 제안
-```
-
-| # | 단계 | 확인 항목 | Pass |
-|---|------|---------|------|
-| 7.1.1 | 요청 | bkit-rules skill 활성화 | [ ] |
-| 7.1.2 | 문서 확인 | design doc 존재 여부 체크 | [ ] |
-| 7.1.3 | Write | pdca-pre-write 발동 | [ ] |
-| 7.1.4 | Write | task-classify 발동 | [ ] |
-| 7.1.5 | Write 후 | pdca-post-write 발동 | [ ] |
-| 7.1.6 | 완료 | Gap Analysis 제안 | [ ] |
-
-### 7.2 Zero Script QA 전체 플로우
-
-```
-1. "/zero-script-qa" 요청
-2. Docker 환경 확인
-3. 로그 모니터링
-4. 이슈 감지 및 보고
-5. 보고서 생성
-```
-
-| # | 단계 | 확인 항목 | Pass |
-|---|------|---------|------|
-| 7.2.1 | 요청 | zero-script-qa skill 활성화 | [ ] |
-| 7.2.2 | Bash | qa-pre-bash 발동 | [ ] |
-| 7.2.3 | 보고서 Write | qa-monitor-post 발동 | [ ] |
-| 7.2.4 | 종료 | qa-stop 발동 | [ ] |
+| # | Condition | Invoked Agent | Pass |
+|---|-----------|---------------|------|
+| 6.1 | Level=Starter + coding request | starter-guide | [ ] |
+| 6.2 | Level=Dynamic + backend work | bkend-expert | [ ] |
+| 6.3 | Level=Enterprise + architecture | enterprise-expert | [ ] |
+| 6.4 | "Do code review" | code-analyzer | [ ] |
+| 6.5 | "Do gap analysis" | gap-detector | [ ] |
+| 6.6 | "Do QA" | qa-monitor | [ ] |
+| 6.7 | After implementation complete | Gap Analysis suggestion | [ ] |
+| 6.8 | After gap analysis < 70% | pdca-iterator suggestion | [ ] |
 
 ---
 
-## 테스트 실행 방법
+## 7. Scenario Integration Tests
 
-### Script 단위 테스트
+### 7.1 New Feature Implementation Full Flow
+
+```
+1. "Create login feature" request
+2. Check design doc → suggest creation if missing
+3. Verify Write hooks fire during implementation
+4. Suggest Gap Analysis after implementation complete
+5. Suggest iterate or report after analysis
+```
+
+| # | Step | Verification Item | Pass |
+|---|------|-------------------|------|
+| 7.1.1 | Request | bkit-rules skill activated | [ ] |
+| 7.1.2 | Doc check | Check design doc existence | [ ] |
+| 7.1.3 | Write | pdca-pre-write fires | [ ] |
+| 7.1.4 | Write | task-classify fires | [ ] |
+| 7.1.5 | After Write | pdca-post-write fires | [ ] |
+| 7.1.6 | Complete | Gap Analysis suggestion | [ ] |
+
+### 7.2 Zero Script QA Full Flow
+
+```
+1. "/zero-script-qa" request
+2. Docker environment check
+3. Log monitoring
+4. Issue detection and reporting
+5. Report generation
+```
+
+| # | Step | Verification Item | Pass |
+|---|------|-------------------|------|
+| 7.2.1 | Request | zero-script-qa skill activated | [ ] |
+| 7.2.2 | Bash | qa-pre-bash fires | [ ] |
+| 7.2.3 | Report Write | qa-monitor-post fires | [ ] |
+| 7.2.4 | End | qa-stop fires | [ ] |
+
+---
+
+## Test Execution Methods
+
+### Script Unit Tests
 
 ```bash
-# 직접 script 실행 (scripts are at root level, not in .claude/)
+# Direct script execution (scripts are at root level, not in .claude/)
 echo '{"tool_input":{"file_path":"src/features/auth/login.ts","content":"test"}}' | \
   scripts/pre-write.js
 ```
 
-### 통합 테스트
+### Integration Tests
 
 ```bash
-# Claude Code 세션에서 실제 시나리오 실행
-# 1. 새 세션 시작
-# 2. 테스트 케이스 입력
-# 3. 예상 동작 확인
+# Execute actual scenarios in Claude Code session
+# 1. Start new session
+# 2. Enter test case input
+# 3. Verify expected behavior
 ```
 
 ---
 
-## 관련 문서
+## Related Documents
 
-- [[../triggers/trigger-matrix]] - 트리거 매트릭스
-- [[../scenarios/scenario-write-code]] - 코드 작성 시나리오
-- [[../scenarios/scenario-new-feature]] - 새 기능 시나리오
-- [[../scenarios/scenario-qa]] - QA 시나리오
+- [[../triggers/trigger-matrix]] - Trigger matrix
+- [[../scenarios/scenario-write-code]] - Code write scenario
+- [[../scenarios/scenario-new-feature]] - New feature scenario
+- [[../scenarios/scenario-qa]] - QA scenario

@@ -1,72 +1,72 @@
 # Scenario: New Feature Request
 
-> 사용자가 새 기능을 요청할 때 bkit의 PDCA 플로우
+> bkit's PDCA flow when user requests a new feature
 
-## 시나리오 개요
+## Scenario Overview
 
 ```
-사용자: "로그인 기능 만들어줘"
-→ PDCA 문서 존재 확인
-→ 없으면 Plan/Design 먼저 생성
-→ 구현
-→ Gap Analysis 제안
+User: "Create a login feature"
+→ Check if PDCA documents exist
+→ If not, create Plan/Design first
+→ Implement
+→ Suggest Gap Analysis
 ```
 
-## 발동 순서 (Flow)
+## Trigger Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1. 사용자 요청: "로그인 기능 만들어줘"                          │
+│  1. User Request: "Create a login feature"                       │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  2. Skills 활성화 (키워드 매칭)                                  │
+│  2. Skills Activation (Keyword Matching)                         │
 │                                                                 │
-│  [[../../skills/bkit-rules/SKILL|bkit-rules]] 활성화                     │
-│  • "기능", "만들어" 키워드 매칭                                 │
+│  [[../../skills/bkit-rules/SKILL|bkit-rules]] activated                  │
+│  • Keywords "feature", "create" matched                         │
 │                                                                 │
-│  [[../../skills/dynamic/SKILL|dynamic]] 활성화 (Level=Dynamic인 경우)  │
-│  • "로그인" 키워드 매칭                                         │
+│  [[../../skills/dynamic/SKILL|dynamic]] activated (if Level=Dynamic)   │
+│  • Keyword "login" matched                                      │
 │                                                                 │
-│  [[../../skills/phase-4-api/SKILL|phase-4-api]] 활성화                    │
-│  • 백엔드 기능이므로 API 관련 skill 활성화                      │
+│  [[../../skills/phase-4-api/SKILL|phase-4-api]] activated                 │
+│  • API-related skill activated for backend feature              │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  3. PDCA 문서 확인 (pdca-rules instruction)                     │
+│  3. PDCA Document Check (pdca-rules instruction)                 │
 │                                                                 │
-│  Claude가 확인:                                                 │
-│  • docs/01-plan/features/login.plan.md 존재?                   │
-│  • docs/02-design/features/login.design.md 존재?               │
+│  Claude checks:                                                 │
+│  • Does docs/01-plan/features/login.plan.md exist?             │
+│  • Does docs/02-design/features/login.design.md exist?         │
 │                                                                 │
-│  없으면 → Design 먼저 생성 제안                                 │
-│  있으면 → 바로 구현                                             │
+│  If not → Suggest creating Design first                         │
+│  If yes → Start implementation immediately                      │
 └─────────────────────────────────────────────────────────────────┘
                               │
             ┌─────────────────┴─────────────────┐
             ▼                                   ▼
    ┌─────────────────┐                 ┌─────────────────┐
-   │ 문서 없음       │                 │ 문서 있음       │
+   │ No Document     │                 │ Document Exists │
    └─────────────────┘                 └─────────────────┘
             │                                   │
             ▼                                   ▼
 ┌─────────────────────────┐       ┌─────────────────────────┐
-│ 4a. Design 문서 생성    │       │ 4b. 구현 시작           │
+│ 4a. Create Design Doc   │       │ 4b. Start Implementation│
 │                         │       │                         │
-│ AskUserQuestion:        │       │ 기존 design doc 참조    │
-│ "설계 먼저 할까요?"     │       │ 하여 구현               │
+│ AskUserQuestion:        │       │ Reference existing      │
+│ "Create design first?"  │       │ design doc for impl     │
 │                         │       │                         │
 │ Yes → /pdca-design      │       │                         │
-│ No → 바로 구현          │       │                         │
+│ No → Implement directly │       │                         │
 └─────────────────────────┘       └─────────────────────────┘
             │                                   │
             └─────────────────┬─────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  5. Write/Edit 시 Hooks 발동 ([[scenario-write-code]] 참조)     │
+│  5. Hooks Fire on Write/Edit (See [[scenario-write-code]])       │
 │                                                                 │
 │  PreToolUse: pre-write.js (unified hook v1.2.0)                │
 │  PostToolUse: pdca-post-write.js, phase6-ui-post.js            │
@@ -74,138 +74,138 @@
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  6. 구현 완료 후                                                 │
+│  6. After Implementation Completion                              │
 │                                                                 │
-│  Claude 제안 (auto-trigger-agents instruction):                 │
-│  "구현이 완료되었습니다. Gap Analysis를 실행할까요?"            │
-│  • Yes → gap-detector agent 호출                                │
-│  • No → 종료                                                    │
+│  Claude suggests (auto-trigger-agents instruction):             │
+│  "Implementation complete. Run Gap Analysis?"                   │
+│  • Yes → Invoke gap-detector agent                              │
+│  • No → Exit                                                    │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  7. Gap Analysis 결과에 따라                                    │
+│  7. Based on Gap Analysis Results                                │
 │                                                                 │
-│  Match Rate >= 90% → "PDCA 완료, 보고서 생성할까요?"            │
-│  Match Rate < 70% → "자동 수정(iterate) 실행할까요?"            │
+│  Match Rate >= 90% → "PDCA complete, generate report?"          │
+│  Match Rate < 70% → "Run auto-fix (iterate)?"                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## 예시: "로그인 기능 만들어줘"
+## Example: "Create a login feature"
 
-### Case 1: Design 문서 없음
-
-```
-사용자: "로그인 기능 만들어줘"
-
-Claude: 로그인 기능을 구현하겠습니다.
-
-먼저 설계 문서가 없는 것 같습니다.
-PDCA 방법론에 따라 설계 문서를 먼저 작성하면
-나중에 Gap Analysis로 검증할 수 있습니다.
-
-설계 문서를 먼저 작성할까요?
-1. 네, 설계 먼저 (/pdca-design login)
-2. 아니오, 바로 구현
-
-[사용자: 1 선택]
-
-Claude: 로그인 기능 설계 문서를 작성합니다.
-[design template 적용하여 docs/02-design/features/login.design.md 생성]
-
-설계가 완료되었습니다. 이제 구현을 시작할까요?
-```
-
-### Case 2: Design 문서 있음
+### Case 1: No Design Document
 
 ```
-사용자: "로그인 기능 만들어줘"
+User: "Create a login feature"
 
-Claude: 로그인 기능을 구현하겠습니다.
+Claude: I'll implement the login feature.
 
-기존 설계 문서를 참조합니다:
+First, it seems there's no design document.
+Following PDCA methodology, creating a design document first
+enables Gap Analysis verification later.
+
+Would you like to create a design document first?
+1. Yes, design first (/pdca-design login)
+2. No, implement directly
+
+[User selects 1]
+
+Claude: Creating the login feature design document.
+[Applies design template to create docs/02-design/features/login.design.md]
+
+Design is complete. Would you like to start implementation now?
+```
+
+### Case 2: Design Document Exists
+
+```
+User: "Create a login feature"
+
+Claude: I'll implement the login feature.
+
+Referencing existing design document:
 - docs/02-design/features/login.design.md
 
-[설계 문서 내용 요약]
+[Design document summary]
 - POST /api/auth/login
 - POST /api/auth/logout
 - GET /api/auth/me
 
-이 설계대로 구현하겠습니다.
+I'll implement according to this design.
 
-[구현 진행...]
+[Implementation in progress...]
 
-구현이 완료되었습니다.
-Gap Analysis를 실행하여 설계-구현 일치 여부를 확인할까요?
+Implementation complete.
+Would you like to run Gap Analysis to verify design-implementation alignment?
 ```
 
 ---
 
-## Level별 동작 차이
+## Behavior Differences by Level
 
 ### Starter Level
 
 ```
-특징:
-- BaaS 없음 (정적 웹)
-- 로그인 기능 자체가 Level 초과
+Characteristics:
+- No BaaS (static web)
+- Login feature itself exceeds level
 
-동작:
-Claude: "로그인 기능은 Dynamic 레벨에서 가능합니다.
-레벨 업그레이드가 필요합니다. /upgrade-level dynamic"
+Behavior:
+Claude: "Login feature requires Dynamic level.
+Level upgrade is needed. /upgrade-level dynamic"
 ```
 
 ### Dynamic Level
 
 ```
-특징:
-- bkend.ai BaaS 사용
-- 로그인 = bkend.ai 인증 API 연동
+Characteristics:
+- Uses bkend.ai BaaS
+- Login = bkend.ai authentication API integration
 
-동작:
-Claude: bkend-expert agent 활성화 가능
-설계 시 bkend.ai collection 구조 포함
+Behavior:
+Claude: bkend-expert agent can be activated
+Design includes bkend.ai collection structure
 ```
 
 ### Enterprise Level
 
 ```
-특징:
-- 자체 백엔드
-- 마이크로서비스 가능
+Characteristics:
+- Custom backend
+- Microservices possible
 
-동작:
-Claude: enterprise-expert 또는 infra-architect 활성화 가능
-설계 시 서비스 분리, K8s 배포 고려
+Behavior:
+Claude: enterprise-expert or infra-architect can be activated
+Design considers service separation, K8s deployment
 ```
 
 ---
 
-## Agent 자동 호출 시점
+## Agent Auto-Invoke Timing
 
-| 시점 | 호출 가능 Agent |
-|------|----------------|
-| 기능 요청 초기 | starter-guide, bkend-expert, enterprise-expert (Level별) |
-| 설계 문서 작성 후 | design-validator |
-| 구현 완료 후 | gap-detector, code-analyzer |
-| 갭 분석 후 (< 70%) | pdca-iterator |
-| PDCA 완료 후 | report-generator |
-
----
-
-## 테스트 체크리스트
-
-- [ ] "기능 만들어줘" 요청 시 bkit-rules skill 활성화 확인
-- [ ] design doc 없을 때 생성 제안 확인
-- [ ] design doc 있을 때 바로 구현 시작 확인
-- [ ] 구현 완료 후 Gap Analysis 제안 확인
-- [ ] Level별 적절한 agent 제안 확인
+| Timing | Available Agents |
+|--------|-----------------|
+| Initial feature request | starter-guide, bkend-expert, enterprise-expert (by Level) |
+| After design document creation | design-validator |
+| After implementation completion | gap-detector, code-analyzer |
+| After gap analysis (< 70%) | pdca-iterator |
+| After PDCA completion | report-generator |
 
 ---
 
-## 관련 문서
+## Test Checklist
 
-- [[scenario-write-code]] - 코드 작성 시나리오
-- [[scenario-qa]] - QA 실행 시나리오
-- [[../triggers/trigger-matrix]] - 트리거 매트릭스
-- [[../components/agents/_agents-overview]] - Agent 자동 호출 규칙
+- [ ] Verify bkit-rules skill activation on "create feature" request
+- [ ] Verify creation suggestion when design doc doesn't exist
+- [ ] Verify immediate implementation start when design doc exists
+- [ ] Verify Gap Analysis suggestion after implementation completion
+- [ ] Verify appropriate agent suggestions by Level
+
+---
+
+## Related Documents
+
+- [[scenario-write-code]] - Write code scenario
+- [[scenario-qa]] - QA execution scenario
+- [[../triggers/trigger-matrix]] - Trigger matrix
+- [[../components/agents/_agents-overview]] - Agent auto-invoke rules

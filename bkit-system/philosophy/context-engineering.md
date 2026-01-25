@@ -1,31 +1,31 @@
 # Context Engineering Principles
 
-> LLM 추론을 위한 최적의 토큰 큐레이션 - bkit의 핵심 설계 원칙
+> Optimal token curation for LLM inference - bkit's core design principle
 >
-> **v1.4.1**: Context Engineering 관점으로 bkit 아키텍처 분석
+> **v1.4.1**: Analyzing bkit architecture from Context Engineering perspective
 
 ## What is Context Engineering?
 
-Context Engineering이란 **LLM의 추론에 사용될 컨텍스트 토큰을 최적으로 큐레이션하는 작업**입니다.
+Context Engineering is **the practice of optimally curating context tokens for LLM inference**.
 
 ```
 Traditional Prompt Engineering:
-  "좋은 프롬프트를 작성하는 기술"
+  "The art of writing good prompts"
 
 Context Engineering:
-  "시스템, 프롬프트, 도구, 상태를 통합하여
-   LLM이 최적의 추론을 할 수 있도록 컨텍스트를 설계하는 기술"
+  "The art of designing systems that integrate prompts, tools, and state
+   to provide LLMs with optimal context for inference"
 ```
 
-bkit은 Context Engineering의 **실제 구현체**로서, Claude Code/Gemini CLI 환경에서 체계적인 컨텍스트 관리 시스템을 제공합니다.
+bkit is a **practical implementation of Context Engineering**, providing a systematic context management system for Claude Code/Gemini CLI environments.
 
 ---
 
-## bkit의 Context Engineering 구조
+## bkit's Context Engineering Structure
 
-### 1. 도메인 지식 계층 (18 Skills)
+### 1. Domain Knowledge Layer (18 Skills)
 
-Skills는 **구조화된 도메인 지식**을 제공합니다.
+Skills provide **structured domain knowledge**.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -48,18 +48,18 @@ Skills는 **구조화된 도메인 지식**을 제공합니다.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Context Engineering 기법**:
+**Context Engineering Techniques**:
 
-| 기법 | 적용 | 효과 |
-|------|------|------|
-| **계층 구조 테이블** | 레벨별/Phase별 적용 방법 | 조건부 지식 선택 |
-| **ASCII 다이어그램** | 아키텍처 시각화 | 구조적 이해 |
-| **체크리스트** | 완료 조건 명확화 | 자동화 가능 |
-| **코드 예제** | 즉시 적용 가능한 참조 | 일관된 구현 |
+| Technique | Application | Effect |
+|-----------|-------------|--------|
+| **Hierarchical Tables** | Level/Phase-specific methods | Conditional knowledge selection |
+| **ASCII Diagrams** | Architecture visualization | Structural understanding |
+| **Checklists** | Clear completion criteria | Enables automation |
+| **Code Examples** | Ready-to-apply references | Consistent implementation |
 
-### 2. 행동 규칙 계층 (11 Agents)
+### 2. Behavioral Rules Layer (11 Agents)
 
-Agents는 **역할 기반 행동 규칙**을 정의합니다.
+Agents define **role-based behavioral rules**.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -69,10 +69,10 @@ Agents는 **역할 기반 행동 규칙**을 정의합니다.
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │              Role Definition Pattern                     │   │
 │  │                                                         │   │
-│  │  1. 전문 분야 명시 (Expert in X)                         │   │
-│  │  2. 책임 범위 정의 (responsible for X)                   │   │
-│  │  3. 레벨 명시 (CTO-level, beginner-friendly)            │   │
-│  │  4. 실제 사례 참조 (bkamp.ai case study)                │   │
+│  │  1. Specify expertise (Expert in X)                     │   │
+│  │  2. Define responsibility scope (responsible for X)     │   │
+│  │  3. Specify level (CTO-level, beginner-friendly)        │   │
+│  │  4. Reference real cases (bkamp.ai case study)          │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
@@ -81,23 +81,23 @@ Agents는 **역할 기반 행동 규칙**을 정의합니다.
 │  │  • Permission Mode: plan | acceptEdits                  │   │
 │  │  • Allowed/Disallowed Tools                             │   │
 │  │  • Score Thresholds (70/90%)                            │   │
-│  │  • Workflow Rules (문서 먼저, 단계별 진행)                │   │
+│  │  • Workflow Rules (docs first, step-by-step)            │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Agent별 모델 선택 전략**:
+**Model Selection Strategy by Agent**:
 
-| Model | Agents | 특성 |
-|-------|--------|------|
-| **opus** | code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect | 복잡한 분석, 전략적 판단 |
-| **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide | 실행, 가이드, 반복 |
-| **haiku** | qa-monitor, report-generator | 빠른 모니터링, 문서 생성 |
+| Model | Agents | Characteristics |
+|-------|--------|-----------------|
+| **opus** | code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect | Complex analysis, strategic judgment |
+| **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide | Execution, guidance, iteration |
+| **haiku** | qa-monitor, report-generator | Fast monitoring, document generation |
 
-### 3. 상태 관리 계층 (lib/common.js)
+### 3. State Management Layer (lib/common.js)
 
-76+ 함수로 구성된 **상태 관리 시스템**입니다.
+A **state management system** composed of 76+ functions.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -118,8 +118,8 @@ Agents는 **역할 기반 행동 규칙**을 정의합니다.
 │  │   Intent Detection   │  │   Ambiguity          │            │
 │  │   (8 Languages)      │  │   Detection          │            │
 │  │                      │  │                      │            │
-│  │  EN, KO, JA, ZH      │  │  • Score 계산        │            │
-│  │  ES, FR, DE, IT      │  │  • 명확화 질문 생성   │            │
+│  │  EN, KO, JA, ZH      │  │  • Score calculation │            │
+│  │  ES, FR, DE, IT      │  │  • Generate questions│            │
 │  │                      │  │  • Magic Word Bypass │            │
 │  └──────────────────────┘  └──────────────────────┘            │
 │                                                                 │
@@ -136,7 +136,7 @@ Agents는 **역할 기반 행동 규칙**을 정의합니다.
 
 ## 5-Layer Hook System
 
-bkit의 컨텍스트 주입은 **5개 레이어**에서 발생합니다.
+bkit's context injection occurs at **5 layers**.
 
 ```
 Layer 1: hooks.json (Global)
@@ -155,14 +155,14 @@ Layer 5: Scripts (26 modules)
          └── Actual Node.js logic execution
 ```
 
-**Hook Event별 컨텍스트 주입**:
+**Context Injection by Hook Event**:
 
 | Event | Timing | Injection Type |
 |-------|--------|----------------|
-| **SessionStart** | 세션 시작 | 온보딩, PDCA 상태, 트리거 테이블 |
-| **PreToolUse** | 도구 실행 전 | 검증 체크리스트, 컨벤션 힌트 |
-| **PostToolUse** | 도구 실행 후 | 다음 단계 가이드, 분석 제안 |
-| **Stop** | 에이전트 종료 | 상태 전환, 사용자 선택 유도 |
+| **SessionStart** | Session start | Onboarding, PDCA status, trigger table |
+| **PreToolUse** | Before tool execution | Validation checklist, convention hints |
+| **PostToolUse** | After tool execution | Next step guide, analysis suggestion |
+| **Stop** | Agent termination | State transition, user choice prompt |
 
 ---
 
@@ -200,17 +200,17 @@ const implicitPatterns = {
 
 ```javascript
 // lib/common.js: calculateAmbiguityScore()
-// Score >= 50 → AskUserQuestion 트리거
+// Score >= 50 → Trigger AskUserQuestion
 
-// 가산 요소
-- 구체적 명사 없음: +20
-- 범위 미정의: +20
-- 다중 해석 가능: +30
-- 컨텍스트 충돌: +30
+// Addition factors
+- No specific nouns: +20
+- Undefined scope: +20
+- Multiple interpretations possible: +30
+- Context conflict: +30
 
-// 감산 요소
-- 파일 경로 포함: -30
-- 기술 용어 포함: -20
+// Subtraction factors
+- Contains file path: -30
+- Contains technical terms: -20
 
 // Magic Word Bypass
 !hotfix, !prototype, !bypass → Score = 0
@@ -219,48 +219,48 @@ const implicitPatterns = {
 ### Pattern 4: Match Rate → Check-Act Iteration
 
 ```
-gap-detector (Check) → Match Rate 계산
+gap-detector (Check) → Calculate Match Rate
     ├── >= 90% → report-generator (Complete)
-    ├── 70-89% → AskUserQuestion (manual/auto 선택)
-    └── < 70%  → pdca-iterator 강력 권장
+    ├── 70-89% → AskUserQuestion (manual/auto choice)
+    └── < 70%  → Strongly recommend pdca-iterator
                       ↓
                  Re-run gap-detector
                       ↓
-                 반복 (max 5 iterations)
+                 Repeat (max 5 iterations)
 ```
 
 ---
 
 ## Response Report Rule (v1.4.1)
 
-모든 응답에 bkit 기능 사용 현황을 보고합니다.
+Reports bkit feature usage status at the end of every response.
 
 ```markdown
 ─────────────────────────────────────────────────
-📊 bkit 기능 사용 현황
+📊 bkit Feature Usage Report
 ─────────────────────────────────────────────────
-✅ 사용: [이번 답변에서 사용한 bkit 기능들]
-⏭️ 미사용: [주요 미사용 기능] (이유)
-💡 추천: [다음 작업에 적합한 기능]
+✅ Used: [bkit features used in this response]
+⏭️ Not Used: [Major unused features] (reason)
+💡 Recommended: [Features suitable for next task]
 ─────────────────────────────────────────────────
 ```
 
-**PDCA 단계별 추천**:
+**Recommendations by PDCA Stage**:
 
-| 현재 상태 | 추천 |
-|----------|------|
-| PDCA 없음 | `/pdca-plan`으로 시작 |
-| Plan 완료 | `/pdca-design`으로 설계 |
-| Design 완료 | 구현 또는 `/pdca-next` |
-| Do 완료 | `/pdca-analyze`로 Gap 분석 |
-| Check < 90% | `/pdca-iterate`로 자동 개선 |
-| Check >= 90% | `/pdca-report`로 완료 |
+| Current Status | Recommendation |
+|----------------|----------------|
+| No PDCA | Start with `/pdca-plan` |
+| Plan complete | Design with `/pdca-design` |
+| Design complete | Implement or `/pdca-next` |
+| Do complete | Gap analysis with `/pdca-analyze` |
+| Check < 90% | Auto-improve with `/pdca-iterate` |
+| Check >= 90% | Complete with `/pdca-report` |
 
 ---
 
 ## Cross-Platform Context Sharing
 
-Claude Code와 Gemini CLI 간 컨텍스트 공유:
+Context sharing between Claude Code and Gemini CLI:
 
 | Component | Claude Code | Gemini CLI | Shared |
 |-----------|-------------|------------|:------:|
@@ -277,8 +277,8 @@ Claude Code와 Gemini CLI 간 컨텍스트 공유:
 
 ## Related Documents
 
-- [[core-mission]] - 3가지 핵심 철학
-- [[ai-native-principles]] - AI-Native 개발 원칙
-- [[pdca-methodology]] - PDCA 방법론
-- [[../triggers/trigger-matrix]] - 트리거 매트릭스
-- [[../components/hooks/_hooks-overview]] - 훅 시스템 상세
+- [[core-mission]] - Three core philosophies
+- [[ai-native-principles]] - AI-Native development principles
+- [[pdca-methodology]] - PDCA methodology
+- [[../triggers/trigger-matrix]] - Trigger matrix
+- [[../components/hooks/_hooks-overview]] - Hook system details
