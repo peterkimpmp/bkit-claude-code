@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 /**
- * bkit Vibecoding Kit - SessionStart Hook (v1.4.6)
+ * bkit Vibecoding Kit - SessionStart Hook (v1.4.7)
  * Cross-platform Node.js implementation
  * Supports: Claude Code, Gemini CLI
  *
- * v1.4.6 Changes:
+ * v1.4.7 Changes:
+ * - Task Management + PDCA Integration (Task Chain Auto-Creation)
+ * - Core Modularization: lib/common.js split into lib/core/, lib/pdca/, lib/intent/, lib/task/
+ * - 22 new module files, 132 function exports
+ * - Check↔Act Iteration with automatic improvement cycles
+ * - Full-Auto Mode support (manual/semi-auto/full-auto)
+ *
+ * v1.4.7 Changes:
  * - Added /pdca archive action for PDCA cycle completion
  * - 8-language trigger completion (ES, FR, DE, IT added)
  * - Korean to English translation (internationalization)
@@ -489,7 +496,7 @@ if (isGeminiCli()) {
   // ------------------------------------------------------------
 
   let output = `
-\x1b[36m🤖 bkit Vibecoding Kit v1.4.6 (Gemini Edition)\x1b[0m
+\x1b[36m🤖 bkit Vibecoding Kit v1.4.7 (Gemini Edition)\x1b[0m
 ====================================================
 PDCA Cycle & AI-Native Development Environment
 `;
@@ -533,7 +540,7 @@ PDCA Cycle & AI-Native Development Environment
   // ------------------------------------------------------------
 
   // Build context based on onboarding type
-  let additionalContext = `# bkit Vibecoding Kit v1.4.6 - Session Startup\n\n`;
+  let additionalContext = `# bkit Vibecoding Kit v1.4.7 - Session Startup\n\n`;
 
   if (onboardingData.hasExistingWork) {
     additionalContext += `## 🔄 Previous Work Detected\n\n`;
@@ -578,7 +585,7 @@ PDCA Cycle & AI-Native Development Environment
   // ============================================================
   additionalContext += `
 
-## 📊 bkit Feature Usage Report (v1.4.6 - Required for all responses)
+## 📊 bkit Feature Usage Report (v1.4.7 - Required for all responses)
 
 **Rule: Include the following format at the end of every response to report bkit feature usage.**
 
@@ -634,7 +641,7 @@ AskUserQuestion, SessionStart Hook, Read, Write, Edit, Bash
 `;
 
   const response = {
-    systemMessage: `bkit Vibecoding Kit v1.4.6 activated (Claude Code)`,
+    systemMessage: `bkit Vibecoding Kit v1.4.7 activated (Claude Code)`,
     hookSpecificOutput: {
       hookEventName: "SessionStart",
       onboardingType: onboardingData.type,

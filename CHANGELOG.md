@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.7] - 2026-01-29
+
+### Added
+- **Task Management + PDCA Integration**: Complete integration of Claude Code Task System
+  - Task Chain Auto-Creation on `/pdca plan`
+  - Task ID Persistence in `.pdca-status.json`
+  - Check↔Act Iteration (max 5 iterations, 90% threshold)
+  - Full-Auto Mode (manual/semi-auto/full-auto)
+  - 9 new functions: `savePdcaTaskId`, `createPdcaTaskChain`, `triggerNextPdcaAction`, etc.
+- **Core Modularization**: lib/common.js split into 4 module directories
+  - `lib/core/` - Platform detection, caching, debugging, configuration (7 files)
+  - `lib/pdca/` - PDCA phase management, status tracking (6 files)
+  - `lib/intent/` - Intent analysis, language detection, triggers (4 files)
+  - `lib/task/` - Task classification, creation, tracking (5 files)
+  - 22 new module files, 132 function exports
+  - Migration Bridge for 100% backward compatibility
+  - Lazy Require Pattern for circular dependency prevention
+
+### Changed
+- **lib/common.js**: Converted to Migration Bridge (3,722 → 212 lines)
+- **scripts/pdca-skill-stop.js**: Task chain creation integration
+- **scripts/gap-detector-stop.js**: triggerNextPdcaAction integration
+- **scripts/iterator-stop.js**: triggerNextPdcaAction integration
+
+### Compatibility
+- **Claude Code**: Minimum v2.1.15, Recommended v2.1.22
+- **Gemini CLI**: Minimum v0.25.0
+- **Node.js**: Minimum v18.0.0
+
+---
+
 ## [1.4.6] - 2026-01-28
 
 ### Fixed

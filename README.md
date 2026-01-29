@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-v2.1.15+-purple.svg)](https://docs.anthropic.com/en/docs/claude-code/getting-started)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.25.0+-4285F4.svg)](https://geminicli.dev)
-[![Version](https://img.shields.io/badge/Version-1.4.6-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.4.7-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + AI coding assistant mastery for AI-native development**
@@ -60,6 +60,8 @@ Layer 5: Scripts (39 modules)    → Actual Node.js execution logic with unified
 
 ![bkit Features](images/bkit-features.png)
 
+- **Task Management + PDCA Integration (v1.4.7)** - Task Chain Auto-Creation, Task ID Persistence, Check↔Act Iteration
+- **Core Modularization (v1.4.7)** - lib/common.js split into 4 modules (lib/core/, lib/pdca/, lib/intent/, lib/task/)
 - **Context Engineering (v1.4.4)** - Systematic context curation with 7 library modules and unified hook system
 - **PDCA Methodology** - Structured development workflow with automatic documentation
 - **PDCA Skill Integration (v1.4.4)** - Unified `/pdca` skill with 8 actions (plan, design, do, analyze, iterate, report, status, next)
@@ -70,8 +72,8 @@ Layer 5: Scripts (39 modules)    → Actual Node.js execution logic with unified
 - **21 Skills** - Domain-specific knowledge for various development scenarios
 - **11 Agents** - Specialized AI assistants for different tasks
 - **39 Scripts** - Hook execution with unified handlers (hooks-json-integration)
-- **86+ Utility Functions** - 7 library modules with state management, intent detection, ambiguity handling
-- **Check-Act Iteration Loop** - Automatic gap analysis and fix cycles (v1.3.0+)
+- **132 Utility Functions** - 4 modular libraries with state management, intent detection, task tracking
+- **Check-Act Iteration Loop** - Automatic gap analysis and fix cycles with max 5 iterations (90% threshold)
 
 ---
 

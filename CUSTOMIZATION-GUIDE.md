@@ -128,7 +128,7 @@ For deeper understanding, explore the `bkit-system/` folder:
 
 bkit is not just a collection of prompts—it's a **production-grade plugin architecture** with carefully designed components that work together as a cohesive system.
 
-### Component Inventory (v1.4.5)
+### Component Inventory (v1.4.7)
 
 | Component | Count | Purpose |
 |-----------|-------|---------|
@@ -138,13 +138,58 @@ bkit is not just a collection of prompts—it's a **production-grade plugin arch
 | **Scripts** | 39 | Hook execution scripts with unified handlers |
 | **Templates** | 23 | Document templates (PDCA + 9 phases + shared) |
 | **Hooks** | 6 events | Event-driven automation (centralized in hooks.json) |
-| **lib/*.js** | 7 modules (87+ functions) | Shared utility library (v1.4.5) |
+| **lib/** | 4 modules (132 functions) | Modular utility library (v1.4.7) |
 
 **Total: 100+ components** working in harmony.
 
+### Library Module Structure (v1.4.7)
+
+```
+lib/
+├── common.js              # Migration Bridge (re-exports all modules)
+├── core/                  # Core utilities (7 files, 37 exports)
+│   ├── index.js           # Entry point
+│   ├── platform.js        # Platform detection (Claude/Gemini)
+│   ├── cache.js           # In-memory TTL cache
+│   ├── debug.js           # Debug logging
+│   ├── config.js          # Configuration management
+│   ├── io.js              # I/O utilities
+│   └── file.js            # File type detection
+├── pdca/                  # PDCA management (6 files, 50 exports)
+│   ├── index.js
+│   ├── tier.js            # Language tier system
+│   ├── level.js           # Project level detection
+│   ├── phase.js           # PDCA phase management
+│   ├── status.js          # Status file operations
+│   └── automation.js      # Full-auto mode
+├── intent/                # Intent analysis (4 files, 19 exports)
+│   ├── index.js
+│   ├── language.js        # Multi-language detection
+│   ├── trigger.js         # Agent/Skill triggers
+│   └── ambiguity.js       # Ambiguity scoring
+└── task/                  # Task management (5 files, 26 exports)
+    ├── index.js
+    ├── classification.js  # Task size classification
+    ├── context.js         # Context tracking
+    ├── creator.js         # Task chain creation
+    └── tracker.js         # Task ID persistence
+```
+
+**Import Options**:
+```javascript
+// Recommended: Import from specific modules
+const { debugLog, getConfig } = require('./lib/core');
+const { getPdcaStatusFull } = require('./lib/pdca');
+const { matchImplicitAgentTrigger } = require('./lib/intent');
+const { classifyTask } = require('./lib/task');
+
+// Legacy: Still supported via Migration Bridge
+const { debugLog, getConfig } = require('./lib/common');
+```
+
 > **v1.4.0**: Dual Platform Support - bkit now works on both Claude Code and Gemini CLI
 
-### Context Engineering Architecture (v1.4.5)
+### Context Engineering Architecture (v1.4.7)
 
 bkit is a **practical implementation of Context Engineering**—the art of curating optimal tokens for LLM inference. Unlike traditional prompt engineering that focuses on single prompts, Context Engineering designs an entire system of context delivery.
 
@@ -219,7 +264,7 @@ For detailed Context Engineering documentation, see [bkit-system/philosophy/cont
 │  ─────────────────────────────────────────────────────────────  │
 │  Template Layer     │ Templates (23)   │ Document standards     │
 │  ─────────────────────────────────────────────────────────────  │
-│  Shared Library     │ lib/*.js (86+ funcs)│ Platform utilities    │
+│  Shared Library     │ lib/ (132 funcs)    │ Modular utilities     │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -720,7 +765,11 @@ bkit-claude-code/
 ├── scripts/                        # Shared between platforms (28 scripts)
 │   └── *.js
 ├── lib/
-│   └── *.js                        # Shared library (6 modules, 87+ functions, v1.4.3)
+│   ├── common.js                   # Migration Bridge (v1.4.7)
+│   ├── core/                       # Core utilities (7 files)
+│   ├── pdca/                       # PDCA management (6 files)
+│   ├── intent/                     # Intent analysis (4 files)
+│   └── task/                       # Task management (5 files)
 └── templates/                      # Shared between platforms (23 templates)
     ├── plan.template.md
     └── design.template.md
