@@ -56,11 +56,11 @@ bkit is a practical implementation of **Context Engineering**. Context Engineeri
 │                                 ▼                               │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │                Unified Hook System (v1.4.4)               │  │
-│  │  L1: hooks.json (8 events - all hooks centralized)       │  │
+│  │  L1: hooks.json (10 events - all hooks centralized)      │  │
 │  │  L2: Unified Scripts (stop, bash-pre, write-post, etc.)  │  │
 │  │  L3: Agent Frontmatter (constraints only)                │  │
 │  │  L4: Description Triggers (keyword matching)             │  │
-│  │  L5: Scripts (43 Node.js modules)                        │  │
+│  │  L5: Scripts (45 Node.js modules)                        │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                 │                               │
 │                                 ▼                               │
@@ -208,9 +208,9 @@ lib/
 | Skills | 26 | Domain knowledge + Slash commands | [[components/skills/_skills-overview]] |
 | Agents | 16 | Specialized task execution | [[components/agents/_agents-overview]] |
 | Commands | DEPRECATED | Migrated to Skills (v1.4.4) | - |
-| Hooks | 8 events | Event-based triggers (unified) | [[components/hooks/_hooks-overview]] |
-| Scripts | 43 | Actual logic execution | [[components/scripts/_scripts-overview]] |
-| Lib | 5 modules | Shared utilities | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` (165 functions) |
+| Hooks | 10 events | Event-based triggers (unified) | [[components/hooks/_hooks-overview]] |
+| Scripts | 45 | Actual logic execution | [[components/scripts/_scripts-overview]] |
+| Lib | 5 modules | Shared utilities | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` (241 functions) |
 | Config | 1 | Centralized settings | `bkit.config.json` |
 | Templates | 27 | Document templates | PDCA + Pipeline + Shared |
 
@@ -218,8 +218,8 @@ lib/
 
 | Feature | Components | Discovery Mechanism |
 |---------|-----------|---------------------|
-| Output Styles | 3 style files in `output-styles/` | Auto-suggested at SessionStart based on level |
-| Agent Teams | `lib/team/` module (4 files) | Announced at SessionStart, suggested for major features |
+| Output Styles | 4 style files in `output-styles/` | Auto-suggested at SessionStart based on level |
+| Agent Teams | `lib/team/` module (9 files) | Announced at SessionStart, suggested for major features |
 | Agent Memory | `memory:` frontmatter in all 16 agents | Auto-active, mentioned at SessionStart |
 
 ## Trigger Layers
@@ -231,7 +231,7 @@ Layer 1: hooks.json (Global) → SessionStart, UserPromptSubmit, PreCompact, Pre
 Layer 2: Unified Scripts     → unified-stop.js, unified-bash-pre.js, unified-write-post.js, etc.
 Layer 3: Agent Frontmatter   → Constraints and role definitions (hooks deprecated)
 Layer 4: Description Triggers → "Triggers:" keyword matching
-Layer 5: Scripts             → Actual Node.js logic execution (43 modules)
+Layer 5: Scripts             → Actual Node.js logic execution (45 modules)
 ```
 
 > **Note (v1.4.4)**: All hooks centralized in hooks.json. SKILL.md frontmatter hooks deprecated (backward compatible).
@@ -321,4 +321,4 @@ The `bkit-system/.obsidian/` folder includes shared settings:
 | `workspace.json` | Personal workspace state | No |
 | `app.json` | Personal app settings | No |
 
-> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 26 skills, 16 agents, 43 scripts, and their relationships.
+> **Tip**: The graph settings are pre-configured for optimal visualization of bkit's 26 skills, 16 agents, 45 scripts, and their relationships.

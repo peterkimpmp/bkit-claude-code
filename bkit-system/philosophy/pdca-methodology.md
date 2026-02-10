@@ -238,7 +238,7 @@ A methodology for performing QA without traditional test scripts:
 
 ---
 
-## v1.5.1 PDCA Enhancements
+## v1.5.3 PDCA Enhancements
 
 ### Output Styles for PDCA Phases
 

@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-v2.1.33+-purple.svg)](https://docs.anthropic.com/en/docs/claude-code/getting-started)
-[![Version](https://img.shields.io/badge/Version-1.5.2-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.5.3-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + CTO-Led Agent Teams + AI coding assistant mastery for AI-native development**
@@ -36,7 +36,7 @@ bkit implements Context Engineering through three interconnected layers:
 |-------|------------|---------|
 | **Domain Knowledge** | 26 Skills | Structured expert knowledge (phases, levels, specialized domains) |
 | **Behavioral Rules** | 16 Agents | Role-based constraints with model selection (opus/sonnet/haiku) |
-| **State Management** | 165 Functions | PDCA status, intent detection, ambiguity scoring, multi-feature context, team coordination |
+| **State Management** | 241 Functions | PDCA status, intent detection, ambiguity scoring, multi-feature context, team coordination |
 
 ### 5-Layer Hook System
 
@@ -47,7 +47,7 @@ Layer 1: hooks.json (Global)     → SessionStart, UserPromptSubmit, PreCompact,
 Layer 2: Skill Frontmatter       → Domain-specific hooks (deprecated in v1.4.4, use hooks.json)
 Layer 3: Agent Frontmatter       → Task-specific hooks with constraints
 Layer 4: Description Triggers    → Semantic matching in 8 languages
-Layer 5: Scripts (43 modules)    → Actual Node.js execution logic with unified handlers
+Layer 5: Scripts (45 modules)    → Actual Node.js execution logic with unified handlers
 ```
 
 > **Learn more**: See [Context Engineering Principles](bkit-system/philosophy/context-engineering.md) for detailed implementation.
@@ -58,8 +58,11 @@ Layer 5: Scripts (43 modules)    → Actual Node.js execution logic with unified
 
 ![bkit Features](images/bkit-features.png)
 
+- **Team Visibility & State Writer (v1.5.3)** - Agent Teams state management with `.bkit/agent-state.json` for Studio IPC
+- **SubagentStart/SubagentStop Hooks (v1.5.3)** - 2 new hook events for agent lifecycle tracking (10 hook events total)
+- **Output Styles Auto-Discovery (v1.5.3)** - `outputStyles` in plugin.json + 4th style `bkit-pdca-enterprise`
 - **CTO-Led Agent Teams (v1.5.1)** - CTO agent orchestrates parallel PDCA execution with multi-agent teams (Dynamic: 3, Enterprise: 5 teammates)
-- **Output Styles (v1.5.1)** - Level-based response formatting (bkit-learning, bkit-pdca-guide, bkit-enterprise)
+- **Output Styles (v1.5.1)** - Level-based response formatting (bkit-learning, bkit-pdca-guide, bkit-enterprise, bkit-pdca-enterprise)
 - **Agent Memory (v1.5.1)** - Cross-session context persistence for all 16 agents (auto-active)
 - **Natural Feature Discovery (v1.5.1)** - Auto-trigger integration aligned with "Automation First" philosophy
 - **Task Management + PDCA Integration (v1.4.7)** - Task Chain Auto-Creation, Task ID Persistence, Check↔Act Iteration
@@ -73,8 +76,8 @@ Layer 5: Scripts (43 modules)    → Actual Node.js execution logic with unified
 - **Multilingual Support** - 8 languages (EN, KO, JA, ZH, ES, FR, DE, IT)
 - **26 Skills** - Domain-specific knowledge for various development scenarios
 - **16 Agents** - Specialized AI assistants including CTO-Led Team agents
-- **43 Scripts** - Hook execution with unified handlers (hooks-json-integration)
-- **165 Utility Functions** - 5 modular libraries with state management, intent detection, task tracking, team coordination
+- **45 Scripts** - Hook execution with unified handlers (hooks-json-integration)
+- **241 Utility Functions** - 5 modular libraries with state management, intent detection, task tracking, team coordination
 - **Check-Act Iteration Loop** - Automatic gap analysis and fix cycles with max 5 iterations (90% threshold)
 
 ---

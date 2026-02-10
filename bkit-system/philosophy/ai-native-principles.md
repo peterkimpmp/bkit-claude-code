@@ -161,7 +161,7 @@ bkit classifies languages optimized for AI-Native development into 4 tiers:
 
 ---
 
-## v1.5.1 Feature Integration
+## v1.5.3 Feature Integration
 
 ### Output Styles in AI-Native Context
 

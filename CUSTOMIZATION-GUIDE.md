@@ -63,7 +63,7 @@ Layer 1: hooks.json          → SessionStart, PreToolUse, PostToolUse hooks
 Layer 2: Skill Frontmatter   → hooks: PreToolUse, PostToolUse, Stop
 Layer 3: Agent Frontmatter   → hooks: PreToolUse, PostToolUse
 Layer 4: Description Triggers → "Triggers:" keyword matching
-Layer 5: Scripts             → Actual Node.js logic execution
+Layer 5: Scripts             → Actual Node.js logic execution (45 modules)
 ```
 
 This separation allows fine-grained control over when and how automation triggers.
@@ -128,22 +128,22 @@ For deeper understanding, explore the `bkit-system/` folder:
 
 bkit is not just a collection of prompts—it's a **production-grade plugin architecture** with carefully designed components that work together as a cohesive system.
 
-### Component Inventory (v1.5.2)
+### Component Inventory (v1.5.3)
 
 | Component | Count | Purpose |
 |-----------|-------|---------|
 | **Agents** | 16 | Specialized AI subagents with memory persistence |
 | **Skills** | 26 | Domain knowledge and slash commands (Commands deprecated) |
 | **Commands** | DEPRECATED | Migrated to Skills in v1.4.4+ |
-| **Scripts** | 43 | Hook execution scripts with unified handlers |
+| **Scripts** | 45 | Hook execution scripts with unified handlers |
 | **Templates** | 27 | Document templates (PDCA + 9 phases + shared) |
-| **Hooks** | 8 events | Event-driven automation (centralized in hooks.json) |
-| **lib/** | 5 modules (165 functions) | Modular utility library (v1.5.2) |
-| **Output Styles** | 3 | Level-based response formatting (v1.5.2) |
+| **Hooks** | 10 events | Event-driven automation (centralized in hooks.json) |
+| **lib/** | 5 modules (241 functions) | Modular utility library (v1.5.3) |
+| **Output Styles** | 4 | Level-based response formatting (v1.5.3) |
 
 **Total: 100+ components** working in harmony.
 
-### Library Module Structure (v1.5.2)
+### Library Module Structure (v1.5.3)
 
 ```
 lib/
@@ -174,7 +174,7 @@ lib/
 │   ├── context.js         # Context tracking
 │   ├── creator.js         # Task chain creation
 │   └── tracker.js         # Task ID persistence
-└── team/                  # CTO-Led Agent Teams (8 files, 30 exports) - v1.5.2
+└── team/                  # CTO-Led Agent Teams (9 files, 40 exports) - v1.5.3
     ├── index.js           # Team module entry point
     ├── coordinator.js     # Team coordination and task assignment
     ├── strategy.js        # Team composition strategies per level
@@ -182,7 +182,8 @@ lib/
     ├── orchestrator.js    # Phase-based team orchestration patterns
     ├── communication.js   # Structured team messaging (DM, broadcast, directives)
     ├── task-queue.js      # Team task creation and progress tracking
-    └── cto-logic.js       # CTO decision-making (phase, evaluation, agent selection)
+    ├── cto-logic.js       # CTO decision-making (phase, evaluation, agent selection)
+    └── state-writer.js    # Agent state management for Studio IPC (v1.5.3)
 ```
 
 **Import Options**:
@@ -197,9 +198,9 @@ const { classifyTask } = require('./lib/task');
 const { debugLog, getConfig } = require('./lib/common');
 ```
 
-> **v1.5.2**: Claude Code Exclusive with CTO-Led Agent Teams (16 agents), Output Styles, and Agent Memory
+> **v1.5.3**: Claude Code Exclusive with CTO-Led Agent Teams (16 agents), Output Styles, Agent Memory, and Team Visibility
 
-### Context Engineering Architecture (v1.5.2)
+### Context Engineering Architecture (v1.5.3)
 
 bkit is a **practical implementation of Context Engineering**—the art of curating optimal tokens for LLM inference. Unlike traditional prompt engineering that focuses on single prompts, Context Engineering designs an entire system of context delivery.
 
@@ -225,7 +226,7 @@ bkit is a **practical implementation of Context Engineering**—the art of curat
 │  │  L2: Skill Frontmatter (PreToolUse/PostToolUse/Stop)     │  │
 │  │  L3: Agent Frontmatter (PreToolUse/PostToolUse)          │  │
 │  │  L4: Description Triggers (keyword matching)             │  │
-│  │  L5: Scripts (43 Node.js modules)                        │  │
+│  │  L5: Scripts (45 Node.js modules)                        │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                 │                               │
 │                                 ▼                               │
@@ -261,7 +262,7 @@ For detailed Context Engineering documentation, see [bkit-system/philosophy/cont
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│               bkit Component Architecture (v1.5.2)               │
+│               bkit Component Architecture (v1.5.3)               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Knowledge Layer    │ Skills (26)      │ Domain expertise       │
@@ -270,11 +271,11 @@ For detailed Context Engineering documentation, see [bkit-system/philosophy/cont
 │  ─────────────────────────────────────────────────────────────  │
 │  Interface Layer    │ Commands (20×2)  │ User interaction       │
 │  ─────────────────────────────────────────────────────────────  │
-│  Automation Layer   │ Hooks + Scripts (28) │ Event-driven triggers│
+│  Automation Layer   │ Hooks + Scripts (45) │ Event-driven triggers│
 │  ─────────────────────────────────────────────────────────────  │
 │  Template Layer     │ Templates (27)   │ Document standards     │
 │  ─────────────────────────────────────────────────────────────  │
-│  Shared Library     │ lib/ (165 funcs)    │ Modular utilities     │
+│  Shared Library     │ lib/ (241 funcs)    │ Modular utilities     │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -322,7 +323,7 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
    └─ "Triggers:" keywords for auto-activation
 
-Layer 5: Scripts (28 Node.js scripts)
+Layer 5: Scripts (45 Node.js scripts)
    └─ Actual logic execution
 ```
 
@@ -679,7 +680,7 @@ When you install a Claude Code plugin, components are deployed to the global con
 | **Windows (PowerShell)** | `%USERPROFILE%\.claude\` or `C:\Users\<username>\.claude\` |
 | **Windows (WSL)** | `/home/<username>/.claude/` (Linux filesystem, NOT `/mnt/c/...`) |
 
-> **Note (v1.5.2)**: bkit is Claude Code exclusive. Gemini CLI support was removed in v1.5.0.
+> **Note (v1.5.3)**: bkit is Claude Code exclusive. Gemini CLI support was removed in v1.5.0.
 
 ### Managed Settings (Enterprise/Admin - Claude Code Only)
 
@@ -728,7 +729,7 @@ A Claude Code plugin like bkit consists of these components:
 | **Templates** | Document templates for standardization | `templates/` |
 | **Scripts** | Helper scripts for automation | `scripts/` |
 
-### bkit Plugin Structure Example (v1.5.2 - Claude Code Exclusive)
+### bkit Plugin Structure Example (v1.5.3 - Claude Code Exclusive)
 
 ```
 bkit-claude-code/
@@ -752,27 +753,28 @@ bkit-claude-code/
 ├── commands/
 │   └── *.md                        # Claude Code commands
 ├── hooks/
-│   ├── hooks.json                  # Claude Code hook configuration (8 events)
+│   ├── hooks.json                  # Claude Code hook configuration (10 events)
 │   └── session-start.js            # Session initialization (Node.js)
-├── scripts/                        # Hook execution scripts (43 scripts)
+├── scripts/                        # Hook execution scripts (45 scripts)
 │   └── *.js
-├── output-styles/                  # Level-based response formatting (v1.5.2)
+├── output-styles/                  # Level-based response formatting (v1.5.3)
 │   ├── bkit-learning.md            # Starter level style
 │   ├── bkit-pdca-guide.md          # Dynamic level style
-│   └── bkit-enterprise.md          # Enterprise level style
+│   ├── bkit-enterprise.md          # Enterprise level style
+│   └── bkit-pdca-enterprise.md     # Enterprise PDCA style (v1.5.3)
 ├── lib/
-│   ├── common.js                   # Migration Bridge (v1.5.2)
+│   ├── common.js                   # Migration Bridge (v1.5.3)
 │   ├── core/                       # Core utilities (7 files)
 │   ├── pdca/                       # PDCA management (6 files)
 │   ├── intent/                     # Intent analysis (4 files)
 │   ├── task/                       # Task management (5 files)
-│   └── team/                       # CTO-Led Agent Teams (8 files, v1.5.2)
+│   └── team/                       # CTO-Led Agent Teams (9 files, v1.5.3)
 └── templates/                      # Document templates (27 templates)
     ├── plan.template.md
     └── design.template.md
 ```
 
-> **v1.5.2**: All plugin components (skills, agents, scripts, lib, templates, output-styles) work exclusively with Claude Code.
+> **v1.5.3**: All plugin components (skills, agents, scripts, lib, templates, output-styles) work exclusively with Claude Code.
 
 ---
 

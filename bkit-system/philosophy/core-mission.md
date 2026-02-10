@@ -117,9 +117,9 @@ After:  /learn-claude-code → Systematic training
 
 ---
 
-## Current Implementation (v1.5.1)
+## Current Implementation (v1.5.3)
 
-> **v1.5.1**: CTO-Led Agent Teams + Claude Code Exclusive
+> **v1.5.3**: CTO-Led Agent Teams + Team Visibility + Claude Code Exclusive
 
 ### Component Counts
 
@@ -128,9 +128,9 @@ After:  /learn-claude-code → Systematic training
 | Skills | 26 | `skills/*/SKILL.md` |
 | Agents | 16 | `agents/*.md` |
 | Commands | DEPRECATED | Migrated to Skills |
-| Scripts | 43 | `scripts/*.js` |
+| Scripts | 45 | `scripts/*.js` |
 | Templates | 27 | `templates/*.md` |
-| lib/ | 5 modules (165 functions) | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` |
+| lib/ | 5 modules (241 functions) | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` |
 
 ### Key Features
 
@@ -143,7 +143,7 @@ After:  /learn-claude-code → Systematic training
 
 ---
 
-## v1.5.1 Features
+## v1.5.3 Features
 
 ### Natural Discovery Through Automation First
 

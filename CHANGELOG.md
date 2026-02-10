@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-02-10
+
+### Added
+- **Team Visibility (State Writer)**
+  - `lib/team/state-writer.js`: 9 new functions for Agent Teams state management
+  - `initAgentState`, `updateTeammateStatus`, `addTeammate`, `removeTeammate`, `updateProgress`, `addRecentMessage`, `cleanupAgentState`, `getAgentStatePath`, `readAgentState`
+  - `.bkit/agent-state.json` schema v1.0 for Studio IPC
+  - Atomic write pattern (tmp + rename) for concurrent safety
+  - MAX_TEAMMATES=10, MAX_MESSAGES=50 ring buffer
+- **SubagentStart/SubagentStop Hooks**
+  - 2 new hook event types in `hooks.json` (8 → 10 events)
+  - `scripts/subagent-start.js`, `scripts/subagent-stop.js`
+  - Auto-init agent state, name extraction, model validation
+- **Output Styles Auto-Discovery**
+  - `outputStyles` field in `plugin.json` for Claude Code auto-discovery
+  - 4th output style: `bkit-pdca-enterprise` added
+  - `/output-style-setup` command for menu visibility
+- **bkend Documentation Enhancement**
+  - Official Documentation (Live Reference) sections in 5 bkend skills + agent
+  - `bkend-quickstart` MCP step-by-step guide expansion
+  - Agent Memory file for bkend-expert
+- **CLAUDE.md Strategy Documentation**
+  - `commands/bkit.md` expanded with CLAUDE.md strategy sections
+  - v1.5.3 Features table in bkit help command
+
+### Changed
+- **Hook Events**: 8 → 10 (added SubagentStart, SubagentStop)
+- **Library Functions**: 232 → 241 (+9 state-writer)
+- **common.js exports**: 171 → 180 (+9 state-writer bridge)
+- **team/index.js exports**: 31 → 40 (+9 state-writer)
+- **Output Styles**: 3 → 4 (added bkit-pdca-enterprise)
+- **team.enabled**: Default changed from false to true
+- **session-start.js**: 4 output styles + /output-style-setup guide
+
+### Fixed
+- **GAP-01**: common.js missing 9 state-writer re-exports (171 → 180)
+
+### Quality
+- Comprehensive Test: 685 TC, 646 PASS, 39 SKIP (100% excl. SKIP)
+- Enhancement Test: 31/31 PASS (100%)
+- Final QA: 736/736 PASS (100%)
+
+---
+
 ## [1.5.2] - 2026-02-06
 
 ### Added

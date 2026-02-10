@@ -43,7 +43,7 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 │  Layer 4: Description Triggers                                  │
 │           └── "Triggers:" keyword matching (8 languages)        │
 │                                                                  │
-│  Layer 5: Scripts (28 modules)                                  │
+│  Layer 5: Scripts (45 modules)                                  │
 │           └── Actual Node.js logic execution                    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -60,7 +60,7 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 | **PreCompact** | Before context compaction (v1.4.2) | PDCA state snapshot, context preservation |
 | **Stop** | Agent termination | State transition, user choice prompt |
 
-## Hook Events (v1.5.0 - Claude Code Exclusive)
+## Hook Events (v1.5.3 - Claude Code Exclusive)
 
 | Hook Event | Description | Added |
 |------------|-------------|:-----:|
@@ -70,6 +70,10 @@ Hooks are the core of bkit's **context injection system**, organized into 5 laye
 | `PostToolUse` | After tool execution | v1.0 |
 | `PreCompact` | Before context compaction | v1.4.2 |
 | `Stop` | Agent completion | v1.0 |
+| `SubagentStart` | Subagent spawned | v1.5.3 |
+| `SubagentStop` | Subagent completed | v1.5.3 |
+| `TaskCompleted` | Task completion | v1.5.1 |
+| `TeammateIdle` | Teammate idle detection | v1.5.1 |
 
 ## Hook Architecture (v1.4.2)
 

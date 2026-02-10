@@ -140,7 +140,7 @@ Context Engineering is the **systematic design of information flow to LLMs**—g
 ```
 Domain Knowledge (26 Skills) ─┐
 Behavioral Rules (16 Agents) ─┼─→ Unified Hook System ─→ Dynamic Context Injection
-State Management (165 funcs) ─┘
+State Management (241 funcs) ─┘
 ```
 
 See [bkit-system/philosophy/context-engineering.md](bkit-system/philosophy/context-engineering.md) for detailed implementation.
@@ -227,7 +227,7 @@ code-explorer → code-architect → implementation → code-reviewer → qa-mon
 Plan → [Human Review] → Design → [Human Review] → Do → Check → [Human Review] → Act
 ```
 
-### Principle 5: CTO-Led Agent Teams (v1.5.2)
+### Principle 5: CTO-Led Agent Teams (v1.5.3)
 
 **Principle**: A CTO agent orchestrates multiple specialized AI agents working in parallel, mimicking real development team dynamics.
 

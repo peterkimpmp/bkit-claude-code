@@ -66,7 +66,7 @@ v1.4.2 implements 8 functional requirements (FR-01~FR-08) for comprehensive cont
 │  │  L2: Skill YAML ─→ PreToolUse, PostToolUse, Stop                       │ │
 │  │  L3: Agent YAML ─→ PreToolUse, PostToolUse                             │ │
 │  │  L4: Triggers   ─→ 8-language keyword detection                        │ │
-│  │  L5: Scripts    ─→ 28 Node.js modules                                  │ │
+│  │  L5: Scripts    ─→ 45 Node.js modules                                  │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                 │                                            │
 │                                 ▼                                            │
@@ -225,7 +225,7 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
          └── "Triggers:" keyword matching (8 languages)
 
-Layer 5: Scripts (43 modules)
+Layer 5: Scripts (45 modules)
          └── Actual Node.js logic execution
 ```
 
@@ -332,17 +332,17 @@ Reports bkit feature usage status at the end of every response.
 
 ---
 
-## Component Architecture (v1.5.1)
+## Component Architecture (v1.5.3)
 
-> **Note**: As of v1.5.0, bkit is Claude Code exclusive. v1.5.1 adds CTO-Led Agent Teams.
+> **Note**: As of v1.5.0, bkit is Claude Code exclusive. v1.5.3 adds Team Visibility + SubagentStart/Stop hooks.
 
 | Component | Location | Count |
 |-----------|----------|:-----:|
 | Skills | `skills/*/SKILL.md` | 26 |
 | Agents | `agents/*.md` | 16 |
-| Scripts | `scripts/*.js` | 43 |
+| Scripts | `scripts/*.js` | 45 |
 | Templates | `templates/*.md` | 27 |
-| lib/ modules | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` | 165 functions |
+| lib/ modules | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` | 241 functions |
 | Context File | `CLAUDE.md` | 1 |
 | Manifest | `.claude-plugin/plugin.json` | 1 |
 

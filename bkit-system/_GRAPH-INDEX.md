@@ -104,10 +104,11 @@ The following skills were consolidated:
 
 ## v1.5.1 Features
 
-### Output Styles (3)
+### Output Styles (4)
 - [[../output-styles/bkit-learning|bkit-learning]] - Learning-focused response formatting
 - [[../output-styles/bkit-pdca-guide|bkit-pdca-guide]] - PDCA workflow response formatting
 - [[../output-styles/bkit-enterprise|bkit-enterprise]] - Enterprise architecture response formatting
+- [[../output-styles/bkit-pdca-enterprise|bkit-pdca-enterprise]] - Enterprise PDCA response formatting (v1.5.3)
 
 ### Agent Teams
 - [[../lib/team/index|team module]] - Team coordination (Dynamic: 2, Enterprise: 4 teammates)
@@ -149,7 +150,7 @@ The following skills were consolidated:
 - `/claude-code-learning` - Learning curriculum
 - `/code-review` - Code review and quality analysis
 
-## Hooks (3 events)
+## Hooks (10 events)
 
 ### Global Hooks (hooks/hooks.json)
 - [[components/hooks/_hooks-overview|SessionStart]] - Plugin initialization with AskUserQuestion guidance
@@ -158,7 +159,7 @@ The following skills were consolidated:
 - [[components/hooks/_hooks-overview|PreToolUse]] - Before Write/Edit operations (defined in SKILL.md)
 - [[components/hooks/_hooks-overview|PostToolUse]] - After Write operations (defined in SKILL.md)
 
-## Scripts (26)
+## Scripts (45)
 
 > **Note**: All scripts converted to Node.js (.js) in v1.3.1 for cross-platform compatibility
 >
@@ -203,7 +204,7 @@ The following skills were consolidated:
 ## Infrastructure
 
 ### Shared Library
-- `lib/common.js` - Shared utility functions (v1.4.0 Node.js, **80+ functions**)
+- `lib/common.js` - Shared utility functions (v1.5.3, **241 functions**)
 
 #### Platform Detection (v1.5.0 - Claude Code Exclusive)
   - `isClaudeCode()` - Check if running in Claude Code
@@ -327,8 +328,8 @@ bkit supports languages and frameworks organized by tier:
 **Components**:
 - `skills/` - 26 skills
 - `agents/` - 16 agents
-- `scripts/` - 43 scripts (Node.js)
-- `lib/` - 5 modules (165 functions)
+- `scripts/` - 45 scripts (Node.js)
+- `lib/` - 5 modules (241 functions)
 - `templates/` - 27 templates
 
 ## Templates (27)

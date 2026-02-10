@@ -1,6 +1,6 @@
 # Scripts Overview
 
-> 43 Node.js Scripts used by bkit hooks (v1.5.2)
+> 45 Node.js Scripts used by bkit hooks (v1.5.3)
 >
 > **v1.5.0**: Claude Code Exclusive - Gemini CLI support removed, simplified architecture
 > **v1.4.7**: Core Modularization - lib/ split into 4 modules (132 functions), Task Management Integration
@@ -68,7 +68,7 @@ All scripts are at root level (not in .claude/):
 
 ```
 bkit-claude-code/
-├── lib/                       # Modular Library (v1.5.2, 165 functions)
+├── lib/                       # Modular Library (v1.5.3, 241 functions)
 │   ├── common.js              # Migration Bridge (re-exports all modules)
 │   ├── core/                  # Core utilities (7 files, 40 exports)
 │   │   ├── index.js           # Entry point
@@ -225,7 +225,7 @@ bkit-claude-code/
 | `lib/pdca/` | 6 | 50 | PDCA phase, status, automation, tier system |
 | `lib/intent/` | 4 | 19 | Language detection, triggers, ambiguity scoring |
 | `lib/task/` | 5 | 26 | Task classification, context, creation, tracking |
-| `lib/common.js` | 1 | 165 | Migration Bridge (re-exports all modules) |
+| `lib/common.js` | 1 | 180 | Migration Bridge (re-exports all modules) |
 
 ### Import Options
 
@@ -599,7 +599,8 @@ common.outputAllow('Guidance message');
 
 ### Output Styles Directory
 
-3 output style files in `output-styles/`:
+4 output style files in `output-styles/`:
 - `bkit-learning.md` - Learning-focused response formatting
 - `bkit-pdca-guide.md` - PDCA workflow response formatting
 - `bkit-enterprise.md` - Enterprise architecture response formatting
+- `bkit-pdca-enterprise.md` - Enterprise PDCA response formatting (v1.5.3)

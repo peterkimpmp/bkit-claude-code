@@ -1,6 +1,6 @@
 # Skills Overview
 
-> 26 Skills defined in bkit (v1.5.2)
+> 26 Skills defined in bkit (v1.5.3)
 >
 > **v1.4.1**: Added Context Engineering perspective - Domain Knowledge Layer
 > **v1.5.0**: Claude Code Exclusive
@@ -101,7 +101,7 @@ Skills form bkit's **Domain Knowledge Layer**, designed according to [[../../phi
 | [[../../../skills/mobile-app/SKILL|mobile-app]] | Mobile app dev | - | [[../../../agents/pipeline-guide|pipeline-guide]] |
 | [[../../../skills/desktop-app/SKILL|desktop-app]] | Desktop app dev | - | [[../../../agents/pipeline-guide|pipeline-guide]] |
 
-### bkend Specialist Skills (v1.5.2)
+### bkend Specialist Skills (v1.5.3)
 
 | Skill | Level | Description |
 |-------|-------|-------------|
@@ -252,10 +252,11 @@ Level skills now suggest appropriate output styles:
 - Agent Memory scopes and behavior
 - Agent Teams setup and team composition
 
-### Output Styles (3)
+### Output Styles (4)
 
 | Style | File | Best For |
 |-------|------|----------|
 | `bkit-learning` | `output-styles/bkit-learning.md` | Beginners, learning |
 | `bkit-pdca-guide` | `output-styles/bkit-pdca-guide.md` | PDCA workflows |
 | `bkit-enterprise` | `output-styles/bkit-enterprise.md` | Architecture decisions |
+| `bkit-pdca-enterprise` | `output-styles/bkit-pdca-enterprise.md` | Enterprise PDCA (v1.5.3) |
