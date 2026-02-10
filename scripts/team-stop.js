@@ -30,6 +30,16 @@ function run(context) {
     });
   }
 
+  // State writer: agent state cleanup (v1.5.3 Team Visibility)
+  try {
+    const teamModule = require('../lib/team');
+    if (teamModule.cleanupAgentState) {
+      teamModule.cleanupAgentState();
+    }
+  } catch (e) {
+    debugLog('TeamStop', 'Agent state cleanup failed (non-fatal)', { error: e.message });
+  }
+
   outputAllow('Team session ended. Returning to single-session mode.', 'Stop');
   debugLog('TeamStop', 'Team cleanup completed');
 }

@@ -52,6 +52,15 @@ function main() {
   // Use handleTeammateIdle for task-queue integration
   const idleResult = teamModule.handleTeammateIdle(teammateId, pdcaStatus);
 
+  // State writer: idle 상태 기록 (v1.5.3 Team Visibility)
+  try {
+    if (teamModule.updateTeammateStatus) {
+      teamModule.updateTeammateStatus(teammateId, 'idle', null);
+    }
+  } catch (e) {
+    debugLog('TeammateIdle', 'State write failed (non-fatal)', { error: e.message });
+  }
+
   const response = {
     systemMessage: `Teammate ${teammateId} is idle`,
     hookSpecificOutput: {

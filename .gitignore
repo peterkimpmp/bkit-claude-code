@@ -32,6 +32,9 @@ bkit-system/.obsidian/appearance.json
 bkit-system/.obsidian/workspace.json
 bkit-system/.obsidian/plugins/
 
+# bkit runtime state (agent-state.json)
+.bkit/
+
 # Local Claude Code settings (plugin elements are at root level)
 .claude/
 

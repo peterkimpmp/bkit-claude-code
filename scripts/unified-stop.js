@@ -211,6 +211,20 @@ if (!handled && activeSkill && SKILL_HANDLERS[activeSkill]) {
 // Clear active context after stop
 clearActiveContext();
 
+// Fallback: agent state cleanup if no handler did it (v1.5.3 Team Visibility)
+if (!handled) {
+  try {
+    const teamModule = require('../lib/team');
+    const state = teamModule.readAgentState ? teamModule.readAgentState() : null;
+    if (state && state.enabled) {
+      teamModule.cleanupAgentState();
+      debugLog('UnifiedStop', 'Fallback agent state cleanup executed');
+    }
+  } catch (e) {
+    // Silent - not all stops need agent state cleanup
+  }
+}
+
 // Default output if no handler matched
 if (!handled) {
   debugLog('UnifiedStop', 'No handler matched, using default output');

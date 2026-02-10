@@ -186,7 +186,7 @@
     }
   },
   "team": {
-    "enabled": false,
+    "enabled": true,
     "displayMode": "in-process",
     "maxTeammates": 5,
     "delegateMode": false,
@@ -217,7 +217,8 @@
     "available": [
       "bkit-pdca-guide",
       "bkit-learning",
-      "bkit-enterprise"
+      "bkit-enterprise",
+      "bkit-pdca-enterprise"
     ],
     "levelDefaults": {
       "Starter": "bkit-learning",

@@ -125,6 +125,25 @@ function main() {
         }
       }
 
+      // State writer: 진행률 업데이트 + 메시지 기록 (v1.5.3 Team Visibility)
+      try {
+        if (teamModule && teamModule.updateProgress) {
+          const progress = teamModule.getTeamProgress(featureName, detectedPhase);
+          teamModule.updateProgress(progress);
+
+          // Phase transition 시 메시지 기록
+          if (response.hookSpecificOutput.autoAdvanced) {
+            teamModule.addRecentMessage({
+              from: 'system',
+              to: 'all',
+              content: `Phase ${detectedPhase} → ${response.hookSpecificOutput.nextPhase} (auto-advanced)`,
+            });
+          }
+        }
+      } catch (e) {
+        debugLog('TaskCompleted', 'State write failed (non-fatal)', { error: e.message });
+      }
+
       console.log(JSON.stringify(response));
       process.exit(0);
     }

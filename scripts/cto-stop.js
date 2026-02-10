@@ -45,6 +45,15 @@ function run(context) {
         progress,
       });
     }
+
+    // State writer: agent state cleanup (v1.5.3 Team Visibility)
+    try {
+      if (teamModule.cleanupAgentState) {
+        teamModule.cleanupAgentState();
+      }
+    } catch (e) {
+      debugLog('CTOStop', 'Agent state cleanup failed (non-fatal)', { error: e.message });
+    }
   }
 
   outputAllow('CTO session ended. Team state saved for next session.', 'CTOStop');
