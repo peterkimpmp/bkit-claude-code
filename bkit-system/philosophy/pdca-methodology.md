@@ -238,6 +238,13 @@ A methodology for performing QA without traditional test scripts:
 
 ---
 
+## v1.5.4 PDCA Notes
+
+- bkend MCP accuracy fix: ensures PDCA Check phase uses exact tool names for gap analysis against bkend API
+- Comprehensive Test results: 764/765 PASS (100%), validating PDCA workflow stability
+
+---
+
 ## v1.5.3 PDCA Enhancements
 
 ### Output Styles for PDCA Phases

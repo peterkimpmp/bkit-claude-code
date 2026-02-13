@@ -19,6 +19,8 @@
 > **v1.4.7**: Task Management + PDCA Integration, Core Modularization (lib/ split into 4 modules with 132 functions)
 >
 > **v1.5.0**: Claude Code Exclusive - Gemini CLI support removed, simplified architecture
+>
+> **v1.5.4**: bkend MCP Accuracy Fix - MCP tools 19→28+, accurate tool names, dynamic Base URL
 
 ## Purpose of This Document
 
@@ -178,19 +180,20 @@ lib/
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                bkit Trigger System (v1.4.7)                      │
+│                bkit Trigger System (v1.5.4)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
 │  │   Skills     │───▶│   Agents     │───▶│   Scripts    │      │
-│  │  (22)        │    │  (11)        │    │  (39)        │      │
+│  │  (26)        │    │  (16)        │    │  (45)        │      │
 │  └──────────────┘    └──────────────┘    └──────────────┘      │
 │         │                   │                   │               │
 │         ▼                   ▼                   ▼               │
 │  ┌──────────────────────────────────────────────────────┐      │
-│  │                    Hooks Layer (5 events)             │      │
+│  │                    Hooks Layer (10 events)            │      │
 │  │  SessionStart │ UserPromptSubmit │ PreToolUse │       │      │
-│  │  PostToolUse  │ PreCompact       │ (+ Stop)           │      │
+│  │  PostToolUse  │ PreCompact │ Stop │ SubagentStart │   │      │
+│  │  SubagentStop │ TaskCompleted │ TeammateIdle          │      │
 │  └──────────────────────────────────────────────────────┘      │
 │                              │                                  │
 │                              ▼                                  │

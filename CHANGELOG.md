@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2026-02-14
+
+### Added
+- **bkend MCP Accuracy Fix (10 GAPs)**
+  - MCP tool coverage: 19 (partial) → 28+ (complete)
+  - MCP Fixed Tools: `get_context`, `search_docs`, `get_operation_schema`
+  - MCP Project Management Tools: 9 tools (project/environment CRUD)
+  - MCP Table Management Tools: 11 tools (table/schema/index management)
+  - MCP Data CRUD Tools: 5 tools (`backend_data_list/get/create/update/delete`)
+  - MCP Resources: 4 URI patterns (`bkend://` scheme)
+  - Searchable Docs: 8 Doc IDs (`search_docs` query support)
+- **bkend-patterns.md SSOT Expansion**
+  - Shared patterns document: 85 → 140 lines (+65%)
+  - New sections: REST API response format, query parameters, file upload, MCP setup, OAuth 2.1
+- **bkend-expert Agent Rewrite**
+  - MCP tools organized into 4 categories (Fixed/Project/Table/Data CRUD)
+  - Dynamic Base URL (from `get_context`, no hardcoding)
+  - MCP Resources (`bkend://` URI) reference added
+
+### Changed
+- **bkend-data/SKILL.md**: ID field `_id` → `id`, Data CRUD tools added, filter operators with `$` prefix
+- **bkend-auth/SKILL.md**: MCP Auth Workflow pattern, REST endpoints 18 → 12 core, social login endpoint unified
+- **bkend-storage/SKILL.md**: MCP Storage Workflow, multipart upload 4 endpoints, `download-url` GET → POST
+- **bkend-quickstart/SKILL.md**: Numbered tools → named tools, Project Management 9 tools + Resources 4 URIs
+- **bkend-cookbook/SKILL.md**: Live Reference URLs `src/` → `en/` paths
+- **session-start.js**: bkend MCP status check `Dynamic` → `Dynamic || Enterprise` (GAP-10)
+- **All Live Reference URLs**: `src/` directory paths → `en/` specific file paths
+
+### Removed
+- **bkend-expert.md**: Obsolete numbered Guide Tools references (`0_get_context` ~ `7_code_examples_data`)
+- **bkend-auth/SKILL.md**: Account Lifecycle section (replaced by search_docs)
+- **bkend-data/SKILL.md**: `backend_table_update` tool (non-existent tool)
+
+### Quality
+- Comprehensive Test Round 1: 708 TC, 705 PASS, 0 FAIL, 3 SKIP (100%)
+- Comprehensive Test Round 2: 765 TC, 764 PASS, 0 FAIL, 1 SKIP (100%)
+- bkend MCP Accuracy Fix: 10/10 GAPs, 42/42 items, 100% match rate
+
+---
+
 ## [1.5.3] - 2026-02-10
 
 ### Added

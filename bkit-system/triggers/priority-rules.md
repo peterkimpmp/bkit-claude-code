@@ -180,3 +180,10 @@ Agent Memory is always-on:
 - No opt-out mechanism (by design)
 - Memory scopes determined by agent configuration
 - Project scope > User scope for overlapping data
+
+### bkend MCP Trigger Priority (v1.5.4)
+
+When bkend-related keywords are detected:
+- bkend-expert agent activation priority for Dynamic level projects
+- bkend specialist skills (5) activated based on specific domain (auth, data, storage, quickstart, cookbook)
+- MCP tool names in skills use exact named tools (28+) for accurate invocation

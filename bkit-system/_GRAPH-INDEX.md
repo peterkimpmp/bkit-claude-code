@@ -19,6 +19,15 @@
 > **v1.4.1 Context Engineering**: Optimal token curation perspective for LLM reasoning, Response Report Rule
 >
 > **v1.5.0 Claude Code Exclusive**: Gemini CLI support removed, simplified architecture
+>
+> **v1.5.4 bkend MCP Accuracy Fix**: MCP tools 19→28+, accurate tool names, dynamic Base URL
+
+### v1.5.4 (2026-02-14) - bkend MCP Accuracy Fix
+- bkend MCP tool coverage: 19 → 28+ (Fixed 3 + Project 9 + Table 11 + Data CRUD 5)
+- bkend specialist skills 5 updated (tool names/endpoints/workflows)
+- bkend-patterns.md SSOT expansion: 85 → 140 lines
+- session-start.js: Enterprise level bkend MCP status check added
+- Comprehensive Test: 764/765 PASS (100%)
 
 ## Philosophy (4)
 
@@ -111,7 +120,7 @@ The following skills were consolidated:
 - [[../output-styles/bkit-pdca-enterprise|bkit-pdca-enterprise]] - Enterprise PDCA response formatting (v1.5.3)
 
 ### Agent Teams
-- [[../lib/team/index|team module]] - Team coordination (Dynamic: 2, Enterprise: 4 teammates)
+- [[../lib/team/index|team module]] - Team coordination (Dynamic: 3, Enterprise: 5 teammates)
 - [[../lib/team/strategy|team strategy]] - Level-based team composition patterns
 - [[../lib/team/coordinator|team coordinator]] - Team availability and configuration
 - [[../lib/team/hooks|team hooks]] - TaskCompleted and TeammateIdle handlers

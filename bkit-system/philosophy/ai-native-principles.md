@@ -161,6 +161,13 @@ bkit classifies languages optimized for AI-Native development into 4 tiers:
 
 ---
 
+## v1.5.4 Agent Distribution
+
+**Model distribution**: 7 opus / 7 sonnet / 2 haiku (16 total)
+**Permission modes**: 9 acceptEdits / 7 plan
+
+---
+
 ## v1.5.3 Feature Integration
 
 ### Output Styles in AI-Native Context

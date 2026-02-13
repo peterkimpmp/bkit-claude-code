@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-v2.1.33+-purple.svg)](https://docs.anthropic.com/en/docs/claude-code/getting-started)
-[![Version](https://img.shields.io/badge/Version-1.5.3-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.5.4-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + CTO-Led Agent Teams + AI coding assistant mastery for AI-native development**
@@ -58,6 +58,7 @@ Layer 5: Scripts (45 modules)    → Actual Node.js execution logic with unified
 
 ![bkit Features](images/bkit-features.png)
 
+- **bkend MCP Accuracy Fix (v1.5.4)** - MCP tool coverage 19→28+, accurate tool names, dynamic Base URL, search_docs workflow
 - **Team Visibility & State Writer (v1.5.3)** - Agent Teams state management with `.bkit/agent-state.json` for Studio IPC
 - **SubagentStart/SubagentStop Hooks (v1.5.3)** - 2 new hook events for agent lifecycle tracking (10 hook events total)
 - **Output Styles Auto-Discovery (v1.5.3)** - `outputStyles` in plugin.json + 4th style `bkit-pdca-enterprise`

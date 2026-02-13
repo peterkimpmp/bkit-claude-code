@@ -332,9 +332,10 @@ Reports bkit feature usage status at the end of every response.
 
 ---
 
-## Component Architecture (v1.5.3)
+## Component Architecture (v1.5.4)
 
 > **Note**: As of v1.5.0, bkit is Claude Code exclusive. v1.5.3 adds Team Visibility + SubagentStart/Stop hooks.
+> **v1.5.4**: MCP tool accuracy is a critical Context Engineering concern -- providing exact tool names (not numbered lists) ensures LLMs invoke the correct MCP tools without hallucinating tool names. bkend MCP tools expanded 19→28+ with accurate naming across 4 categories.
 
 | Component | Location | Count |
 |-----------|----------|:-----:|

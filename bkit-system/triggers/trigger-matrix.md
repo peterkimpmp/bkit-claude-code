@@ -4,16 +4,22 @@
 >
 > **v1.5.0**: Claude Code Exclusive
 
-## Hook Event Reference (v1.5.0)
+## Hook Event Reference (v1.5.4)
 
-| Hook Event | Description |
-|------------|-------------|
-| `SessionStart` | Session initialization |
-| `PreToolUse` | Before tool execution |
-| `PostToolUse` | After tool execution |
-| `Stop` | Agent completion |
-| `UserPromptSubmit` | User prompt submitted |
-| `PreCompact` | Before context compaction |
+| Hook Event | Description | Added |
+|------------|-------------|:-----:|
+| `SessionStart` | Session initialization | v1.0 |
+| `PreToolUse` | Before tool execution | v1.0 |
+| `PostToolUse` | After tool execution | v1.0 |
+| `Stop` | Agent completion | v1.0 |
+| `UserPromptSubmit` | User prompt submitted | v1.4.2 |
+| `PreCompact` | Before context compaction | v1.4.2 |
+| `SubagentStart` | Subagent spawned | v1.5.3 |
+| `SubagentStop` | Subagent completed | v1.5.3 |
+| `TaskCompleted` | Task completion | v1.5.1 |
+| `TeammateIdle` | Teammate idle detection | v1.5.1 |
+
+> **Note (v1.5.3)**: SubagentStart and SubagentStop added for Team Visibility. TaskCompleted and TeammateIdle added in v1.5.1 for Agent Teams support. Total: 10 hook events.
 
 ---
 

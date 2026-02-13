@@ -302,6 +302,29 @@ echo '{"tool_input":{"file_path":"src/features/auth/login.ts","content":"test"}}
 
 ---
 
+## v1.5.4 bkend MCP Accuracy Tests
+
+### bkend MCP Tool Accuracy Tests (BM-T)
+
+| ID | Test | Expected Result |
+|----|------|-----------------|
+| BM-T01 | bkend-quickstart SKILL.md contains exact MCP tool names | Named tools (not numbered list) |
+| BM-T02 | bkend-data SKILL.md references `bkend_create_item`, `bkend_get_items` | Exact tool names present |
+| BM-T03 | bkend-auth SKILL.md references `bkend_sign_up_with_email`, `bkend_sign_in_with_email` | Exact tool names present |
+| BM-T04 | bkend-storage SKILL.md references `bkend_upload_file`, `bkend_get_file` | Exact tool names present |
+| BM-T05 | bkend-cookbook SKILL.md references named MCP tools | Exact tool names present |
+| BM-T06 | bkend-patterns.md SSOT contains 28+ tool names | All 4 categories covered |
+| BM-T07 | session-start.js bkend MCP check at Dynamic level | MCP status reported |
+| BM-T08 | session-start.js bkend MCP check at Enterprise level | Full MCP health check |
+| BM-T09 | All bkend skills use `{BASE_URL}` dynamic pattern | No hardcoded URLs |
+| BM-T10 | All bkend skills reference `en/` endpoint paths | Live Reference paths used |
+| BM-T11 | MCP Fixed tools (3): `bkend_ask_ai`, `bkend_get_settings`, `bkend_health_check` | All 3 verified |
+| BM-T12 | MCP Project tools (9): project CRUD + settings | All 9 verified |
+| BM-T13 | MCP Table tools (11): table/column CRUD + schema | All 11 verified |
+| BM-T14 | MCP Data CRUD tools (5): item create/read/update/delete + query | All 5 verified |
+
+---
+
 ## v1.5.1 Feature Discovery Tests
 
 ### Output Style Discovery Tests (OS-T)

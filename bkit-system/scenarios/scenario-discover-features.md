@@ -30,12 +30,12 @@ User creates a Dynamic-level fullstack project and requests a major feature.
 ### Flow
 1. **SessionStart hook fires**
    - Level detected as Dynamic
-   - If env var set: "Agent Teams: Dynamic mode available (2 teammates)"
+   - If env var set: "Agent Teams: Dynamic mode available (3 teammates)"
    - If env var not set: "Your Dynamic project supports Agent Teams. To enable: set `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`"
 2. **User requests major feature** (>= 1000 chars)
    - bkit-rules: "This is a major feature. Agent Teams can parallelize PDCA phases."
 3. **User starts team mode**: `/pdca team user-auth`
-   - 2 teammates assigned (developer, qa)
+   - 3 teammates assigned (developer, frontend, qa) + CTO Lead
 4. **Parallel execution**: developer implements while qa prepares check
 
 ### Expected Outcome
@@ -65,6 +65,6 @@ User becomes aware that agents are learning and improving over time.
 
 | Feature | Session Start | Project Init | PDCA Flow | Agent Invocation |
 |---------|:------------:|:------------:|:---------:|:----------------:|
-| Output Styles | Suggested | Suggested | Suggested | Recommended |
-| Agent Teams | Announced | Announced | Suggested | N/A |
+| Output Styles (4) | Suggested | Suggested | Suggested | Recommended |
+| Agent Teams (Dynamic: 3, Enterprise: 5) | Announced | Announced | Suggested | N/A |
 | Agent Memory | Mentioned | N/A | N/A | Active |

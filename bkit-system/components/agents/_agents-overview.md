@@ -1,9 +1,10 @@
 # Agents Overview
 
-> List of 16 Agents defined in bkit and their roles (v1.5.3)
+> List of 16 Agents defined in bkit and their roles (v1.5.4)
 >
 > **v1.4.1**: Added Context Engineering perspective - Role-based Behavioral Rules Layer
 > **v1.5.0**: Claude Code Exclusive
+> **v1.5.4**: Model distribution verified: 7 opus / 7 sonnet / 2 haiku, 9 acceptEdits / 7 plan
 
 ## What are Agents?
 
@@ -47,9 +48,11 @@ Agents form bkit's **Behavioral Rules Layer**, designed according to [[../../phi
 
 | Model | Agents | Characteristics |
 |-------|--------|-----------------|
-| **opus** | code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect | Complex analysis, strategic decisions |
-| **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide | Execution, guidance, iteration |
-| **haiku** | qa-monitor, report-generator | Fast monitoring, document generation |
+| **opus** (7) | cto-lead, code-analyzer, design-validator, gap-detector, enterprise-expert, infra-architect, security-architect | Complex analysis, strategic decisions |
+| **sonnet** (7) | bkend-expert, pdca-iterator, pipeline-guide, starter-guide, product-manager, frontend-architect, qa-strategist | Execution, guidance, iteration |
+| **haiku** (2) | qa-monitor, report-generator | Fast monitoring, document generation |
+
+**Distribution**: 7 opus / 7 sonnet / 2 haiku, 9 acceptEdits / 7 plan
 
 ## Full List
 
@@ -63,6 +66,18 @@ Agents auto-recommended based on project level:
 | [[../../../agents/bkend-expert|bkend-expert]] | Dynamic | BaaS/Fullstack expert (v1.5.3 Enhanced) | - |
 | [[../../../agents/enterprise-expert|enterprise-expert]] | Enterprise | CTO-level architecture guide | - |
 | [[../../../agents/infra-architect|infra-architect]] | Enterprise | AWS/K8s/Terraform expert | - |
+
+### CTO Team Agents (5) (v1.5.3)
+
+Agents for CTO-Led Agent Teams orchestration:
+
+| Agent | Model | Permission Mode | Role | Hooks |
+|-------|-------|-----------------|------|-------|
+| [[../../../agents/cto-lead|cto-lead]] | opus | acceptEdits | CTO Team orchestration, PDCA coordination | - |
+| [[../../../agents/frontend-architect|frontend-architect]] | sonnet | plan | UI/UX design, frontend architecture | - |
+| [[../../../agents/product-manager|product-manager]] | sonnet | plan | Requirements analysis, scope management | - |
+| [[../../../agents/qa-strategist|qa-strategist]] | sonnet | plan | Test strategy, quality planning | - |
+| [[../../../agents/security-architect|security-architect]] | opus | plan | Vulnerability analysis, security review | - |
 
 ### Task-Based Agents (7)
 
@@ -205,7 +220,12 @@ bkit-claude-code/
     ├── code-analyzer.md
     ├── qa-monitor.md
     ├── pdca-iterator.md
-    └── report-generator.md
+    ├── report-generator.md
+    ├── cto-lead.md
+    ├── frontend-architect.md
+    ├── product-manager.md
+    ├── qa-strategist.md
+    └── security-architect.md
 ```
 
 ---

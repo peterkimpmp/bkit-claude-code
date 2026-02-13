@@ -431,6 +431,17 @@ outputEmpty()            // Allow without context
 
 ---
 
+## v1.5.4 Hook Enhancements
+
+### SessionStart bkend MCP Check
+
+session-start.js bkend MCP status check upgraded from Dynamic → Dynamic+Enterprise:
+- Dynamic level: bkend MCP connection status, available tool count
+- Enterprise level: Full bkend MCP health check with tool category validation (Fixed/Project/Table/Data CRUD)
+- Reports MCP tool coverage (28+ tools expected)
+
+---
+
 ## v1.5.1 Hook Enhancements
 
 ### SessionStart Feature Awareness

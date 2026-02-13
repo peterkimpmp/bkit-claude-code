@@ -196,6 +196,15 @@ design-implementation alignment.
 
 ---
 
+## v1.5.4 Note
+
+Agent Memory (v1.5.1) provides persistent context during code write flows:
+- Agents remember previous analysis patterns and fix history across sessions
+- `memory: project` scope ensures project-specific knowledge accumulates
+- Convention hints and PDCA guidance improve over time based on accumulated context
+
+---
+
 ## Related Documents
 
 - [[../triggers/trigger-matrix]] - Full trigger matrix

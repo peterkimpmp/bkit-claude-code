@@ -101,7 +101,7 @@ Skills form bkit's **Domain Knowledge Layer**, designed according to [[../../phi
 | [[../../../skills/mobile-app/SKILL|mobile-app]] | Mobile app dev | - | [[../../../agents/pipeline-guide|pipeline-guide]] |
 | [[../../../skills/desktop-app/SKILL|desktop-app]] | Desktop app dev | - | [[../../../agents/pipeline-guide|pipeline-guide]] |
 
-### bkend Specialist Skills (v1.5.3)
+### bkend Specialist Skills (v1.5.4)
 
 | Skill | Level | Description |
 |-------|-------|-------------|
@@ -110,6 +110,13 @@ Skills form bkit's **Domain Knowledge Layer**, designed according to [[../../phi
 | bkend-auth | Dynamic | Authentication (email/social, JWT, RBAC, RLS) |
 | bkend-storage | Dynamic | File storage (Presigned URL, visibility levels) |
 | bkend-cookbook | Dynamic | Practical tutorials and troubleshooting |
+
+#### v1.5.4 bkend Skill Changes
+- **Numbered tools → Named tools**: All MCP tool references changed from numbered list to exact tool names (e.g., `bkend_create_item`, `bkend_get_tables`)
+- **MCP 4 categories**: Fixed 3 + Project 9 + Table 11 + Data CRUD 5 = 28+ tools
+- **Live Reference paths**: All skills reference `en/` endpoint paths for accuracy
+- **Dynamic Base URL**: `{BASE_URL}` pattern replaces hardcoded URLs
+- **bkend-patterns.md SSOT**: Shared template expanded 85 → 140 lines
 
 ## Removed Skills (v1.2.0)
 
@@ -242,8 +249,8 @@ Level skills now suggest appropriate output styles:
 ### Agent Teams Integration
 
 `/pdca team {feature}` enables parallel PDCA execution:
-- Dynamic: 2 teammates (developer, qa)
-- Enterprise: 4 teammates (architect, developer, qa, reviewer)
+- Dynamic: 3 teammates (developer, frontend, qa) + CTO Lead
+- Enterprise: 5 teammates (architect, developer, qa, reviewer, security) + CTO Lead
 
 ### Learning Skill Enhancement
 

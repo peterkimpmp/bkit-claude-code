@@ -3,7 +3,8 @@
 > 45 Node.js Scripts used by bkit hooks (v1.5.3)
 >
 > **v1.5.0**: Claude Code Exclusive - Gemini CLI support removed, simplified architecture
-> **v1.4.7**: Core Modularization - lib/ split into 4 modules (132 functions), Task Management Integration
+> **v1.4.7**: Core Modularization - lib/ split into 4 modules, Task Management Integration
+> **v1.5.3**: lib/ expanded to 5 modules (241 functions), Team module added
 > **v1.4.6**: Sub-agent call stability with `bkit:` prefix
 > **v1.4.5**: `/pdca archive` action, 8-language trigger completion
 > **v1.4.4**: hooks-json-integration, unified handlers (unified-stop.js, unified-bash-pre.js, etc.)
@@ -211,21 +212,25 @@ bkit-claude-code/
 
 > **Note**: pdca-pre-write.js was deprecated and deleted in v1.4.2. Its functionality is integrated into pre-write.js.
 
-## Shared Library: lib/ (v1.4.7)
+## Shared Library: lib/ (v1.5.3)
 
+> **v1.5.3**: 5 module directories with 241 functions total (team module added)
 > **v1.4.7**: Core Modularization - 4 module directories with 132 functions total
 > **v1.4.2**: 6 library modules with 86+ functions total
 > **v1.4.0**: Expanded from 38 to 80+ functions with dual platform support
 
-### Library Modules (v1.4.7)
+### Library Modules (v1.5.3)
 
 | Module | Files | Exports | Purpose |
 |--------|:-----:|:-------:|---------|
-| `lib/core/` | 7 | 40 | Platform detection, caching, debugging, configuration |
-| `lib/pdca/` | 6 | 50 | PDCA phase, status, automation, tier system |
+| `lib/core/` | 7 | 41 | Platform detection, caching, debugging, configuration |
+| `lib/pdca/` | 6 | 54 | PDCA phase, status, automation, tier system |
 | `lib/intent/` | 4 | 19 | Language detection, triggers, ambiguity scoring |
 | `lib/task/` | 5 | 26 | Task classification, context, creation, tracking |
+| `lib/team/` | 9 | 40 | Team coordination, strategy, state-writer |
 | `lib/common.js` | 1 | 180 | Migration Bridge (re-exports all modules) |
+
+**Export summary**: core:41 + pdca:54 + intent:19 + task:26 + team:40 = bridge 180
 
 ### Import Options
 

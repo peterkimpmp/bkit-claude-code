@@ -117,9 +117,10 @@ After:  /learn-claude-code → Systematic training
 
 ---
 
-## Current Implementation (v1.5.3)
+## Current Implementation (v1.5.4)
 
 > **v1.5.3**: CTO-Led Agent Teams + Team Visibility + Claude Code Exclusive
+> **v1.5.4**: bkend MCP Accuracy Fix - embodying "No Guessing" philosophy through exact MCP tool names (19→28+), eliminating numbered tool references in favor of precise named tools
 
 ### Component Counts
 

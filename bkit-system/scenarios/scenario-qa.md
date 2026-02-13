@@ -212,6 +212,15 @@ Patterns blocked by `qa-pre-bash.js`:
 
 ---
 
+## v1.5.4 Note
+
+For team-based QA execution, CTO-Led Agent Teams can parallelize QA:
+- qa-strategist (sonnet, plan) handles test strategy planning
+- qa-monitor (haiku) handles real-time log monitoring
+- CTO Lead orchestrates QA phases with gap-detector for design-implementation validation
+
+---
+
 ## Related Documents
 
 - [[scenario-write-code]] - Write code scenario
