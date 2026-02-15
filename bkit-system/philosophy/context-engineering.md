@@ -11,6 +11,10 @@
 > **v1.4.5**: `/pdca archive` action, 8-language trigger completion, internationalization (KO→EN)
 >
 > **v1.5.0**: Claude Code Exclusive - simplified architecture
+>
+> **v1.5.3**: Agent Teams with team/ module (9 files, 40 exports), state-writer, SubagentStart/Stop hooks
+>
+> **v1.5.4**: lib/ modularization (5 subdirs, 180 exports), 10 hook events, bkend MCP accuracy fix
 
 ## What is Context Engineering?
 
@@ -29,60 +33,90 @@ bkit is a **practical implementation of Context Engineering**, providing a syste
 
 ---
 
-## v1.4.2 Context Engineering Architecture
+## v1.5.4 Context Engineering Architecture
 
-v1.4.2 implements 8 functional requirements (FR-01~FR-08) for comprehensive context management:
+bkit v1.5.4 builds on the original 8 functional requirements (FR-01~FR-08) with modular library architecture, Agent Teams orchestration, and expanded hook events:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    bkit v1.4.2 Context Engineering Architecture              │
-├─────────────────────────────────────────────────────────────────────────────┤
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                    bkit v1.5.4 Context Engineering Architecture              │
+├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │                 Multi-Level Context Hierarchy (FR-01)                   │ │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │                 Multi-Level Context Hierarchy (FR-01)                  │  │
+│  │                                                                        │  │
+│  │  L1: Plugin Policy ──→ L2: User Config ──→ L3: Project ──→ L4: Session │  │
+│  │     (bkit defaults)     (~/.claude/bkit/)   (.pdca-status)   (runtime) │  │
+│  │                                                                        │  │
+│  │  Priority: L4 > L3 > L2 > L1 (later levels override earlier)           │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                     │                                        │
+│                                     ▼                                        │
+│  ┌───────────────────┐  ┌──────────────────┐  ┌──────────────────┐           │
+│  │ @import Directive │  │ context:fork     │  │ Permission       │           │
+│  │ (FR-02)           │  │ (FR-03)          │  │ Hierarchy (FR-05)│           │
+│  │                   │  │                  │  │                  │           │
+│  │ • SKILL.md loads  │  │ • Isolated exec  │  │ • deny: block    │           │
+│  │ • Variable subst  │  │ • Deep clone     │  │ • ask: confirm   │           │
+│  │ • Circular detect │  │ • Merge-back opt │  │ • allow: permit  │           │
+│  └────────┬──────────┘  └────────┬─────────┘  └─────────┬────────┘           │
+│           │                      │                      │                    │
+│           └──────────────────────┼──────────────────────┘                    │
+│                                  ▼                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │                  6-Layer Hook System (10 Events)                        │ │
 │  │                                                                         │ │
-│  │  L1: Plugin Policy ──→ L2: User Config ──→ L3: Project ──→ L4: Session │ │
-│  │     (bkit defaults)     (~/.claude/bkit/)   (.pdca-status)   (runtime)  │ │
+│  │  L1: hooks.json ─→ SessionStart, UserPromptSubmit, PreCompact           │ │
+│  │                     TaskCompleted, SubagentStart/Stop, TeammateIdle     │ │
+│  │  L2: Skill YAML ─→ PreToolUse, PostToolUse, Stop                        │ │
+│  │  L3: Agent YAML ─→ PreToolUse, PostToolUse                              │ │
+│  │  L4: Triggers   ─→ 8-language keyword detection                         │ │
+│  │  L5: Scripts    ─→ 47 Node.js modules                                   │ │
+│  │  L6: Team Orch. ─→ CTO-led phase routing (leader/council/swarm/watch)   │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                  │                                           │
+│           ┌──────────────────────┼──────────────────────┐                    │
+│           ▼                      ▼                      ▼                    │
+│  ┌───────────────────┐  ┌──────────────────┐  ┌──────────────────┐           │
+│  │ Task Dependency   │  │ Context Compact. │  │ MEMORY Variable  │           │
+│  │ Chain (FR-06)     │  │ Hook (FR-07)     │  │ (FR-08)          │           │
+│  │                   │  │                  │  │                  │           │
+│  │ • PDCA blocking   │  │ • State snapshot │  │ • Session persist│           │
+│  │ • blockedBy meta  │  │ • Auto-cleanup   │  │ • Key-value store│           │
+│  │ • Non-blocking    │  │ • 10 recent kept │  │ • .bkit-memory   │           │
+│  └───────────────────┘  └──────────────────┘  └──────────────────┘           │
+│                                  │                                           │
+│                                  ▼                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │              Agent Teams Orchestration (v1.5.3+)                        │ │
 │  │                                                                         │ │
-│  │  Priority: L4 > L3 > L2 > L1 (later levels override earlier)           │ │
-│  └────────────────────────────────────────────────────────────────────────┘ │
-│                                    │                                         │
-│                                    ▼                                         │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
-│  │ @import Directive│  │ context:fork     │  │ Permission       │          │
-│  │ (FR-02)          │  │ (FR-03)          │  │ Hierarchy (FR-05)│          │
-│  │                  │  │                  │  │                  │          │
-│  │ • SKILL.md loads │  │ • Isolated exec  │  │ • deny: block    │          │
-│  │ • Variable subst │  │ • Deep clone     │  │ • ask: confirm   │          │
-│  │ • Circular detect│  │ • Merge-back opt │  │ • allow: permit  │          │
-│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘          │
-│           │                     │                      │                    │
-│           └─────────────────────┼──────────────────────┘                    │
-│                                 ▼                                            │
-│  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │                       5-Layer Hook System + New Events                  │ │
+│  │  CTO Lead (opus) ──→ Orchestration Pattern per Phase                    │ │
+│  │       │                                                                 │ │
+│  │       ├── Teammate A (own context window)                               │ │
+│  │       ├── Teammate B (own context window)                               │ │
+│  │       └── Teammate C (own context window)                               │ │
 │  │                                                                         │ │
-│  │  L1: hooks.json ─→ SessionStart, UserPromptSubmit (FR-04), PreCompact  │ │
-│  │  L2: Skill YAML ─→ PreToolUse, PostToolUse, Stop                       │ │
-│  │  L3: Agent YAML ─→ PreToolUse, PostToolUse                             │ │
-│  │  L4: Triggers   ─→ 8-language keyword detection                        │ │
-│  │  L5: Scripts    ─→ 45 Node.js modules                                  │ │
-│  └────────────────────────────────────────────────────────────────────────┘ │
-│                                 │                                            │
-│                                 ▼                                            │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
-│  │ Task Dependency  │  │ Context Compaction│ │ MEMORY Variable  │          │
-│  │ Chain (FR-06)    │  │ Hook (FR-07)      │  │ (FR-08)          │          │
-│  │                  │  │                  │  │                  │          │
-│  │ • PDCA blocking  │  │ • State snapshot │  │ • Session persist│          │
-│  │ • blockedBy meta │  │ • Auto-cleanup   │  │ • Key-value store│          │
-│  │ • Non-blocking   │  │ • 10 recent kept │  │ • .bkit-memory   │          │
-│  └──────────────────┘  └──────────────────┘  └──────────────────┘          │
+│  │  State: .bkit/agent-state.json (schema v1.0)                            │ │
+│  │  Modules: lib/team/ (9 files, 40 exports)                               │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Library Modules (6 modules, 86+ functions)
+### Library Modules (14 modules across 5 subdirectories, 180 exports)
+
+**Modular subdirectories** (v1.5.4 — refactored from monolithic common.js):
+
+| Module | Files | Exports | Purpose |
+|--------|:-----:|:-------:|---------|
+| `lib/core/` | 7 | 41 | Platform detection, cache, I/O, debug, config, file utilities |
+| `lib/pdca/` | 6 | 54 | Tier classification, level detection, phase management, status, automation |
+| `lib/intent/` | 4 | 19 | 8-language detection, trigger matching, ambiguity analysis |
+| `lib/task/` | 5 | 26 | Task classification, context, creation, tracking |
+| `lib/team/` | 9 | 40 | Coordinator, strategy, CTO logic, state-writer, communication |
+| **Subtotal** | **31** | **180** | |
+
+**Top-level modules** (FR implementations, unchanged):
 
 | Module | FR | Purpose | Key Functions |
 |--------|:--:|---------|---------------|
@@ -91,7 +125,8 @@ v1.4.2 implements 8 functional requirements (FR-01~FR-08) for comprehensive cont
 | `lib/context-fork.js` | FR-03 | Context isolation | `forkContext()`, `mergeForkedContext()`, `discardFork()` |
 | `lib/permission-manager.js` | FR-05 | Permission hierarchy | `checkPermission()`, `getToolPermission()` |
 | `lib/memory-store.js` | FR-08 | Session persistence | `setMemory()`, `getMemory()`, `deleteMemory()` |
-| `lib/common.js` | All | Core utilities | 76+ functions for PDCA, intent, caching |
+| `lib/skill-orchestrator.js` | — | Skill routing | `orchestrateSkillPre()`, `getAgentForAction()` |
+| `lib/common.js` | All | **Bridge layer** | Re-exports all 180 functions for backward compatibility |
 
 ---
 
@@ -169,52 +204,55 @@ Agents define **role-based behavioral rules**.
 | **sonnet** | bkend-expert, pdca-iterator, pipeline-guide, starter-guide, product-manager, frontend-architect, qa-strategist | Execution, guidance, iteration |
 | **haiku** | qa-monitor, report-generator | Fast monitoring, document generation |
 
-### 3. State Management Layer (lib/common.js)
+### 3. State Management Layer (5-Module Architecture)
 
-A **state management system** composed of 86+ functions across 6 library modules.
+A **modular state management system** composed of 180 exports across 5 subdirectories, with `lib/common.js` as a backward-compatible bridge layer.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    State Management Layer                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌──────────────────────┐  ┌──────────────────────┐            │
-│  │   PDCA Status v2.0   │  │   Multi-Feature      │            │
-│  │                      │  │   Context            │            │
-│  │  • activeFeatures[]  │  │                      │            │
-│  │  • primaryFeature    │  │  • setActiveFeature  │            │
-│  │  • features {}       │  │  • switchContext     │            │
-│  │  • pipeline {}       │  │  • getFeatureContext │            │
-│  │  • session {}        │  │                      │            │
-│  └──────────────────────┘  └──────────────────────┘            │
-│                                                                 │
-│  ┌──────────────────────┐  ┌──────────────────────┐            │
-│  │   Intent Detection   │  │   Ambiguity          │            │
-│  │   (8 Languages)      │  │   Detection          │            │
-│  │                      │  │                      │            │
-│  │  EN, KO, JA, ZH      │  │  • Score calculation │            │
-│  │  ES, FR, DE, IT      │  │  • Generate questions│            │
-│  │                      │  │  • Magic Word Bypass │            │
-│  └──────────────────────┘  └──────────────────────┘            │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │                    TTL-based Caching                      │  │
-│  │                                                          │  │
-│  │  _cache = { data: Map, timestamps: Map, defaultTTL: 5s } │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                   State Management Layer (v1.5.4)                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
+│  │  lib/core/       │  │  lib/pdca/       │  │  lib/intent/     │  │
+│  │  7 files, 41 exp │  │  6 files, 54 exp │  │  4 files, 19 exp │  │
+│  │                  │  │                  │  │                  │  │
+│  │  • Platform      │  │  • Tier          │  │  • Language (8)  │  │
+│  │  • Cache (TTL)   │  │  • Level         │  │  • Trigger match │  │
+│  │  • I/O           │  │  • Phase         │  │  • Ambiguity     │  │
+│  │  • Debug         │  │  • Status        │  │                  │  │
+│  │  • Config        │  │  • Automation    │  │                  │  │
+│  │  • File          │  │  • readBkitMem   │  │                  │  │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘  │
+│                                                                      │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
+│  │  lib/task/       │  │  lib/team/       │  │  lib/common.js   │  │
+│  │  5 files, 26 exp │  │  9 files, 40 exp │  │  (Bridge Layer)  │  │
+│  │                  │  │                  │  │                  │  │
+│  │  • Classification│  │  • Coordinator   │  │  Re-exports all  │  │
+│  │  • Context       │  │  • Strategy      │  │  180 functions   │  │
+│  │  • Creator       │  │  • CTO Logic     │  │  from 5 modules  │  │
+│  │  • Tracker       │  │  • State-Writer  │  │  for backward    │  │
+│  │                  │  │  • Communication │  │  compatibility   │  │
+│  │                  │  │  • Task Queue    │  │                  │  │
+│  │                  │  │  • Orchestrator  │  │                  │  │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘  │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
+
+> **Migration Note**: As of v1.5.4, `lib/common.js` is a pure bridge layer. All 180 functions originate in subdirectory modules. Existing scripts that `require('./lib/common.js')` continue to work without changes.
 
 ---
 
-## 5-Layer Hook System
+## 6-Layer Hook System (10 Events)
 
-bkit's context injection occurs at **5 layers**.
+bkit's context injection occurs at **6 layers** with **10 hook events**.
 
 ```
 Layer 1: hooks.json (Global)
-         └── SessionStart only (AskUserQuestion guidance)
+         └── SessionStart, UserPromptSubmit, PreCompact
+         └── TaskCompleted, SubagentStart, SubagentStop, TeammateIdle
 
 Layer 2: Skill Frontmatter
          └── hooks: { PreToolUse, PostToolUse, Stop }
@@ -225,18 +263,28 @@ Layer 3: Agent Frontmatter
 Layer 4: Description Triggers
          └── "Triggers:" keyword matching (8 languages)
 
-Layer 5: Scripts (45 modules)
+Layer 5: Scripts (47 modules)
          └── Actual Node.js logic execution
+
+Layer 6: Team Orchestration (v1.5.3+)
+         └── CTO-led phase routing, orchestration pattern selection
+         └── Patterns: leader | council | swarm | watchdog
 ```
 
-**Context Injection by Hook Event**:
+**Context Injection by Hook Event** (10 events):
 
 | Event | Timing | Injection Type |
 |-------|--------|----------------|
 | **SessionStart** | Session start | Onboarding, PDCA status, trigger table |
+| **UserPromptSubmit** | Before AI processing | Intent detection, agent/skill triggers, ambiguity |
 | **PreToolUse** | Before tool execution | Validation checklist, convention hints |
 | **PostToolUse** | After tool execution | Next step guide, analysis suggestion |
 | **Stop** | Agent termination | State transition, user choice prompt |
+| **PreCompact** | Before compaction | PDCA state snapshot preservation |
+| **TaskCompleted** | Task completion | Auto-advance to next PDCA phase |
+| **SubagentStart** | Subagent startup | Agent state recording, team registration |
+| **SubagentStop** | Subagent shutdown | Agent state cleanup, result collection |
+| **TeammateIdle** | Teammate idle | Task reassignment, idle state handling |
 
 ---
 
@@ -245,7 +293,7 @@ Layer 5: Scripts (45 modules)
 ### Pattern 1: Task Size → PDCA Level
 
 ```javascript
-// lib/common.js: classifyTaskByLines()
+// lib/task/classification.js (re-exported via lib/common.js)
 const classification = {
   quick_fix: lines < 10,      // PDCA: None
   minor_change: lines < 50,   // PDCA: Light mention
@@ -257,7 +305,7 @@ const classification = {
 ### Pattern 2: User Intent → Agent/Skill Auto-Trigger
 
 ```javascript
-// lib/common.js: matchImplicitAgentTrigger()
+// lib/intent/trigger.js (re-exported via lib/common.js)
 const implicitPatterns = {
   'gap-detector': {
     patterns: [/맞아\??/, /이거 괜찮아\??/, /is this right\?/i],
@@ -273,7 +321,7 @@ const implicitPatterns = {
 ### Pattern 3: Ambiguity Score → Clarifying Questions
 
 ```javascript
-// lib/common.js: calculateAmbiguityScore()
+// lib/intent/ambiguity.js (re-exported via lib/common.js)
 // Score >= 50 → Trigger AskUserQuestion
 
 // Addition factors
@@ -341,15 +389,17 @@ Reports bkit feature usage status at the end of every response.
 |-----------|----------|:-----:|
 | Skills | `skills/*/SKILL.md` | 26 |
 | Agents | `agents/*.md` | 16 |
-| Scripts | `scripts/*.js` | 45 |
-| Templates | `templates/*.md` | 27 |
-| lib/ modules | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` | 241 functions |
+| Scripts | `scripts/*.js` | 47 |
+| Templates | `templates/*.md` + `pipeline/` + `shared/` | 13 + subdirs |
+| lib/ modules | `lib/core/`, `lib/pdca/`, `lib/intent/`, `lib/task/`, `lib/team/` | 5 dirs, 180 exports |
+| lib/ top-level | `context-hierarchy`, `import-resolver`, `context-fork`, `permission-manager`, `memory-store`, `skill-orchestrator`, `common` (bridge) | 7 modules |
+| Output Styles | `output-styles/*.md` | 4 |
 | Context File | `CLAUDE.md` | 1 |
 | Manifest | `.claude-plugin/plugin.json` | 1 |
 
 ---
 
-## Functional Requirements (v1.4.2)
+## Functional Requirements (FR-01~FR-08, stable since v1.4.2)
 
 ### FR-01: Multi-Level Context Hierarchy
 
@@ -529,7 +579,7 @@ PDCA phase-based task blocking using Claude Code Task System.
 
 **Non-Blocking PDCA**: `blockedBy` is dependency tracking metadata, not a hard block.
 
-**Implementation**: `lib/common.js` - `autoCreatePdcaTask()` function
+**Implementation**: `lib/task/creator.js` - `autoCreatePdcaTask()` (re-exported via `lib/common.js`)
 
 ### FR-07: Context Compaction Hook
 
@@ -585,7 +635,9 @@ clearMemory();
 
 ## Module Integration Map
 
-All new modules are integrated through the following call paths:
+All modules are integrated through the following call paths:
+
+**Top-level FR modules**:
 
 | Module | Called From | Trigger |
 |--------|-------------|---------|
@@ -594,12 +646,23 @@ All new modules are integrated through the following call paths:
 | `context-fork.js` | `hooks/session-start.js` | SessionStart (stale fork cleanup) |
 | `permission-manager.js` | `scripts/pre-write.js` | PreToolUse (Write\|Edit) |
 | `memory-store.js` | `hooks/session-start.js` | SessionStart |
+| `skill-orchestrator.js` | `scripts/skill-post.js` | Skill invocation |
+
+**Subdirectory modules** (via `lib/common.js` bridge):
+
+| Module | Called From | Trigger |
+|--------|-------------|---------|
+| `lib/core/*` | All scripts | Platform, cache, I/O, debug, config, file operations |
+| `lib/pdca/*` | PDCA scripts, stop hooks | Phase transitions, status updates, tier detection |
+| `lib/intent/*` | `user-prompt-handler.js` | UserPromptSubmit (language/trigger/ambiguity) |
+| `lib/task/*` | Stop hooks, PDCA scripts | Task creation, classification, tracking |
+| `lib/team/*` | Team hooks, CTO logic | SubagentStart/Stop, TeammateIdle, orchestration |
 
 ---
 
 ## v1.4.4 Architecture Diagrams
 
-### Component Diagram (5-Layer Architecture)
+### Component Diagram (6-Layer Architecture)
 
 ```mermaid
 flowchart TB
@@ -696,11 +759,9 @@ agents:
 
 ---
 
----
+## v1.5.x Context Engineering Features
 
-## v1.5.1 Context Engineering Features
-
-### Output Styles as Context Layer
+### Output Styles as Context Layer (v1.5.1)
 
 Output Styles add a response formatting context layer:
 
@@ -709,19 +770,69 @@ Output Styles add a response formatting context layer:
 | `bkit-learning` | Learning points, TODO(learner) markers, concept explanations |
 | `bkit-pdca-guide` | Status badges, checklists, gap analysis suggestions |
 | `bkit-enterprise` | Tradeoff tables, cost impact, deployment strategy |
+| `bkit-pdca-enterprise` | Enterprise PDCA report styling |
 
 **Auto-Selection**: Level detection → Output style suggestion (Starter→learning, Dynamic→pdca-guide, Enterprise→enterprise)
 
-### CTO-Led Agent Teams as Parallel Context
+**Configuration** (`bkit.config.json`):
+```json
+{
+  "outputStyles": {
+    "directory": "output-styles",
+    "available": ["bkit-pdca-guide", "bkit-learning", "bkit-enterprise", "bkit-pdca-enterprise"],
+    "levelDefaults": {
+      "Starter": "bkit-learning",
+      "Dynamic": "bkit-pdca-guide",
+      "Enterprise": "bkit-enterprise"
+    }
+  }
+}
+```
+
+> **Note**: Plugin must declare `"outputStyles": "./output-styles/"` in `plugin.json` for discovery.
+
+### CTO-Led Agent Teams as Parallel Context (v1.5.1+)
 
 CTO-Led Agent Teams enable orchestrated parallel context management:
 - CTO Lead (opus) coordinates all context flow across teammates
-- Each teammate operates with its own context scope per PDCA phase
+- Each teammate operates with its own context window per PDCA phase
 - Phase-specific agents focus on their domain context
 - Orchestrator selects pattern (Leader/Council/Swarm/Watchdog) per phase
 - Communication module manages structured team messages (7 types)
 
-### Agent Memory as Persistent Context
+**Orchestration Patterns by Level**:
+
+| Level | Plan | Design | Do | Check | Act |
+|-------|------|--------|-----|-------|-----|
+| Dynamic | leader | leader | swarm | council | leader |
+| Enterprise | leader | council | swarm | council | watchdog |
+
+**Team Configuration** (`bkit.config.json`):
+```json
+{
+  "team": {
+    "enabled": true,
+    "displayMode": "in-process",
+    "maxTeammates": 5,
+    "ctoAgent": "cto-lead",
+    "levelOverrides": {
+      "Dynamic": { "maxTeammates": 3 },
+      "Enterprise": { "maxTeammates": 5 }
+    }
+  }
+}
+```
+
+### Team Visibility & State Writer (v1.5.3)
+
+The `lib/team/state-writer.js` module (9 exports) persists agent team state for external tools (e.g., bkit Studio IPC):
+
+- **State file**: `.bkit/agent-state.json` (schema v1.0)
+- **Tracked data**: Agent status, phase progress, teammate assignments
+- **New hooks**: `SubagentStart`, `SubagentStop` for lifecycle tracking
+- **Handlers**: `subagent-start-handler.js`, `subagent-stop-handler.js`, `team-idle-handler.js`
+
+### Agent Memory as Persistent Context (v1.5.1)
 
 Agent Memory implements cross-session context persistence:
 
@@ -731,7 +842,15 @@ Agent Memory implements cross-session context persistence:
 | `user` | `~/.claude/agent-memory/` | Global, across all projects |
 | `local` | `.claude/agent-memory-local/` | Per-project, local only |
 
-9 agents use `project` scope, 2 agents use `user` scope.
+9 agents use `project` scope, 2 agents (starter-guide, pipeline-guide) use `user` scope.
+
+### MCP Tool Accuracy (v1.5.4)
+
+MCP tool accuracy is a critical Context Engineering concern. Providing exact tool names (not numbered lists) ensures LLMs invoke the correct MCP tools without hallucinating names.
+
+- bkend MCP tools expanded: 19 → 28+ tools
+- Accurate naming across 4 categories (auth, data, storage, management)
+- Each tool documented with exact name, parameters, and examples
 
 ---
 
